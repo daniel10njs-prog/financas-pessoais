@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Finanças Pessoais</title>
+<meta name="description" content="Controle suas receitas, despesas e pendências.">
+<meta name="theme-color" content="#0f172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Finanças">
+<style>
+:root {
+  --verde: #22c55e;
+  --vermelho: #ef4444;
+  --amarelo: #f59e0b;
+  --azul: #3b82f6;
+  --roxo: #a855f7;
+  --bg: #0f172a;
+  --card: #1e293b;
+  --card2: #253047;
+  --border: #334155;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; max-width: 480px; margin: 0 auto; padding-bottom: 24px; }
+
+/* HEADER */
+header { padding: 18px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 1.2rem; font-weight: 700; }
+header p { color: var(--muted); font-size: .75rem; margin-top: 1px; }
+.header-sync { display: flex; gap: 6px; align-items: center; }
+.sync-btn { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); padding: 5px 8px; font-size: .75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all .2s; }
+.sync-btn:hover { border-color: var(--azul); color: var(--azul); }
+.sync-btn.ok { border-color: var(--verde); color: var(--verde); }
+.sync-btn.err { border-color: var(--vermelho); color: var(--vermelho); }
+
+/* TABS NAV */
+.tab-nav { display: flex; border-bottom: 1px solid var(--border); background: var(--card); }
+.tab-nav button { flex: 1; padding: 12px 4px; background: none; border: none; color: var(--muted); font-size: .85rem; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; }
+.tab-nav button.active { color: var(--text); border-bottom-color: var(--azul); }
+
+/* CARDS */
+.cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 14px 12px; }
+.card { background: var(--card); border-radius: 12px; padding: 12px 10px; border: 1px solid var(--border); text-align: center; }
+.card .label { font-size: .65rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 4px; }
+.card .value { font-size: 1rem; font-weight: 700; }
+.card.rec .value { color: var(--verde); }
+.card.desp .value { color: var(--vermelho); }
+.card.saldo .value { color: var(--azul); }
+
+/* PENDÊNCIAS CARDS */
+.pend-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px 12px; }
+.pend-card { background: var(--card); border-radius: 12px; padding: 12px 10px; border: 1px solid var(--amarelo); text-align: center; }
+.pend-card .label { font-size: .65rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 4px; }
+.pend-card .value { font-size: 1rem; font-weight: 700; color: var(--amarelo); }
+
+/* MÊS NAV */
+.mes-nav { display: flex; align-items: center; justify-content: space-between; padding: 4px 12px 10px; }
+.mes-nav button { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); width: 32px; height: 32px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.mes-nav button:hover { border-color: var(--azul); color: var(--azul); }
+.mes-nav span { font-size: .9rem; font-weight: 600; }
+
+/* FORM */
+.form-box { background: var(--card); margin: 0 12px 12px; border-radius: 14px; padding: 14px; border: 1px solid var(--border); }
+.tipo-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.tipo-tab { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: none; color: var(--muted); font-size: .82rem; font-weight: 600; cursor: pointer; transition: all .2s; }
+.tipo-tab.rec.active { background: rgba(34,197,94,.15); border-color: var(--verde); color: var(--verde); }
+.tipo-tab.desp.active { background: rgba(239,68,68,.15); border-color: var(--vermelho); color: var(--vermelho); }
+.tipo-tab.pend.active { background: rgba(245,158,11,.15); border-color: var(--amarelo); color: var(--amarelo); }
+.form-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.form-row:last-child { margin-bottom: 0; }
+.form-group { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.form-group label { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.form-group input, .form-group select { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 8px 10px; font-size: .85rem; width: 100%; outline: none; }
+.form-group input:focus, .form-group select:focus { border-color: var(--azul); }
+.form-group select option { background: var(--card2); }
+.pend-extra { display: none; }
+.pend-extra.show { display: block; }
+.btn-add { width: 100%; padding: 10px; border-radius: 10px; border: none; font-size: .9rem; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all .2s; }
+.btn-add.rec { background: var(--verde); color: #fff; }
+.btn-add.desp { background: var(--vermelho); color: #fff; }
+.btn-add.pend { background: var(--amarelo); color: #000; }
+
+/* FILTROS */
+.filtros { display: flex; gap: 6px; padding: 0 12px 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.filtros-left { display: flex; gap: 6px; }
+.filt-btn { padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: none; color: var(--muted); font-size: .75rem; cursor: pointer; transition: all .2s; }
+.filt-btn.active { background: var(--azul); border-color: var(--azul); color: #fff; }
+.btn-limpar { padding: 5px 10px; border-radius: 20px; border: 1px solid var(--border); background: none; color: var(--muted); font-size: .72rem; cursor: pointer; }
+.btn-limpar:hover { border-color: var(--vermelho); color: var(--vermelho); }
+
+/* LISTA */
+.list { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
+.item { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.item.pendente { border-color: var(--amarelo); }
+.item-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+.item-icon.rec { background: rgba(34,197,94,.15); }
+.item-icon.desp { background: rgba(239,68,68,.15); }
+.item-icon.pend { background: rgba(245,158,11,.15); }
+.item-info { flex: 1; min-width: 0; }
+.item-desc { font-size: .88rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-meta { font-size: .72rem; color: var(--muted); margin-top: 2px; }
+.item-badge { font-size: .65rem; background: rgba(245,158,11,.2); color: var(--amarelo); border: 1px solid var(--amarelo); border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
+.item-val { font-size: .95rem; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+.item-val.rec { color: var(--verde); }
+.item-val.desp { color: var(--vermelho); }
+.item-val.pend { color: var(--amarelo); }
+.item-actions { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+.item-del { background: none; border: none; color: var(--muted); font-size: .8rem; cursor: pointer; padding: 2px 4px; border-radius: 4px; }
+.item-del:hover { color: var(--vermelho); }
+.item-pay { background: rgba(34,197,94,.15); border: 1px solid var(--verde); color: var(--verde); font-size: .7rem; font-weight: 600; cursor: pointer; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+.item-pay:hover { background: rgba(34,197,94,.3); }
+
+.empty { text-align: center; color: var(--muted); padding: 32px 16px; font-size: .9rem; }
+
+/* SEÇÃO PENDÊNCIAS */
+.section-title { padding: 14px 12px 6px; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.section-title span.badge { background: var(--amarelo); color: #000; border-radius: 10px; padding: 1px 7px; font-size: .7rem; }
+
+/* MODAL BACKUP */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
+.modal-overlay.show { display: flex; }
+.modal { background: var(--card); border-radius: 16px; padding: 20px; width: 100%; max-width: 340px; border: 1px solid var(--border); }
+.modal h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.modal p { color: var(--muted); font-size: .82rem; margin-bottom: 14px; line-height: 1.5; }
+.modal-btns { display: flex; flex-direction: column; gap: 8px; }
+.modal-btn { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid var(--border); background: var(--card2); color: var(--text); font-size: .85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all .2s; }
+.modal-btn:hover { border-color: var(--azul); }
+.modal-btn .icon { font-size: 1.1rem; }
+.modal-close { margin-top: 10px; width: 100%; padding: 9px; border-radius: 10px; border: none; background: none; color: var(--muted); font-size: .82rem; cursor: pointer; }
+.modal-close:hover { color: var(--text); }
+#fileInput { display: none; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 10px 18px; font-size: .85rem; color: var(--text); opacity: 0; pointer-events: none; transition: all .3s; z-index: 200; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.ok { border-color: var(--verde); color: var(--verde); }
+.toast.err { border-color: var(--vermelho); color: var(--vermelho); }
+
+/* BANNER INSTALAR */
+#installBanner { display: none; align-items: center; gap: 10px; background: linear-gradient(135deg,#1e3a2f,#1e293b); border-bottom: 1px solid var(--verde); padding: 10px 14px; }
+#installBanner span { flex: 1; font-size: .82rem; color: var(--text); }
+#installBanner strong { color: var(--verde); }
+.install-btn { background: var(--verde); color: #000; border: none; border-radius: 8px; padding: 7px 14px; font-size: .8rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.install-close { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 2px 6px; }
+</style>
+</head>
+<body>
+
+<!-- BANNER INSTALAÇÃO (Android Chrome) -->
+<div id="installBanner">
+  <span>📲 <strong>Instalar o app</strong> na tela inicial</span>
+  <button class="install-btn" onclick="installApp()">Instalar</button>
+  <button class="install-close" onclick="this.parentElement.style.display='none'">✕</button>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <h1>💰 Finanças</h1>
+    <p id="hoje"></p>
+  </div>
+  <div class="header-sync">
+    <button class="sync-btn" id="syncBtn" onclick="abrirModal()">☁ Drive</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tab-nav">
+  <button class="active" onclick="setTab('lancamentos')">Lançamentos</button>
+  <button onclick="setTab('pendencias')">Pendências</button>
+</div>
+
+<!-- === TAB LANÇAMENTOS === -->
+<div id="tab-lancamentos">
+
+  <!-- Cards resumo -->
+  <div class="cards">
+    <div class="card rec"><div class="label">Receitas</div><div class="value" id="totalRec">R$ 0</div></div>
+    <div class="card desp"><div class="label">Despesas</div><div class="value" id="totalDesp">R$ 0</div></div>
+    <div class="card saldo"><div class="label">Saldo</div><div class="value" id="saldo">R$ 0</div></div>
+  </div>
+
+  <!-- Navegação de mês -->
+  <div class="mes-nav">
+    <button onclick="mudarMes(-1)">◀</button>
+    <span id="mesTitulo">—</span>
+    <button onclick="mudarMes(1)">▶</button>
+  </div>
+
+  <!-- Formulário -->
+  <div class="form-box">
+    <div class="tipo-tabs">
+      <button class="tipo-tab rec" id="tabRec" onclick="setTipo('receita')">+ Receita</button>
+      <button class="tipo-tab desp" id="tabDesp" onclick="setTipo('despesa')">− Despesa</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:2">
+        <label>Descrição</label>
+        <input id="desc" type="text" placeholder="Ex: Salário, Aluguel…"/>
+      </div>
+      <div class="form-group" style="flex:1">
+        <label>Valor (R$)</label>
+        <input id="val" type="number" min="0" step="0.01" placeholder="0,00"/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Categoria</label>
+        <select id="cat">
+          <option value="Salário">Salário</option>
+          <option value="Freelance">Freelance</option>
+          <option value="Investimento">Investimento</option>
+          <option value="Moradia">Moradia</option>
+          <option value="Alimentação">Alimentação</option>
+          <option value="Transporte">Transporte</option>
+          <option value="Saúde">Saúde</option>
+          <option value="Lazer">Lazer</option>
+          <option value="Educação">Educação</option>
+          <option value="Assinatura">Assinatura</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Data</label>
+        <input id="data" type="date"/>
+      </div>
+    </div>
+    <button class="btn-add rec" id="btnAdd" onclick="addItem()">Adicionar</button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filtros">
+    <div class="filtros-left">
+      <button class="filt-btn active" onclick="setFiltro('all')" id="fAll">Todos</button>
+      <button class="filt-btn" onclick="setFiltro('receita')" id="fRec">Receitas</button>
+      <button class="filt-btn" onclick="setFiltro('despesa')" id="fDesp">Despesas</button>
+    </div>
+    <button class="btn-limpar" onclick="limparMes()">🗑 Limpar mês</button>
+  </div>
+
+  <!-- Lista -->
+  <div class="list" id="list"></div>
+
+</div>
+
+<!-- === TAB PENDÊNCIAS === -->
+<div id="tab-pendencias" style="display:none">
+
+  <!-- Cards resumo pendências -->
+  <div class="pend-cards">
+    <div class="pend-card"><div class="label">A pagar</div><div class="value" id="totalPend">R$ 0</div></div>
+    <div class="pend-card" style="border-color:var(--roxo)"><div class="label">Qtd pendências</div><div class="value" style="color:var(--roxo)" id="qtdPend">0</div></div>
+  </div>
+
+  <!-- Formulário pendência -->
+  <div class="form-box">
+    <div class="tipo-tabs">
+      <button class="tipo-tab pend active" style="flex:1">⏳ Nova Pendência</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:2">
+        <label>O que precisa pagar?</label>
+        <input id="pdesc" type="text" placeholder="Ex: Conta de luz, Boleto…"/>
+      </div>
+      <div class="form-group" style="flex:1">
+        <label>Valor (R$)</label>
+        <input id="pval" type="number" min="0" step="0.01" placeholder="0,00"/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Categoria</label>
+        <select id="pcat">
+          <option value="Moradia">Moradia</option>
+          <option value="Alimentação">Alimentação</option>
+          <option value="Transporte">Transporte</option>
+          <option value="Saúde">Saúde</option>
+          <option value="Lazer">Lazer</option>
+          <option value="Educação">Educação</option>
+          <option value="Assinatura">Assinatura</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Vencimento</label>
+        <input id="pvenc" type="date"/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Observação (opcional)</label>
+        <input id="pobs" type="text" placeholder="Ex: Parcela 2/3, lembrar de negociar…"/>
+      </div>
+    </div>
+    <button class="btn-add pend" onclick="addPend()">⏳ Adicionar Pendência</button>
+  </div>
+
+  <!-- Lista pendências -->
+  <div class="section-title">Pendentes <span class="badge" id="pendBadge">0</span></div>
+  <div class="list" id="pendList"></div>
+
+</div>
+
+<!-- MODAL DRIVE SYNC -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)fecharModal()">
+  <div class="modal">
+    <h3>☁ Backup & Sincronização</h3>
+    <p>Seus dados ficam salvos neste dispositivo. Use as opções abaixo para fazer backup no Google Drive ou restaurar em outro aparelho.</p>
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="exportarDrive()">
+        <span class="icon">⬆</span>
+        <div>
+          <div>Salvar no Google Drive</div>
+          <div style="font-size:.72rem;color:var(--muted);font-weight:400">Envia seus dados para o Drive</div>
+        </div>
+      </button>
+      <button class="modal-btn" onclick="importarDrive()">
+        <span class="icon">⬇</span>
+        <div>
+          <div>Restaurar do Google Drive</div>
+          <div style="font-size:.72rem;color:var(--muted);font-weight:400">Carrega o último backup salvo</div>
+        </div>
+      </button>
+      <button class="modal-btn" onclick="exportarArquivo()">
+        <span class="icon">💾</span>
+        <div>
+          <div>Exportar arquivo .json</div>
+          <div style="font-size:.72rem;color:var(--muted);font-weight:400">Baixa um arquivo com todos os dados</div>
+        </div>
+      </button>
+      <button class="modal-btn" onclick="document.getElementById('fileInput').click()">
+        <span class="icon">📂</span>
+        <div>
+          <div>Importar arquivo .json</div>
+          <div style="font-size:.72rem;color:var(--muted);font-weight:400">Restaura a partir de um arquivo baixado</div>
+        </div>
+      </button>
+    </div>
+    <button class="modal-close" onclick="fecharModal()">Fechar</button>
+  </div>
+</div>
+<input type="file" id="fileInput" accept=".json" onchange="importarArquivo(event)"/>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// STORAGE
+// ============================================================
+const STORAGE_KEY = 'financas_v2';
+const DRIVE_FILE_ID = '15bXLRrAEw0jCuFqtZvvsjLuTRBxWksXi';
+
+function loadData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {items:[], pends:[], ts:0}; }
+  catch(e) { return {items:[], pends:[], ts:0}; }
+}
+function saveData(d) {
+  d.ts = Date.now();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+}
+
+// ============================================================
+// ESTADO
+// ============================================================
+let viewDate = new Date();
+let filtro = 'all';
+let tipoAtivo = 'receita';
+let tabAtual = 'lancamentos';
+
+// ============================================================
+// UTIL
+// ============================================================
+function fmt(v) {
+  return 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function fmtDate(d) {
+  if (!d) return '';
+  const [y,m,dd] = d.split('-');
+  return `${dd}/${m}/${y}`;
+}
+function toast(msg, tipo) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (tipo ? ' '+tipo : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.className = 'toast'; }, 2800);
+}
+function isVencido(dateStr) {
+  if (!dateStr) return false;
+  return new Date(dateStr + 'T23:59:59') < new Date();
+}
+function diasParaVencer(dateStr) {
+  if (!dateStr) return null;
+  const diff = new Date(dateStr + 'T23:59:59') - new Date();
+  return Math.ceil(diff / (1000*60*60*24));
+}
+
+// ============================================================
+// TABS
+// ============================================================
+function setTab(t) {
+  tabAtual = t;
+  document.getElementById('tab-lancamentos').style.display = t === 'lancamentos' ? '' : 'none';
+  document.getElementById('tab-pendencias').style.display = t === 'pendencias' ? '' : 'none';
+  document.querySelectorAll('.tab-nav button').forEach((b,i) => {
+    b.classList.toggle('active', (i===0 && t==='lancamentos') || (i===1 && t==='pendencias'));
+  });
+  if (t === 'pendencias') renderPends();
+}
+
+// ============================================================
+// TIPO (receita/despesa) no form
+// ============================================================
+function setTipo(t) {
+  tipoAtivo = t;
+  document.getElementById('tabRec').classList.toggle('active', t==='receita');
+  document.getElementById('tabDesp').classList.toggle('active', t==='despesa');
+  const btn = document.getElementById('btnAdd');
+  btn.className = 'btn-add ' + (t==='receita' ? 'rec' : 'desp');
+  btn.textContent = t === 'receita' ? 'Adicionar receita' : 'Adicionar despesa';
+
+  // Atualizar categorias
+  const catEl = document.getElementById('cat');
+  const recCats = ['Salário','Freelance','Investimento','Outros'];
+  const despCats = ['Moradia','Alimentação','Transporte','Saúde','Lazer','Educação','Assinatura','Outros'];
+  const cats = t === 'receita' ? recCats : despCats;
+  const cur = catEl.value;
+  catEl.innerHTML = cats.map(c => `<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
+}
+
+// ============================================================
+// FILTRO
+// ============================================================
+function setFiltro(f) {
+  filtro = f;
+  ['all','rec','desp'].forEach((id,i) => {
+    const btn = document.getElementById(['fAll','fRec','fDesp'][i]);
+    btn.classList.toggle('active', f === ['all','receita','despesa'][i]);
+  });
+  render();
+}
+
+// ============================================================
+// MÊS
+// ============================================================
+function mudarMes(dir) {
+  viewDate.setMonth(viewDate.getMonth() + dir);
+  render();
+}
+
+// ============================================================
+// RENDER LANÇAMENTOS
+// ============================================================
+function render() {
+  const d = loadData();
+  const mes = viewDate.getMonth();
+  const ano = viewDate.getFullYear();
+
+  // Título mês
+  document.getElementById('mesTitulo').textContent =
+    viewDate.toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+
+  // Filtrar pelo mês
+  const doMes = d.items.filter(i => {
+    const dt = new Date(i.data + 'T12:00:00');
+    return dt.getMonth() === mes && dt.getFullYear() === ano;
+  });
+
+  // Totais
+  const totalRec = doMes.filter(i=>i.tipo==='receita').reduce((a,i)=>a+Number(i.val),0);
+  const totalDesp = doMes.filter(i=>i.tipo==='despesa').reduce((a,i)=>a+Number(i.val),0);
+  document.getElementById('totalRec').textContent = fmt(totalRec);
+  document.getElementById('totalDesp').textContent = fmt(totalDesp);
+  const saldo = totalRec - totalDesp;
+  const saldoEl = document.getElementById('saldo');
+  saldoEl.textContent = fmt(saldo);
+  saldoEl.style.color = saldo >= 0 ? 'var(--verde)' : 'var(--vermelho)';
+
+  // Filtro tipo
+  let show = filtro === 'all' ? doMes : doMes.filter(i=>i.tipo===filtro);
+  show = show.sort((a,b) => b.data.localeCompare(a.data));
+
+  const list = document.getElementById('list');
+  if (!show.length) {
+    list.innerHTML = '<div class="empty">Nenhum lançamento neste mês</div>';
+    return;
+  }
+
+  const icons = {receita:'💵', despesa:'💸'};
+  list.innerHTML = show.map(i => `
+    <div class="item">
+      <div class="item-icon ${i.tipo==='receita'?'rec':'desp'}">${icons[i.tipo]}</div>
+      <div class="item-info">
+        <div class="item-desc">${i.desc}</div>
+        <div class="item-meta">${fmtDate(i.data)} · ${i.cat}</div>
+      </div>
+      <div class="item-val ${i.tipo==='receita'?'rec':'desp'}">${i.tipo==='receita'?'+':'-'}${fmt(i.val)}</div>
+      <div class="item-actions">
+        <button class="item-del" onclick="deleteItem(${i.id})" title="Excluir">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// RENDER PENDÊNCIAS
+// ============================================================
+function renderPends() {
+  const d = loadData();
+  const pends = d.pends || [];
+
+  const total = pends.reduce((a,p)=>a+Number(p.val),0);
+  document.getElementById('totalPend').textContent = fmt(total);
+  document.getElementById('qtdPend').textContent = pends.length;
+  document.getElementById('pendBadge').textContent = pends.length;
+
+  const list = document.getElementById('pendList');
+  if (!pends.length) {
+    list.innerHTML = '<div class="empty">Nenhuma pendência 🎉</div>';
+    return;
+  }
+
+  // Ordenar por vencimento
+  const sorted = [...pends].sort((a,b) => {
+    if (!a.venc && !b.venc) return 0;
+    if (!a.venc) return 1;
+    if (!b.venc) return -1;
+    return a.venc.localeCompare(b.venc);
+  });
+
+  list.innerHTML = sorted.map(p => {
+    const vencido = isVencido(p.venc);
+    const dias = diasParaVencer(p.venc);
+    let vencLabel = '';
+    if (p.venc) {
+      if (vencido) vencLabel = `<span style="color:var(--vermelho)">⚠ Vencido em ${fmtDate(p.venc)}</span>`;
+      else if (dias <= 3) vencLabel = `<span style="color:var(--amarelo)">⚡ Vence em ${dias}d</span>`;
+      else vencLabel = `Vence ${fmtDate(p.venc)}`;
+    }
+    return `
+      <div class="item pendente" style="${vencido ? 'border-color:var(--vermelho)' : ''}">
+        <div class="item-icon pend">⏳</div>
+        <div class="item-info">
+          <div class="item-desc">${p.desc}</div>
+          <div class="item-meta">${p.cat}${vencLabel ? ' · ' + vencLabel : ''}${p.obs ? ' · ' + p.obs : ''}</div>
+        </div>
+        <div class="item-val pend">${fmt(p.val)}</div>
+        <div class="item-actions">
+          <button class="item-pay" onclick="pagarPend(${p.id})" title="Marcar como pago">✓ Pagar</button>
+          <button class="item-del" onclick="deletePend(${p.id})" title="Excluir">✕</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============================================================
+// ADICIONAR LANÇAMENTO
+// ============================================================
+function addItem() {
+  const desc = document.getElementById('desc').value.trim();
+  const val = parseFloat(document.getElementById('val').value);
+  const cat = document.getElementById('cat').value;
+  const data = document.getElementById('data').value;
+
+  if (!desc) { toast('Informe uma descrição', 'err'); return; }
+  if (!val || val <= 0) { toast('Informe um valor válido', 'err'); return; }
+  if (!data) { toast('Informe a data', 'err'); return; }
+
+  const d = loadData();
+  const id = Date.now();
+  d.items.push({id, desc, val, cat, data, tipo: tipoAtivo});
+  saveData(d);
+
+  document.getElementById('desc').value = '';
+  document.getElementById('val').value = '';
+
+  toast(tipoAtivo === 'receita' ? '✅ Receita adicionada' : '✅ Despesa adicionada', 'ok');
+  render();
+}
+
+// ============================================================
+// ADICIONAR PENDÊNCIA
+// ============================================================
+function addPend() {
+  const desc = document.getElementById('pdesc').value.trim();
+  const val = parseFloat(document.getElementById('pval').value);
+  const cat = document.getElementById('pcat').value;
+  const venc = document.getElementById('pvenc').value;
+  const obs = document.getElementById('pobs').value.trim();
+
+  if (!desc) { toast('Informe o que precisa pagar', 'err'); return; }
+  if (!val || val <= 0) { toast('Informe o valor', 'err'); return; }
+
+  const d = loadData();
+  if (!d.pends) d.pends = [];
+  const id = Date.now();
+  d.pends.push({id, desc, val, cat, venc, obs});
+  saveData(d);
+
+  document.getElementById('pdesc').value = '';
+  document.getElementById('pval').value = '';
+  document.getElementById('pobs').value = '';
+
+  toast('⏳ Pendência registrada', 'ok');
+  renderPends();
+}
+
+// ============================================================
+// PAGAR PENDÊNCIA (move para lançamentos como despesa)
+// ============================================================
+function pagarPend(id) {
+  const d = loadData();
+  const idx = d.pends.findIndex(p => p.id === id);
+  if (idx === -1) return;
+
+  const p = d.pends[idx];
+  const hoje = new Date().toISOString().slice(0,10);
+
+  // Move para lançamentos como despesa
+  d.items.push({
+    id: Date.now(),
+    desc: p.desc,
+    val: p.val,
+    cat: p.cat,
+    data: hoje,
+    tipo: 'despesa'
+  });
+
+  // Remove da lista de pendências
+  d.pends.splice(idx, 1);
+  saveData(d);
+
+  toast('✅ Pago! Lançado como despesa', 'ok');
+  renderPends();
+}
+
+// ============================================================
+// EXCLUIR
+// ============================================================
+function deleteItem(id) {
+  const d = loadData();
+  d.items = d.items.filter(i => i.id !== id);
+  saveData(d);
+  render();
+  toast('Lançamento removido');
+}
+
+function deletePend(id) {
+  const d = loadData();
+  d.pends = d.pends.filter(p => p.id !== id);
+  saveData(d);
+  renderPends();
+  toast('Pendência removida');
+}
+
+// ============================================================
+// LIMPAR MÊS
+// ============================================================
+function limparMes() {
+  if (!confirm('Remover todos os lançamentos deste mês?')) return;
+  const d = loadData();
+  const mes = viewDate.getMonth();
+  const ano = viewDate.getFullYear();
+  d.items = d.items.filter(i => {
+    const dt = new Date(i.data + 'T12:00:00');
+    return !(dt.getMonth() === mes && dt.getFullYear() === ano);
+  });
+  saveData(d);
+  render();
+  toast('Mês limpo');
+}
+
+// ============================================================
+// MODAL BACKUP
+// ============================================================
+function abrirModal() { document.getElementById('modalOverlay').classList.add('show'); }
+function fecharModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+
+// Exportar arquivo JSON
+function exportarArquivo() {
+  const d = loadData();
+  const blob = new Blob([JSON.stringify(d, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'financas-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  fecharModal();
+  toast('💾 Arquivo baixado', 'ok');
+}
+
+// Importar arquivo JSON
+function importarArquivo(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.items) throw new Error('Arquivo inválido');
+      if (!confirm(`Importar ${data.items.length} lançamento(s) e ${(data.pends||[]).length} pendência(s)? Os dados atuais serão substituídos.`)) return;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      render();
+      renderPends();
+      fecharModal();
+      toast('✅ Dados importados', 'ok');
+    } catch(err) {
+      toast('❌ Arquivo inválido', 'err');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// Exportar para Drive (instrução ao usuário)
+function exportarDrive() {
+  const d = loadData();
+  const json = JSON.stringify(d);
+  // Copia para clipboard
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(json).then(() => {
+      fecharModal();
+      toast('📋 Dados copiados! Me mande no Zapia para salvar no Drive', 'ok');
+      alert('✅ Dados copiados para a área de transferência!\n\nAgora cole no Zapia com a mensagem:\n"Salvar meus dados financeiros no Drive"\n\nEu farei o upload automaticamente! 💰');
+    }).catch(() => driveInstruction(json));
+  } else {
+    driveInstruction(json);
+  }
+}
+
+function driveInstruction(json) {
+  fecharModal();
+  alert('Para salvar no Drive, abra o Zapia e diga:\n\n"Salvar meus dados financeiros no Drive"\n\nE eu faço o backup por você!');
+}
+
+// Importar do Drive
+function importarDrive() {
+  fecharModal();
+  // Tentar carregar o arquivo público do Drive
+  const url = 'https://drive.google.com/uc?export=download&id=' + DRIVE_FILE_ID;
+  toast('⏳ Buscando backup no Drive…');
+  fetch(url)
+    .then(r => {
+      if (!r.ok) throw new Error('not found');
+      return r.json();
+    })
+    .then(data => {
+      if (!data.items) throw new Error('invalid');
+      if (!confirm(`Restaurar ${data.items.length} lançamento(s) e ${(data.pends||[]).length} pendência(s) do Drive? Os dados atuais serão substituídos.`)) return;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      render();
+      renderPends();
+      toast('✅ Dados restaurados do Drive!', 'ok');
+    })
+    .catch(() => {
+      toast('Nenhum backup encontrado no Drive', 'err');
+      setTimeout(() => alert('Não encontrei um backup no Drive ainda.\n\nPara salvar seu backup, clique em "Salvar no Google Drive" ou "Exportar arquivo .json" acima.'), 500);
+    });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+const hoje = new Date();
+document.getElementById('hoje').textContent = hoje.toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
+document.getElementById('data').value = hoje.toISOString().slice(0,10);
+document.getElementById('pvenc').value = hoje.toISOString().slice(0,10);
+
+setTipo('receita');
+setFiltro('all');
+render();
+renderPends();
+
+// ============================================================
+// PWA — Manifest inline + Service Worker via blob
+// ============================================================
+(function() {
+  // 1. Manifest injetado dinamicamente via blob URL
+  const manifest = {
+    name: "Finanças Pessoais",
+    short_name: "Finanças",
+    description: "Controle suas receitas, despesas e pendências",
+    display: "standalone",
+    orientation: "portrait",
+    theme_color: "#0f172a",
+    background_color: "#0f172a",
+    start_url: 'https://daniel10njs-prog.github.io/financas-pessoais/',
+    scope: 'https://daniel10njs-prog.github.io/financas-pessoais/',
+    icons: [
+      { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230f172a'/%3E%3Ccircle cx='96' cy='96' r='76' fill='%2322c55e'/%3E%3Ctext x='96' y='120' text-anchor='middle' font-size='90' font-family='Arial Black,sans-serif' font-weight='900' fill='white'%3E%24%3C/text%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml", purpose: "any" },
+      { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230f172a'/%3E%3Ccircle cx='256' cy='256' r='204' fill='%2322c55e'/%3E%3Ctext x='256' y='330' text-anchor='middle' font-size='240' font-family='Arial Black,sans-serif' font-weight='900' fill='white'%3E%24%3C/text%3E%3C/svg%3E", sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
+  const url  = URL.createObjectURL(blob);
+  const link = document.createElement('link');
+  link.rel   = 'manifest';
+  link.href  = url;
+  document.head.appendChild(link);
+
+  // 2. Service Worker via blob — permite instalação e cache offline
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+const CACHE = 'financas-v1';
+self.addEventListener('install', e => {
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll([self.location.href])));
+});
+self.addEventListener('activate', e => {
+  self.clients.claim();
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
+});
+self.addEventListener('fetch', e => {
+  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(res => {
+    const clone = res.clone();
+    caches.open(CACHE).then(c => c.put(e.request, clone));
+    return res;
+  }).catch(() => caches.match(self.location.href))));
+});`;
+    const swBlob = new Blob([swCode], {type: 'application/javascript'});
+    const swURL  = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swURL, {scope: './'}).catch(() => {});
+  }
+
+  // 3. Banner de instalação no Android
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Mostrar banner customizado
+    const banner = document.getElementById('installBanner');
+    if (banner) banner.style.display = 'flex';
+  });
+  window.addEventListener('appinstalled', () => {
+    const banner = document.getElementById('installBanner');
+    if (banner) banner.style.display = 'none';
+    deferredPrompt = null;
+  });
+  window.installApp = function() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+    }
+  };
+})();
+</script>
+</body>
+</html>
