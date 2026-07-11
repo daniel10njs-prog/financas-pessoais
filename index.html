@@ -373,8 +373,10 @@ textarea.form-ctrl { min-height: 52px; padding: 10px 12px; resize: none; line-he
   width: 42px; height: 42px;
   border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   flex-shrink: 0;
+  overflow: hidden;
+  text-align: center;
 }
 .item-ico.rec  { background: rgba(74,222,128,.14); }
 .item-ico.desp { background: rgba(248,113,113,.14); }
@@ -1190,12 +1192,20 @@ function render() {
   document.getElementById('mesTitulo').textContent =
     viewDate.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
 
-  const doMes = d.items.filter(i=>{
-    const dt = new Date(i.data+'T12:00:00');
-    return dt.getMonth()===mes && dt.getFullYear()===ano;
+  const doMes = d.items.filter(i => {
+    const dt = new Date(i.data + 'T12:00:00');
+    return dt.getMonth() === mes && dt.getFullYear() === ano;
   });
 
-  const rec  = doMes.filter(i=>i.tipo==='receita').reduce((a,i)=>a+Number(i.val),0);
+  // Migração: se o usuário já tem dados com categorias antigas (sem emoji), vamos tentar mapear
+  doMes.forEach(i => {
+    if (i.cat && !catEmoji(i.cat)) {
+      const match = [...(d.cats.receita || []), ...(d.cats.despesa || [])].find(c => catNome(c) === i.cat);
+      if (match) i.cat = match;
+    }
+  });
+
+  const rec = doMes.filter(i => i.tipo === 'receita').reduce((a, i) => a + Number(i.val), 0);
   const desp = doMes.filter(i=>i.tipo==='despesa').reduce((a,i)=>a+Number(i.val),0);
   document.getElementById('totalRec').textContent  = fmt(rec);
   document.getElementById('totalDesp').textContent = fmt(desp);
@@ -1224,7 +1234,7 @@ function render() {
       <div class="item-ico ${i.tipo==='receita'?'rec':'desp'}">${catEmoji(i.cat)||(i.tipo==='receita'?'💵':'💸')}</div>
       <div class="item-body">
         <div class="item-desc">${i.desc}${i.recorrente?'<span class="badge-fixo">🔁 fixo</span>':''}</div>
-        <div class="item-meta">${fmtD(i.data)} · ${catNome(i.cat)}</div>
+        <div class="item-meta">${catNome(i.cat)} · ${fmtD(i.data)}</div>
         ${i.obs?`<div class="item-obs">${i.obs}</div>`:''}
       </div>
       <div class="item-right">
