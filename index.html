@@ -1127,8 +1127,18 @@ function toast(msg, tipo) {
 }
 const isVencido   = ds => ds ? new Date(ds+'T23:59:59') < new Date() : false;
 const diasVencer  = ds => ds ? Math.ceil((new Date(ds+'T23:59:59')-new Date())/86400000) : null;
-const catNome     = c => c.replace(/^\S+\s/,'');
-const catEmoji    = c => { const m=c.match(/^(\S+)/); return m?m[1]:''; };
+const catNome     = c => {
+  if (!c) return '';
+  const parts = c.split(' ');
+  if (parts.length > 1) return parts.slice(1).join(' ');
+  return c;
+};
+const catEmoji    = c => {
+  if (!c) return '';
+  const parts = c.split(' ');
+  if (parts.length > 1) return parts[0];
+  return '';
+};
 
 // ── Navegação ─────────────────────────────────────────────
 function setPage(p) {
@@ -1200,7 +1210,8 @@ function render() {
   // Migração: se o usuário já tem dados com categorias antigas (sem emoji), vamos tentar mapear
   doMes.forEach(i => {
     if (i.cat && !catEmoji(i.cat)) {
-      const match = [...(d.cats.receita || []), ...(d.cats.despesa || [])].find(c => catNome(c) === i.cat);
+      const allCats = [...(d.cats.receita || DEFAULT_CATS.receita), ...(d.cats.despesa || DEFAULT_CATS.despesa)];
+      const match = allCats.find(c => catNome(c) === i.cat);
       if (match) i.cat = match;
     }
   });
