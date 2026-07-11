@@ -1231,7 +1231,7 @@ function render() {
   }
   list.innerHTML = show.map(i=>`
     <div class="item${i.recorrente?' recorrente':''}">
-      <div class="item-ico ${i.tipo==='receita'?'rec':'desp'}">${catEmoji(i.cat)||(i.tipo==='receita'?'💵':'💸')}</div>
+      <div class="item-ico ${i.tipo==='receita'?'rec':'desp'}" style="font-size: 1.4rem;">${catEmoji(i.cat)||(i.tipo==='receita'?'💵':'💸')}</div>
       <div class="item-body">
         <div class="item-desc">${i.desc}${i.recorrente?'<span class="badge-fixo">🔁 fixo</span>':''}</div>
         <div class="item-meta">${catNome(i.cat)} · ${fmtD(i.data)}</div>
@@ -1276,7 +1276,7 @@ function renderPends() {
     }
     return `
     <div class="item pendente${vencido?' vencido':''}">
-      <div class="item-ico pend">${catEmoji(p.cat)||'⏳'}</div>
+      <div class="item-ico pend" style="font-size: 1.4rem;">${catEmoji(p.cat)||'⏳'}</div>
       <div class="item-body">
         <div class="item-desc">${p.desc}</div>
         <div class="item-meta">${catNome(p.cat)}${vLbl?' · '+vLbl:''}</div>
