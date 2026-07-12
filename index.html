@@ -461,6 +461,23 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   <div class="cat-list" id="catDespesaList"></div>
 </div>
 
+<!-- PÁGINA: PLANOS (SIMULAÇÃO) -->
+<div id="page-planos" class="page">
+  <div class="list-header">
+    <h2>Simulador de Planos</h2>
+    <p style="font-size:0.75rem; color:var(--muted)">Projete seus sonhos</p>
+  </div>
+  
+  <div id="planoList"></div>
+  
+  <button class="btn-add" style="background:var(--azul)" onclick="abrirSheet('sheetPlano')">+ Criar Nova Simulação</button>
+
+  <div class="resumo" style="margin-top:24px; border-style:dashed">
+    <div class="resumo-title">Como funciona?</div>
+    <p style="font-size:0.8rem; color:var(--muted)">Defina um objetivo e quanto você consegue poupar mensalmente. O app calculará em quanto tempo você atingirá sua meta!</p>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="bnav">
   <button class="bnav-btn active" id="bnav-lancamentos" onclick="setPage('lancamentos')">
@@ -482,9 +499,40 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   <button class="bnav-btn" id="bnav-categorias" onclick="setPage('categorias')">
     <span class="icon">🏷</span>Cats
   </button>
+  <button class="bnav-btn" id="bnav-planos" onclick="setPage('planos')">
+    <span class="icon">💡</span>Planos
+  </button>
 </nav>
 
 <!-- SHEETS (MODAIS) -->
+
+<!-- Sheet: Plano -->
+<div class="overlay" id="sheetPlano">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="sheet-title" id="planoTitle">Nova Simulação</div>
+      <button class="sheet-close" onclick="fecharSheets()">&times;</button>
+    </div>
+    <input type="hidden" id="editIdPlano">
+    <div class="field">
+      <label>Nome do plano / Sonho</label>
+      <input type="text" id="plNome" class="input" placeholder="Ex: Comprar Carro">
+    </div>
+    <div class="field">
+      <label>Valor Total Estimado (R$)</label>
+      <input type="number" id="plAlvo" class="input" placeholder="0,00">
+    </div>
+    <div class="field">
+      <label>Quanto posso guardar por mês (R$)?</label>
+      <input type="number" id="plMensal" class="input" placeholder="0,00">
+    </div>
+    <div class="field">
+      <label>Já tenho guardado (R$)</label>
+      <input type="number" id="plAtual" class="input" value="0">
+    </div>
+    <button class="btn-add" style="background:var(--azul)" onclick="savePlano()">Simular</button>
+  </div>
+</div>
 
 <!-- Sheet: Lançamento -->
 <div class="overlay" id="sheetLanc">
@@ -699,6 +747,7 @@ function setPage(p) {
   if (p === 'anual') renderAnual();
   if (p === 'metas') renderMetas();
   if (p === 'categorias') renderCategorias();
+  if (p === 'planos') renderPlanos();
 }
 
 function setFiltro(f) {
@@ -1089,6 +1138,86 @@ function renderMetas() {
       <div class="meta-pct">${pct}% concluído</div>
     </div>`;
   }).join('');
+}
+
+// ── Planos (Simulação) ────────────────────────────────────
+function renderPlanos() {
+  const d = loadData();
+  const list = document.getElementById('planoList');
+  if (!d.planos || !d.planos.length) { list.innerHTML = '<div class="empty">Nenhuma simulação ainda</div>'; return; }
+  
+  list.innerHTML = d.planos.map(p => {
+    const falta = Math.max(p.alvo - (p.atual||0), 0);
+    const meses = p.mensal > 0 ? Math.ceil(falta / p.mensal) : Infinity;
+    const prog = Math.min(100, Math.round(((p.atual||0)/p.alvo)*100));
+    
+    let tempoTxt = meses === Infinity ? 'Defina um valor mensal' : 
+                   meses === 0 ? 'Meta atingida! 🎉' :
+                   meses === 1 ? 'Em 1 mês' : 
+                   meses < 12 ? `Em ${meses} meses` : 
+                   `Em ${Math.floor(meses/12)}a e ${meses%12}m`;
+
+    return `
+      <div class="meta-card" style="border-left: 4px solid var(--azul)">
+        <div class="meta-top">
+          <div>
+            <div class="meta-nome">${p.nome}</div>
+            <div class="meta-sub" style="color:var(--azul)">Faltam: ${fmt(falta)} | ${tempoTxt}</div>
+          </div>
+          <div class="meta-acts">
+            <button class="act-btn edit" onclick="editPlano(${p.id})">✎</button>
+            <button class="act-btn del" onclick="deletePlano(${p.id})">✕</button>
+          </div>
+        </div>
+        <div class="meta-track" style="background:rgba(52, 152, 219, 0.1)">
+          <div class="meta-fill" style="width:${prog}%; background:var(--azul)"></div>
+        </div>
+        <div class="meta-pct">Progresso: ${prog}% | Guardando ${fmt(p.mensal)}/mês</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function savePlano() {
+  const id = document.getElementById('editIdPlano').value;
+  const n = document.getElementById('plNome').value;
+  const v = parseFloat(document.getElementById('plAlvo').value);
+  const m = parseFloat(document.getElementById('plMensal').value);
+  const a = parseFloat(document.getElementById('plAtual').value) || 0;
+  if (!n || isNaN(v) || v <= 0) return toast('Preencha nome e valor alvo','erro');
+
+  const d = loadData();
+  if (!d.planos) d.planos = [];
+  
+  if (id) {
+    const idx = d.planos.findIndex(p=>p.id==id);
+    if (idx!==-1) d.planos[idx] = {id:Number(id), nome:n, alvo:v, mensal:m, atual:a};
+  } else {
+    d.planos.push({id:Date.now(), nome:n, alvo:v, mensal:m, atual:a});
+  }
+  
+  saveData(d); renderPlanos(); fecharSheets();
+  toast(id ? 'Simulação atualizada' : 'Plano criado! Boa sorte 🚀','ok');
+}
+
+function editPlano(id) {
+  const d = loadData();
+  const p = d.planos.find(x=>x.id==id);
+  if (!p) return;
+  document.getElementById('editIdPlano').value = p.id;
+  document.getElementById('plNome').value = p.nome;
+  document.getElementById('plAlvo').value = p.alvo;
+  document.getElementById('plMensal').value = p.mensal;
+  document.getElementById('plAtual').value = p.atual || 0;
+  document.getElementById('planoTitle').textContent = 'Editar Simulação';
+  abrirSheet('sheetPlano');
+}
+
+function deletePlano(id) {
+  if (!confirm('Excluir esta simulação?')) return;
+  const d = loadData();
+  d.planos = (d.planos||[]).filter(p=>p.id!=id);
+  saveData(d); renderPlanos(); toast('Simulação removida');
 }
 let currentMetaId = null;
 function abrirAporte(id, nome) {
