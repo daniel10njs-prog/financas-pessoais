@@ -257,6 +257,26 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 .check-row { display: flex; align-items: center; gap: 10px; padding: 4px; margin-top: 4px; }
 .check-row input { width: 20px; height: 20px; accent-color: var(--azul); }
 
+/* Dashboard Header Layout */
+.dash-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.dash-saldo { flex: 1; }
+.dash-actions { display: flex; gap: 8px; align-items: center; }
+
+.btn-mini-add {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  border: none;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  transition: 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.btn-mini-add:active { transform: scale(0.9); }
+.btn-mini-add.rec { background: var(--verde); }
+.btn-mini-add.desp { background: var(--verm); }
+
 /* Pages */
 .page { display: none; padding: 16px; animation: fadeIn 0.2s ease-out; }
 .page.active { display: block; }
@@ -349,9 +369,18 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 <!-- PÁGINA: LANÇAMENTOS -->
 <div id="page-lancamentos" class="page active">
   <div class="resumo">
-    <div class="resumo-title">Saldo no mês</div>
-    <div class="resumo-val" id="saldo">R$ 0,00</div>
-    <div class="resumo-grid">
+    <div class="dash-head">
+      <div class="dash-saldo">
+        <div class="resumo-title">Saldo no mês</div>
+        <div class="resumo-val" id="saldo" style="margin:0; font-size:1.8rem">R$ 0,00</div>
+      </div>
+      <div class="dash-actions">
+        <button class="btn-mini-add rec" onclick="abrirForm('receita')" title="Nova receita">＋</button>
+        <button class="btn-mini-add desp" onclick="abrirForm('despesa')" title="Nova despesa">－</button>
+      </div>
+    </div>
+    
+    <div class="resumo-grid" style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.05); padding-top:12px">
       <div class="resumo-item">
         <span class="lab">Receitas</span>
         <span class="amt" style="color:var(--verde)" id="totalRec">R$ 0,00</span>
@@ -379,10 +408,6 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
     <button class="act-btn del" onclick="limparMes()" title="Limpar mês">🗑</button>
   </div>
   <div id="list"></div>
-
-  <div style="height:20px"></div>
-  <button class="btn-add desp" id="floatBtn" onclick="abrirForm('despesa')">+ Nova despesa</button>
-  <button class="btn-add rec" style="margin-top:10px" onclick="abrirForm('receita')">+ Nova receita</button>
 </div>
 
 <!-- PÁGINA: PENDÊNCIAS -->
