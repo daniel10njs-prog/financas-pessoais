@@ -125,7 +125,17 @@ body.light-mode .resumo-item { background: rgba(0,0,0,0.02); }
 .resumo-item .amt { font-size: 1.1rem; font-weight: 800; margin-top: 6px; letter-spacing: -0.5px; }
 
 /* Tabs Modernas */
-.tabs { display: flex; background: var(--card2); border-radius: 14px; padding: 5px; margin-bottom: 20px; border: 1px solid var(--border); }
+.tabs { 
+  display: flex; 
+  background: var(--card2); 
+  border-radius: 14px; 
+  padding: 5px; 
+  margin-bottom: 20px; 
+  border: 1px solid var(--border);
+  position: sticky;
+  top: calc(var(--header-h) + 1px);
+  z-index: 90;
+}
 .tab-btn {
   flex: 1;
   padding: 12px;
