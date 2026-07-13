@@ -1324,6 +1324,9 @@ function renderGraficos() {
     cx.fillText(fmt(totalD), 100, 95);
     cx.fillStyle='var(--muted)'; cx.font='700 10px Inter, sans-serif';
     cx.fillText('TOTAL GASTO', 100, 115);
+    
+    // Forçar Lucide Icons caso haja ícones nas barras
+    if (window.lucide) lucide.createIcons();
   }
 }
 
