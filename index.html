@@ -817,6 +817,39 @@ function diasVencer(ds) {
 }
 
 // ── Navegação ───────────────────────────────────────────────
+let touchStartX = 0;
+let touchEndX = 0;
+
+function handleGesture() {
+  const pages = ['lancamentos', 'graficos', 'anual', 'metas', 'simulador'];
+  const currentIndex = pages.indexOf(pageAtual);
+  if (currentIndex === -1) return;
+
+  const threshold = 100; // Distância mínima para o swipe
+  const diff = touchEndX - touchStartX;
+
+  if (Math.abs(diff) < threshold) return;
+
+  if (diff < 0) { // Swipe para Esquerda (Passar para a próxima aba)
+    if (currentIndex < pages.length - 1) {
+      setPage(pages[currentIndex + 1]);
+    }
+  } else { // Swipe para Direita (Voltar para a aba anterior)
+    if (currentIndex > 0) {
+      setPage(pages[currentIndex - 1]);
+    }
+  }
+}
+
+document.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, false);
+
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleGesture();
+}, false);
+
 function setPage(p) {
   pageAtual = p;
   document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
