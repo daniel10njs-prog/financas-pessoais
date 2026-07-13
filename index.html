@@ -1271,20 +1271,26 @@ function renderGraficos() {
     const c = catNome(i.cat)||'Outros';
     map[c] = (map[c]||0) + Number(i.val);
   });
-  const arr = Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  const maxV = arr.length ? arr[0][1] : 1;
+  const totalD = Object.values(map).reduce((a,b)=>a+b,0);
+  const arr = Object.entries(map).sort((a,b)=>b[1]-a[1]);
   const COLORS = ['#3b82f6','#8b5cf6','#10b981','#f43f5e','#f59e0b','#06b6d4','#ec4899','#6366f1'];
 
   const barEl = document.getElementById('barChart');
   if (!arr.length) {
     barEl.innerHTML = '<div class="empty">Sem despesas este mês</div>';
   } else {
-    barEl.innerHTML = arr.map(([cat,val],i)=>`
+    barEl.innerHTML = arr.map(([cat,val],i)=>{
+      const pct = Math.round((val/totalD)*100);
+      return `
       <div class="bar-row">
-        <div class="bar-cat">${cat}</div>
-        <div class="bar-track"><div class="bar-fill" style="width:${Math.round(val/maxV*100)}%;background:${COLORS[i%COLORS.length]}"></div></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+          <div class="bar-cat" style="margin:0">${cat}</div>
+          <div style="font-size:0.75rem; font-weight:800; color:var(--muted)">${pct}%</div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%; background:${COLORS[i%COLORS.length]}"></div></div>
         <div class="bar-amt">${fmt(val)}</div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
 
   const rec = doMes.filter(i=>i.tipo==='receita').reduce((a,i)=>a+Number(i.val),0);
