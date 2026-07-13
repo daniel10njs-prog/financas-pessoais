@@ -476,6 +476,18 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   </div>
 </div>
 
+<!-- PÁGINA: INSIGHTS IA -->
+<div id="page-insights" class="page">
+  <div class="list-header">
+    <h2>Zapia Insights ✨</h2>
+    <p style="font-size:0.75rem; color:var(--muted)">Inteligência Artificial aplicada às suas finanças</p>
+  </div>
+
+  <div id="insightsContent">
+    <div class="empty">Analisando seus dados...</div>
+  </div>
+</div>
+
 <!-- PÁGINA: ANUAL -->
 <div id="page-anual" class="page">
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
@@ -582,6 +594,9 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   <button class="bnav-btn" id="bnav-graficos" onclick="setPage('graficos')">
     <span class="icon">📊</span>Gráficos
   </button>
+  <button class="bnav-btn" id="bnav-insights" onclick="setPage('insights')">
+    <span class="icon">✨</span>IA
+  </button>
   <button class="bnav-btn" id="bnav-anual" onclick="setPage('anual')">
     <span class="icon">📅</span>Anual
   </button>
@@ -590,6 +605,9 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   </button>
   <button class="bnav-btn" id="bnav-simulador" onclick="setPage('simulador')">
     <span class="icon">⚖</span>Simular
+  </button>
+  <button class="bnav-btn" id="bnav-insights" onclick="setPage('insights')">
+    <span class="icon">✨</span>IA
   </button>
 </nav>
 
@@ -911,6 +929,7 @@ function setPage(p) {
   if (p === 'graficos') renderGraficos();
   if (p === 'anual') renderAnual();
   if (p === 'metas') renderMetas();
+  if (p === 'insights') renderInsights();
   if (p === 'categorias') renderCategorias();
   if (p === 'simulador') renderSimulador();
 }
@@ -1384,6 +1403,97 @@ function renderMetas() {
       <div class="meta-pct">${pct}% concluído</div>
     </div>`;
   }).join('');
+}
+
+// ── Insights IA ──────────────────────────────────────────
+function renderInsights() {
+  const d = loadData();
+  const el = document.getElementById('insightsContent');
+  const agora = new Date();
+  const mesAtual = agora.getMonth();
+  const anoAtual = agora.getFullYear();
+
+  // Dados Mês Atual
+  const doMes = d.items.filter(it => {
+    const dt = new Date(it.data + 'T12:00:00');
+    return dt.getMonth() === mesAtual && dt.getFullYear() === anoAtual;
+  });
+  const recMes = doMes.filter(i => i.tipo === 'receita').reduce((a, i) => a + Number(i.val), 0);
+  const despMes = doMes.filter(i => i.tipo === 'despesa').reduce((a, i) => a + Number(i.val), 0);
+
+  // Dados Mês Anterior
+  const dataAnt = new Date(anoAtual, mesAtual - 1, 1);
+  const doMesAnt = d.items.filter(it => {
+    const dt = new Date(it.data + 'T12:00:00');
+    return dt.getMonth() === dataAnt.getMonth() && dt.getFullYear() === dataAnt.getFullYear();
+  });
+  const despMesAnt = doMesAnt.filter(i => i.tipo === 'despesa').reduce((a, i) => a + Number(i.val), 0);
+
+  let html = '';
+
+  // 1. Score Financeiro
+  let score = 10;
+  if (despMes > recMes && recMes > 0) score -= 4;
+  if (despMes > despMesAnt && despMesAnt > 0) score -= 2;
+  const colorScore = score >= 7 ? 'var(--verde)' : score >= 5 ? 'var(--amar)' : 'var(--verm)';
+
+  html += `
+    <div class="resumo" style="text-align:center; padding:30px; border:2px solid ${colorScore}">
+      <div style="font-size:0.8rem; color:var(--muted); text-transform:uppercase; letter-spacing:2px">Score Financeiro</div>
+      <div style="font-size:4rem; font-weight:900; color:${colorScore}">${score}</div>
+      <p style="font-size:0.85rem; margin-top:10px">${score >= 8 ? 'Excelente! Você está no controle.' : score >= 5 ? 'Atenção aos gastos extras este mês.' : 'Sinal de alerta! Seus gastos estão altos.'}</p>
+    </div>
+  `;
+
+  // 2. Insights Dinâmicos
+  html += '<div style="margin-top:20px">';
+  
+  // Comparação Mensal
+  if (despMesAnt > 0) {
+    const diff = ((despMes / despMesAnt) - 1) * 100;
+    if (diff > 10) {
+      html += cardInsight('trending-up', 'Gasto em Alta', `Seus gastos subiram ${Math.round(diff)}% em relação ao mês passado. Verifique o que mudou.`, 'var(--verm)');
+    } else if (diff < -10) {
+      html += cardInsight('trending-down', 'Economia Detectada', `Parabéns! Você está gastando ${Math.round(Math.abs(diff))}% menos que no mês anterior.`, 'var(--verde)');
+    }
+  }
+
+  // Alerta de Saldo
+  if (despMes > recMes * 0.8 && recMes > 0) {
+    html += cardInsight('alert-triangle', 'Limite de Segurança', 'Seus gastos já comprometeram 80% da sua renda. Evite novas compras agora.', 'var(--amar)');
+  }
+
+  // Meta de Reserva
+  const metaReserva = d.metas.find(m => m.nome.toLowerCase().includes('reserva'));
+  if (metaReserva) {
+    const falta = metaReserva.alvo - metaReserva.atual;
+    if (falta > 0 && recMes > despMes) {
+      const sobra = recMes - despMes;
+      html += cardInsight('target', 'Foco na Reserva', `Você tem R$ ${fmt(sobra)} sobrando hoje. Se aplicar tudo na Reserva, falta apenas ${fmt(falta)}!`, 'var(--roxo)');
+    }
+  } else {
+    html += cardInsight('info', 'Dica de Ouro', 'Você ainda não criou uma meta de "Reserva de Emergência". Isso é fundamental para sua paz.', 'var(--azul)');
+  }
+
+  html += '</div>';
+  el.innerHTML = html;
+  lucide.createIcons();
+}
+
+function cardInsight(icon, title, text, color) {
+  return `
+    <div class="resumo" style="border-left:4px solid ${color}; margin-bottom:12px; padding:16px">
+      <div style="display:flex; align-items:center; gap:12px">
+        <div style="background:${color}22; color:${color}; padding:8px; border-radius:8px">
+          <i data-lucide="${icon}" style="width:20px; height:20px"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:800; font-size:0.9rem">${title}</div>
+          <div style="font-size:0.8rem; color:var(--muted); line-height:1.4; margin-top:2px">${text}</div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 // ── Planos (Simulação) ────────────────────────────────────
