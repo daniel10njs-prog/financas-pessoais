@@ -494,19 +494,19 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   </div>
 
   <div class="resumo" style="background:var(--card2); border:1px solid var(--border)">
-    <div class="row" style="gap:10px">
-      <div class="field" style="flex:1">
-        <label>💰 Salário</label>
-        <input type="number" id="simSalario" class="input" placeholder="0,00" oninput="calcSim()" onkeydown="handleSimEnter(event)">
-      </div>
-      <div class="field" style="flex:1">
-        <label>🌴 Férias</label>
-        <input type="number" id="simFerias" class="input" placeholder="0,00" oninput="calcSim()" onkeydown="handleSimEnter(event)">
+    <div class="field">
+      <label>Adicionar Entrada (Salário, Férias, etc)</label>
+      <div class="row" style="gap:8px">
+        <input type="text" id="simDescEntrada" class="input" placeholder="Descrição (ex: Salário)" style="flex:2">
+        <input type="number" id="simValEntrada" class="input" placeholder="0,00" style="flex:1">
+        <button class="btn-mini-add rec" onclick="addSimEntrada()" style="width:40px; height:40px; border-radius:8px">＋</button>
       </div>
     </div>
+
+    <div id="simListaEntradas" style="margin-top:16px"></div>
     
     <div class="row" style="justify-content:space-between; margin-top:12px; padding-top:12px; border-top:1px solid var(--border)">
-      <span style="color:var(--muted)">Total Bruto:</span>
+      <span style="color:var(--muted)">Total Entradas:</span>
       <span id="simTotalBruto" style="font-weight:600; color:var(--verde)">R$ 0,00</span>
     </div>
     <div class="row" style="justify-content:space-between; margin-top:4px">
@@ -1196,14 +1196,21 @@ function renderMetas() {
 // ── Planos (Simulação) ────────────────────────────────────
 function renderSimulador() {
   const d = loadData();
-  
-  // Carrega valores salvos
-  if (d.simConfig) {
-    document.getElementById('simSalario').value = d.simConfig.salario || '';
-    document.getElementById('simFerias').value = d.simConfig.ferias || '';
-  }
-
   const list = document.getElementById('simListaPends');
+  const entList = document.getElementById('simListaEntradas');
+  
+  // Render Entradas
+  if (!d.simEntradas) d.simEntradas = [];
+  entList.innerHTML = d.simEntradas.map((e, idx) => `
+    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:8px 12px; border-radius:8px; margin-bottom:6px; border:1px solid rgba(255,255,255,0.05)">
+      <div style="font-size:0.85rem">
+        <span style="font-weight:600">${e.desc}</span>
+        <div style="color:var(--verde); font-weight:700">${fmt(e.val)}</div>
+      </div>
+      <button class="act-btn del" onclick="removeSimEntrada(${idx})" style="padding:4px 8px">✕</button>
+    </div>
+  `).join('');
+
   if (!d.pends || !d.pends.length) {
     list.innerHTML = '<div class="empty">Nenhuma pendência para simular</div>';
     calcSim();
@@ -1225,16 +1232,32 @@ function renderSimulador() {
   calcSim();
 }
 
-function calcSim() {
-  const salario = parseFloat(document.getElementById('simSalario').value) || 0;
-  const ferias = parseFloat(document.getElementById('simFerias').value) || 0;
-  const bruto = salario + ferias;
-  
-  // Salva a configuração para persistir
-  const d = loadData();
-  d.simConfig = { salario, ferias };
-  saveData(d);
+function addSimEntrada() {
+  const desc = document.getElementById('simDescEntrada').value;
+  const val = parseFloat(document.getElementById('simValEntrada').value);
+  if (!desc || isNaN(val)) return;
 
+  const d = loadData();
+  if (!d.simEntradas) d.simEntradas = [];
+  d.simEntradas.push({ desc, val });
+  saveData(d);
+  
+  document.getElementById('simDescEntrada').value = '';
+  document.getElementById('simValEntrada').value = '';
+  renderSimulador();
+}
+
+function removeSimEntrada(idx) {
+  const d = loadData();
+  d.simEntradas.splice(idx, 1);
+  saveData(d);
+  renderSimulador();
+}
+
+function calcSim() {
+  const d = loadData();
+  const bruto = (d.simEntradas || []).reduce((acc, e) => acc + e.val, 0);
+  
   let totalPends = 0;
   document.querySelectorAll('#simListaPends input[type="checkbox"]:checked').forEach(cb => {
     totalPends += parseFloat(cb.getAttribute('data-val'));
@@ -1247,14 +1270,6 @@ function calcSim() {
   const resEl = document.getElementById('simResult');
   resEl.textContent = fmt(saldoFinal);
   resEl.style.color = saldoFinal >= 0 ? 'var(--verde)' : 'var(--verm)';
-}
-
-function handleSimEnter(e) {
-  if (e.key === 'Enter') {
-    calcSim();
-    e.target.blur(); // Tira o foco para "fixar" visualmente
-    toast('Valores fixados!');
-  }
 }
 
 let currentMetaId = null;
