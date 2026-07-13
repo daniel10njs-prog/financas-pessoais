@@ -494,16 +494,27 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   </div>
 
   <div class="resumo" style="background:var(--card2); border:1px solid var(--border)">
-    <div class="field">
-      <label>Valor a Receber (Ex: Salário + Férias)</label>
-      <input type="number" id="simReceita" class="input" placeholder="0,00" oninput="calcSim()">
+    <div class="row" style="gap:10px">
+      <div class="field" style="flex:1">
+        <label>💰 Salário</label>
+        <input type="number" id="simSalario" class="input" placeholder="0,00" oninput="calcSim()">
+      </div>
+      <div class="field" style="flex:1">
+        <label>🌴 Férias</label>
+        <input type="number" id="simFerias" class="input" placeholder="0,00" oninput="calcSim()">
+      </div>
     </div>
+    
     <div class="row" style="justify-content:space-between; margin-top:12px; padding-top:12px; border-top:1px solid var(--border)">
+      <span style="color:var(--muted)">Total Bruto:</span>
+      <span id="simTotalBruto" style="font-weight:600; color:var(--verde)">R$ 0,00</span>
+    </div>
+    <div class="row" style="justify-content:space-between; margin-top:4px">
       <span style="color:var(--muted)">Total Pendências:</span>
       <span id="simTotalPends" style="font-weight:600; color:var(--verm)">R$ 0,00</span>
     </div>
-    <div class="row" style="justify-content:space-between; margin-top:8px">
-      <span style="font-weight:700">SALDO FINAL:</span>
+    <div class="row" style="justify-content:space-between; margin-top:8px; padding-top:8px; border-top:1px dashed var(--border)">
+      <span style="font-weight:700">SALDO LIVRE:</span>
       <span id="simResult" style="font-weight:800; font-size:1.2rem; color:var(--verde)">R$ 0,00</span>
     </div>
   </div>
@@ -1208,15 +1219,18 @@ function renderSimulador() {
 }
 
 function calcSim() {
-  const receita = parseFloat(document.getElementById('simReceita').value) || 0;
-  let totalPends = 0;
+  const salario = parseFloat(document.getElementById('simSalario').value) || 0;
+  const ferias = parseFloat(document.getElementById('simFerias').value) || 0;
+  const bruto = salario + ferias;
   
+  let totalPends = 0;
   document.querySelectorAll('#simListaPends input[type="checkbox"]:checked').forEach(cb => {
     totalPends += parseFloat(cb.getAttribute('data-val'));
   });
 
-  const saldoFinal = receita - totalPends;
+  const saldoFinal = bruto - totalPends;
   
+  document.getElementById('simTotalBruto').textContent = fmt(bruto);
   document.getElementById('simTotalPends').textContent = fmt(totalPends);
   const resEl = document.getElementById('simResult');
   resEl.textContent = fmt(saldoFinal);
