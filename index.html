@@ -1319,10 +1319,8 @@ function renderGraficos() {
     cx.strokeStyle='#f43f5e'; cx.stroke();
 
     // Center Text
-    cx.fillStyle='var(--text)'; cx.font='900 22px Inter, sans-serif'; cx.textAlign='center';
-    cx.fillText(Math.round(rec/total*100)+'%', 100, 95);
-    cx.fillStyle='var(--muted)'; cx.font='700 12px Inter, sans-serif';
-    cx.fillText('RECEITA', 100, 115);
+    cx.fillStyle='var(--text)'; cx.font='900 24px Inter, sans-serif'; cx.textAlign='center';
+    cx.fillText(Math.round(rec/total*100)+'%', 100, 105);
   }
 }
 
