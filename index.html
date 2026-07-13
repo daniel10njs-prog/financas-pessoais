@@ -486,20 +486,37 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   <div class="cat-list" id="catDespesaList"></div>
 </div>
 
-<!-- PÁGINA: PLANOS (SIMULAÇÃO) -->
-<div id="page-planos" class="page">
+<!-- PÁGINA: SIMULADOR DE PAGAMENTOS (FECHAMENTO) -->
+<div id="page-simulador" class="page">
   <div class="list-header">
-    <h2>Simulador de Planos</h2>
-    <p style="font-size:0.75rem; color:var(--muted)">Projete seus sonhos</p>
+    <h2>Simulador de Pagamentos</h2>
+    <p style="font-size:0.75rem; color:var(--muted)">Projete seu saldo após pagar tudo</p>
   </div>
-  
-  <div id="planoList"></div>
-  
-  <button class="btn-add" style="background:var(--azul)" onclick="abrirSheet('sheetPlano')">+ Criar Nova Simulação</button>
 
-  <div class="resumo" style="margin-top:24px; border-style:dashed">
-    <div class="resumo-title">Como funciona?</div>
-    <p style="font-size:0.8rem; color:var(--muted)">Defina um objetivo e quanto você consegue poupar mensalmente. O app calculará em quanto tempo você atingirá sua meta!</p>
+  <div class="resumo" style="background:var(--card2); border:1px solid var(--border)">
+    <div class="field">
+      <label>Valor a Receber (Ex: Salário + Férias)</label>
+      <input type="number" id="simReceita" class="input" placeholder="0,00" oninput="calcSim()">
+    </div>
+    <div class="row" style="justify-content:space-between; margin-top:12px; padding-top:12px; border-top:1px solid var(--border)">
+      <span style="color:var(--muted)">Total Pendências:</span>
+      <span id="simTotalPends" style="font-weight:600; color:var(--verm)">R$ 0,00</span>
+    </div>
+    <div class="row" style="justify-content:space-between; margin-top:8px">
+      <span style="font-weight:700">SALDO FINAL:</span>
+      <span id="simResult" style="font-weight:800; font-size:1.2rem; color:var(--verde)">R$ 0,00</span>
+    </div>
+  </div>
+
+  <div class="list-header" style="margin-top:24px">
+    <h3>Suas Pendências</h3>
+    <p style="font-size:0.7rem; color:var(--muted)">Desmarque o que não pretende pagar agora</p>
+  </div>
+  <div id="simListaPends"></div>
+
+  <div class="resumo" style="margin-top:24px; border-style:dashed; opacity:0.8">
+    <div class="resumo-title">Dica de Férias 🌴</div>
+    <p style="font-size:0.8rem; color:var(--muted)">Use este simulador para garantir que o dinheiro extra das férias cubra todas as contas do mês antes de planejar gastos extras!</p>
   </div>
 </div>
 
@@ -524,8 +541,8 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   <button class="bnav-btn" id="bnav-categorias" onclick="setPage('categorias')">
     <span class="icon">🏷</span>Cats
   </button>
-  <button class="bnav-btn" id="bnav-planos" onclick="setPage('planos')">
-    <span class="icon">💡</span>Planos
+  <button class="bnav-btn" id="bnav-simulador" onclick="setPage('simulador')">
+    <span class="icon">⚖</span>Simular
   </button>
 </nav>
 
@@ -772,7 +789,7 @@ function setPage(p) {
   if (p === 'anual') renderAnual();
   if (p === 'metas') renderMetas();
   if (p === 'categorias') renderCategorias();
-  if (p === 'planos') renderPlanos();
+  if (p === 'simulador') renderSimulador();
 }
 
 function setFiltro(f) {
@@ -1166,84 +1183,46 @@ function renderMetas() {
 }
 
 // ── Planos (Simulação) ────────────────────────────────────
-function renderPlanos() {
+function renderSimulador() {
   const d = loadData();
-  const list = document.getElementById('planoList');
-  if (!d.planos || !d.planos.length) { list.innerHTML = '<div class="empty">Nenhuma simulação ainda</div>'; return; }
-  
-  list.innerHTML = d.planos.map(p => {
-    const falta = Math.max(p.alvo - (p.atual||0), 0);
-    const meses = p.mensal > 0 ? Math.ceil(falta / p.mensal) : Infinity;
-    const prog = Math.min(100, Math.round(((p.atual||0)/p.alvo)*100));
-    
-    let tempoTxt = meses === Infinity ? 'Defina um valor mensal' : 
-                   meses === 0 ? 'Meta atingida! 🎉' :
-                   meses === 1 ? 'Em 1 mês' : 
-                   meses < 12 ? `Em ${meses} meses` : 
-                   `Em ${Math.floor(meses/12)}a e ${meses%12}m`;
-
-    return `
-      <div class="meta-card" style="border-left: 4px solid var(--azul)">
-        <div class="meta-top">
-          <div>
-            <div class="meta-nome">${p.nome}</div>
-            <div class="meta-sub" style="color:var(--azul)">Faltam: ${fmt(falta)} | ${tempoTxt}</div>
-          </div>
-          <div class="meta-acts">
-            <button class="act-btn edit" onclick="editPlano(${p.id})">✎</button>
-            <button class="act-btn del" onclick="deletePlano(${p.id})">✕</button>
-          </div>
-        </div>
-        <div class="meta-track" style="background:rgba(52, 152, 219, 0.1)">
-          <div class="meta-fill" style="width:${prog}%; background:var(--azul)"></div>
-        </div>
-        <div class="meta-pct">Progresso: ${prog}% | Guardando ${fmt(p.mensal)}/mês</div>
-      </div>
-    `;
-  }).join('');
-}
-
-function savePlano() {
-  const id = document.getElementById('editIdPlano').value;
-  const n = document.getElementById('plNome').value;
-  const v = parseFloat(document.getElementById('plAlvo').value);
-  const m = parseFloat(document.getElementById('plMensal').value);
-  const a = parseFloat(document.getElementById('plAtual').value) || 0;
-  if (!n || isNaN(v) || v <= 0) return toast('Preencha nome e valor alvo','erro');
-
-  const d = loadData();
-  if (!d.planos) d.planos = [];
-  
-  if (id) {
-    const idx = d.planos.findIndex(p=>p.id==id);
-    if (idx!==-1) d.planos[idx] = {id:Number(id), nome:n, alvo:v, mensal:m, atual:a};
-  } else {
-    d.planos.push({id:Date.now(), nome:n, alvo:v, mensal:m, atual:a});
+  const list = document.getElementById('simListaPends');
+  if (!d.pends || !d.pends.length) {
+    list.innerHTML = '<div class="empty">Nenhuma pendência para simular</div>';
+    calcSim();
+    return;
   }
   
-  saveData(d); renderPlanos(); fecharSheets();
-  toast(id ? 'Simulação atualizada' : 'Plano criado! Boa sorte 🚀','ok');
+  list.innerHTML = d.pends.map(p => `
+    <div class="meta-card" style="margin-bottom:8px; padding:12px; border-left:4px solid var(--verm)">
+      <div style="display:flex; align-items:center; gap:12px; width:100%">
+        <input type="checkbox" checked onchange="calcSim()" data-val="${p.val}" style="width:22px; height:22px; accent-color:var(--azul)">
+        <div style="flex:1">
+          <div class="meta-nome" style="font-size:0.95rem">${p.desc}</div>
+          <div class="meta-sub">Venc: ${p.venc.split('-').reverse().join('/')} | ${p.cat}</div>
+        </div>
+        <div style="font-weight:700; color:var(--verm)">${fmt(p.val)}</div>
+      </div>
+    </div>
+  `).join('');
+  calcSim();
 }
 
-function editPlano(id) {
-  const d = loadData();
-  const p = d.planos.find(x=>x.id==id);
-  if (!p) return;
-  document.getElementById('editIdPlano').value = p.id;
-  document.getElementById('plNome').value = p.nome;
-  document.getElementById('plAlvo').value = p.alvo;
-  document.getElementById('plMensal').value = p.mensal;
-  document.getElementById('plAtual').value = p.atual || 0;
-  document.getElementById('planoTitle').textContent = 'Editar Simulação';
-  abrirSheet('sheetPlano');
+function calcSim() {
+  const receita = parseFloat(document.getElementById('simReceita').value) || 0;
+  let totalPends = 0;
+  
+  document.querySelectorAll('#simListaPends input[type="checkbox"]:checked').forEach(cb => {
+    totalPends += parseFloat(cb.getAttribute('data-val'));
+  });
+
+  const saldoFinal = receita - totalPends;
+  
+  document.getElementById('simTotalPends').textContent = fmt(totalPends);
+  const resEl = document.getElementById('simResult');
+  resEl.textContent = fmt(saldoFinal);
+  resEl.style.color = saldoFinal >= 0 ? 'var(--verde)' : 'var(--verm)';
 }
 
-function deletePlano(id) {
-  if (!confirm('Excluir esta simulação?')) return;
-  const d = loadData();
-  d.planos = (d.planos||[]).filter(p=>p.id!=id);
-  saveData(d); renderPlanos(); toast('Simulação removida');
-}
 let currentMetaId = null;
 function abrirAporte(id, nome) {
   currentMetaId = id;
