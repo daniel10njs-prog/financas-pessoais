@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Finanças Pessoais</title>
+<script src="https://unpkg.com/lucide@latest"></script>
 <meta name="description" content="Controle suas receitas, despesas e pendências.">
 <meta name="theme-color" content="#0d1117">
 <meta name="mobile-web-app-capable" content="yes">
@@ -775,19 +776,19 @@ let filtro    = 'all';
 let tipoAtivo = 'despesa';
 
 const DEFAULT_CATS = {
-  receita: ['💰 Salário', '🚀 Freelance', '📈 Investimentos', '🎁 Presentes', '✨ Outros'],
-  despesa: ['🏠 Moradia', '🍽️ Alimentação', '🚗 Transporte', '🏥 Saúde', '🎭 Lazer', '🎓 Educação', '📲 Assinaturas', '🛍️ Compras', '🛠️ Manutenção', '💳 Crédito', '🔋 Contas Fixas', '💸 Outros']
+  receita: ['banknote Salário', 'rocket Freelance', 'trending-up Investimentos', 'gift Presentes', 'sparkles Outros'],
+  despesa: ['home Moradia', 'utensils-crossed Alimentação', 'car Transporte', 'heart-pulse Saúde', 'clapperboard Lazer', 'graduation-cap Educação', 'smartphone Assinaturas', 'shopping-bag Compras', 'wrench Manutenção', 'credit-card Crédito', 'zap Contas Fixas', 'dollar-sign Outros']
 };
 const EMOJIS = [
-  '🏛️', '⚖️', '📊', '📈', '📉', '💼',
-  '🏦', '💵', '💰', '💳', '🏧', '🪙',
-  '📅', '🗓️', '🖋️', '📎', '📁', '💻',
-  '🏠', '🏢', '🏢', '🏬', '🏗️', '🛠️',
-  '🚗', '✈️', '🚢', '📦', '🚚', '⛽',
-  '🏥', '💊', '⚕️', '🛡️', '🔒', '🔑',
-  '🛒', '🍎', '🍽️', '☕', '⚡', '📶'
+  'banknote', 'credit-card', 'landmark', 'trending-up', 'dollar-sign', 'sparkles',
+  'home', 'building-2', 'car', 'fuel', 'bike', 'plane',
+  'utensils-crossed', 'shopping-cart', 'coffee', 'pizza', 'hamburger', 'beer',
+  'hospital', 'pill', 'dumbbell', 'heart-pulse', 'heart', 'shield-check',
+  'clapperboard', 'film', 'gamepad-2', 'headphones', 'party-popper', 'gift',
+  'graduation-cap', 'book', 'monitor', 'smartphone', 'laptop', 'wrench',
+  'shopping-bag', 'shirt', 'baby', 'paw-print', 'shower-head', 'scissors'
 ];
-let selectedEmoji = '💡';
+let selectedEmoji = 'dollar-sign';
 
 const catNome     = c => {
   if (!c) return '';
@@ -799,8 +800,12 @@ const catEmoji    = c => {
   if (!c) return '';
   const parts = c.split(' ');
   if (parts.length > 1) return parts[0];
-  return '';
+  return 'circle';
 };
+
+function renderIcon(iconName) {
+  return `<i data-lucide="${iconName}" style="width:24px; height:24px"></i>`;
+}
 
 // ── Storage ─────────────────────────────────────────────────
 function loadData() {
@@ -1051,7 +1056,7 @@ function render() {
   list.innerHTML = show.map(i=>`
     <div class="item">
       <div class="item-ico ${i.tipo==='receita'?'rec':'desp'}">
-        ${catEmoji(i.cat)||(i.tipo==='receita'?'💵':'💸')}
+        ${renderIcon(catEmoji(i.cat))}
       </div>
       <div class="item-body">
         <div class="item-desc">${i.desc}${i.recorrente?'<span class="badge-fixo">🔁 fixo</span>':''}</div>
@@ -1066,6 +1071,7 @@ function render() {
         </div>
       </div>
     </div>`).join('');
+  lucide.createIcons();
 }
 
 // ── Render Pendências ───────────────────────────────────────
@@ -1082,6 +1088,7 @@ function renderPends() {
   const list = document.getElementById('pendList');
   if (!pends.length) {
     list.innerHTML = '<div class="empty"><span class="icon">🎉</span>Tudo pago!</div>';
+    lucide.createIcons();
     return;
   }
 
@@ -1102,7 +1109,7 @@ function renderPends() {
     }
     return `
     <div class="item pendente${vencido?' vencido':''}">
-      <div class="item-ico pend">${catEmoji(p.cat)||'⏳'}</div>
+      <div class="item-ico pend">${renderIcon(catEmoji(p.cat))}</div>
       <div class="item-body">
         <div class="item-desc">${p.desc}</div>
         <div class="item-meta">${catNome(p.cat)}${vLbl?' · '+vLbl:''}</div>
@@ -1118,6 +1125,7 @@ function renderPends() {
       </div>
     </div>`;
   }).join('');
+  lucide.createIcons();
 }
 
 // ── CRUD Lançamentos ────────────────────────────────────────
@@ -1435,11 +1443,12 @@ function renderCategorias() {
   ['receita','despesa'].forEach(t=>{
     const list = document.getElementById('cat' + t.charAt(0).toUpperCase() + t.slice(1) + 'List');
     list.innerHTML = d.cats[t].map(c=>`
-      <div class="cat-chip"><span>${catEmoji(c)}</span><span>${catNome(c)}</span>
+      <div class="cat-chip"><span>${renderIcon(catEmoji(c))}</span><span>${catNome(c)}</span>
       <button class="cat-chip-del" onclick="removeCategoria('${t}','${c.replace(/'/g,"\\'")}')">✕</button></div>`).join('');
   });
   document.getElementById('emojiGrid').innerHTML = EMOJIS.map(e=>
-    `<button class="emoji-btn${e===selectedEmoji?' sel':''}" onclick="selectEmoji('${e}')">${e}</button>`).join('');
+    `<button class="emoji-btn${e===selectedEmoji?' sel':''}" onclick="selectEmoji('${e}')">${renderIcon(e)}</button>`).join('');
+  lucide.createIcons();
 }
 
 // ── Backup ──────────────────────────────────────────────────
