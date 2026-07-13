@@ -1276,9 +1276,17 @@ function renderGraficos() {
   const COLORS = ['#3b82f6','#8b5cf6','#10b981','#f43f5e','#f59e0b','#06b6d4','#ec4899','#6366f1'];
 
   const barEl = document.getElementById('barChart');
+  const cv = document.getElementById('pieCanvas');
+  const cx = cv.getContext('2d');
+  cx.clearRect(0,0,200,200);
+
   if (!arr.length) {
     barEl.innerHTML = '<div class="empty">Sem despesas este mês</div>';
+    cx.beginPath(); cx.arc(100,100,80,0,Math.PI*2);
+    cx.strokeStyle='#1c212b'; cx.lineWidth=15; cx.stroke();
+    cx.fillStyle='#64748b'; cx.font='600 14px Inter, sans-serif'; cx.textAlign='center'; cx.fillText('Sem dados',100,105);
   } else {
+    // Lista de Barras
     barEl.innerHTML = arr.map(([cat,val],i)=>{
       const pct = Math.round((val/totalD)*100);
       return `
@@ -1291,42 +1299,31 @@ function renderGraficos() {
         <div class="bar-amt">${fmt(val)}</div>
       </div>`;
     }).join('');
-  }
 
-  const rec = doMes.filter(i=>i.tipo==='receita').reduce((a,i)=>a+Number(i.val),0);
-  const desp = doMes.filter(i=>i.tipo==='despesa').reduce((a,i)=>a+Number(i.val),0);
-  const cv = document.getElementById('pieCanvas');
-  const cx = cv.getContext('2d');
-  cx.clearRect(0,0,200,200);
-  const total = rec + desp;
-  if (!total) {
-    cx.beginPath(); cx.arc(100,100,80,0,Math.PI*2);
-    cx.strokeStyle='#1c212b'; cx.lineWidth=15; cx.stroke();
-    cx.fillStyle='#64748b'; cx.font='600 14px Inter, sans-serif'; cx.textAlign='center'; cx.fillText('Sem dados',100,105);
-  } else {
+    // Gráfico de Rosca por Categoria
     const dPR = window.devicePixelRatio || 1;
     cv.width = 200 * dPR; cv.height = 200 * dPR;
     cv.style.width = '200px'; cv.style.height = '200px';
     cx.scale(dPR, dPR);
     
-    const a = (rec/total)*Math.PI*2;
-    cx.lineCap = 'round'; cx.lineWidth = 18;
-    
-    // Background track
-    cx.beginPath(); cx.arc(100,100,75,0,Math.PI*2);
-    cx.strokeStyle='rgba(255,255,255,0.05)'; cx.stroke();
+    let startA = -Math.PI/2;
+    cx.lineWidth = 20;
+    cx.lineCap = 'butt'; // Butt para categorias coladas
 
-    // Receita (Verde)
-    cx.beginPath(); cx.arc(100,100,75,-Math.PI/2,-Math.PI/2+a);
-    cx.strokeStyle='#10b981'; cx.stroke();
+    arr.forEach(([cat, val], i) => {
+      const sliceA = (val / totalD) * Math.PI * 2;
+      cx.beginPath();
+      cx.arc(100, 100, 75, startA, startA + sliceA);
+      cx.strokeStyle = COLORS[i % COLORS.length];
+      cx.stroke();
+      startA += sliceA;
+    });
 
-    // Despesa (Vermelho)
-    cx.beginPath(); cx.arc(100,100,75,-Math.PI/2+a,-Math.PI/2+Math.PI*2);
-    cx.strokeStyle='#f43f5e'; cx.stroke();
-
-    // Center Text
-    cx.fillStyle='var(--text)'; cx.font='900 24px Inter, sans-serif'; cx.textAlign='center';
-    cx.fillText(Math.round(rec/total*100)+'%', 100, 105);
+    // Texto Central: Total Gasto
+    cx.fillStyle='var(--text)'; cx.font='900 20px Inter, sans-serif'; cx.textAlign='center';
+    cx.fillText(fmt(totalD), 100, 95);
+    cx.fillStyle='var(--muted)'; cx.font='700 10px Inter, sans-serif';
+    cx.fillText('TOTAL GASTO', 100, 115);
   }
 }
 
