@@ -497,11 +497,11 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
     <div class="row" style="gap:10px">
       <div class="field" style="flex:1">
         <label>💰 Salário</label>
-        <input type="number" id="simSalario" class="input" placeholder="0,00" oninput="calcSim()">
+        <input type="number" id="simSalario" class="input" placeholder="0,00" oninput="calcSim()" onkeydown="handleSimEnter(event)">
       </div>
       <div class="field" style="flex:1">
         <label>🌴 Férias</label>
-        <input type="number" id="simFerias" class="input" placeholder="0,00" oninput="calcSim()">
+        <input type="number" id="simFerias" class="input" placeholder="0,00" oninput="calcSim()" onkeydown="handleSimEnter(event)">
       </div>
     </div>
     
@@ -1196,6 +1196,13 @@ function renderMetas() {
 // ── Planos (Simulação) ────────────────────────────────────
 function renderSimulador() {
   const d = loadData();
+  
+  // Carrega valores salvos
+  if (d.simConfig) {
+    document.getElementById('simSalario').value = d.simConfig.salario || '';
+    document.getElementById('simFerias').value = d.simConfig.ferias || '';
+  }
+
   const list = document.getElementById('simListaPends');
   if (!d.pends || !d.pends.length) {
     list.innerHTML = '<div class="empty">Nenhuma pendência para simular</div>';
@@ -1223,6 +1230,11 @@ function calcSim() {
   const ferias = parseFloat(document.getElementById('simFerias').value) || 0;
   const bruto = salario + ferias;
   
+  // Salva a configuração para persistir
+  const d = loadData();
+  d.simConfig = { salario, ferias };
+  saveData(d);
+
   let totalPends = 0;
   document.querySelectorAll('#simListaPends input[type="checkbox"]:checked').forEach(cb => {
     totalPends += parseFloat(cb.getAttribute('data-val'));
@@ -1235,6 +1247,14 @@ function calcSim() {
   const resEl = document.getElementById('simResult');
   resEl.textContent = fmt(saldoFinal);
   resEl.style.color = saldoFinal >= 0 ? 'var(--verde)' : 'var(--verm)';
+}
+
+function handleSimEnter(e) {
+  if (e.key === 'Enter') {
+    calcSim();
+    e.target.blur(); // Tira o foco para "fixar" visualmente
+    toast('Valores fixados!');
+  }
 }
 
 let currentMetaId = null;
