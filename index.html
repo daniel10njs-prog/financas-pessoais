@@ -375,7 +375,7 @@ body.light-mode .bar-row { background: rgba(0,0,0,0.01); }
 .emoji-btn { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; font-size: 1.5rem; height: 48px; display: flex; align-items: center; justify-content: center; }
 .emoji-btn.sel { background: var(--azul); border-color: var(--azul); }
 
-#pendBadge { position: absolute; top: 8px; right: 20%; background: var(--verm); color: white; font-size: 10px; min-width: 16px; height: 16px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; border: 2px solid var(--card); }
+#pendBadge { position: absolute; top: 10px; right: 10px; background: var(--verm); color: white; font-size: 10px; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid var(--card); box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10; }
 </style>
 </head>
 <body>
@@ -562,7 +562,7 @@ body.light-mode .bar-row { background: rgba(0,0,0,0.01); }
   <button class="bnav-btn active" id="bnav-lancamentos" onclick="setPage('lancamentos')">
     <span class="icon">💸</span>Lançar
   </button>
-  <button class="bnav-btn" id="bnav-pendencias" onclick="setPage('pendencias')">
+  <button class="bnav-btn" id="bnav-pendencias" onclick="setPage('pendencias')" style="position:relative">
     <span class="icon">⏳</span>Contas
     <div id="pendBadge" style="display:none">0</div>
   </button>
