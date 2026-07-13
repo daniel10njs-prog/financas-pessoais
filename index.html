@@ -26,6 +26,14 @@
   --muted: #8b949e;
   --header-h: 70px;
 }
+body.light-mode {
+  --bg: #f6f8fa;
+  --card: #ffffff;
+  --card2: #f3f4f6;
+  --border: #d0d7de;
+  --text: #1f2328;
+  --muted: #656d76;
+}
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body {
@@ -702,27 +710,46 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
       <div class="sheet-title">Configurações & Backup</div>
       <button class="sheet-close" onclick="fecharSheets()">&times;</button>
     </div>
-    <div class="resumo">
-      <div class="resumo-title">Sincronização Drive</div>
-      <button class="btn-add" style="background:var(--azul)" onclick="exportarDrive()">Exportar p/ Zapia (Drive)</button>
-      <p style="font-size:0.7rem; color:var(--muted); margin-top:8px">Copia os dados para você colar no Zapia e salvar no Google Drive.</p>
-    </div>
-    <div class="row">
-      <button class="btn-add" style="background:var(--card2); font-size:0.8rem" onclick="exportarArquivo()">Baixar JSON</button>
-      <button class="btn-add" style="background:var(--card2); font-size:0.8rem" onclick="document.getElementById('fileIn').click()">Importar JSON</button>
-    </div>
-    <input type="file" id="fileIn" style="display:none" onchange="importarArquivo(event)">
     
+    <!-- Sincronização -->
+    <div class="resumo">
+      <div class="resumo-title">Nuvem & Sincronização</div>
+      <button class="btn-add" style="background:var(--azul)" onclick="exportarDrive()">Sincronizar c/ Zapia (Drive)</button>
+      <div class="row" style="margin-top:10px; gap:8px">
+        <button class="btn-add" style="background:var(--card2); font-size:0.8rem; flex:1" onclick="exportarArquivo()">Baixar JSON</button>
+        <button class="btn-add" style="background:var(--card2); font-size:0.8rem; flex:1" onclick="document.getElementById('fileIn').click()">Importar JSON</button>
+      </div>
+      <input type="file" id="fileIn" style="display:none" onchange="importarArquivo(event)">
+    </div>
+
+    <!-- Personalização -->
     <div class="resumo" style="margin-top:16px">
       <div class="resumo-title">Personalização</div>
       <button class="btn-add" style="background:var(--roxo)" onclick="fecharSheets(); setPage('categorias')">🏷 Gerenciar Categorias</button>
-      <p style="font-size:0.7rem; color:var(--muted); margin-top:8px">Adicione ou remova categorias e emojis personalizados.</p>
+      <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center">
+        <span style="font-size:0.9rem">Tema do Aplicativo</span>
+        <button id="themeToggle" class="act-btn" onclick="toggleTheme()" style="width:auto; padding:8px 16px; font-size:0.8rem">🌙 Escuro</button>
+      </div>
+    </div>
+
+    <!-- Info & Reset -->
+    <div class="resumo" style="margin-top:16px">
+      <div class="resumo-title">Dados & Sistema</div>
+      <div id="appStats" style="font-size:0.75rem; color:var(--muted); margin-bottom:12px">
+        Carregando estatísticas...
+      </div>
+      <button class="btn-add" style="background:rgba(239, 68, 68, 0.1); color:var(--verm); border:1px solid var(--verm)" onclick="resetApp()">🗑 Limpar Todos os Dados</button>
     </div>
 
     <div id="installBanner" style="display:none; margin-top:20px; background:var(--azul); padding:16px; border-radius:12px; align-items:center; gap:12px">
       <div style="font-size:1.5rem">📱</div>
-      <div style="flex:1; font-size:0.85rem; font-weight:600">Instalar o app no seu Android?</div>
+      <div style="flex:1; font-size:0.85rem; font-weight:600">Instalar no Android?</div>
       <button onclick="installApp()" style="background:white; color:var(--azul); border:none; padding:8px 12px; border-radius:8px; font-weight:700">SIM</button>
+    </div>
+    
+    <div style="text-align:center; padding:20px 0; font-size:0.7rem; color:var(--muted)">
+      Zapia Finance v3.2<br>
+      Feito com ❤️ para Daniel
     </div>
   </div>
 </div>
@@ -823,8 +850,50 @@ function mudarAno(n) {
 }
 
 // ── Sheets ──────────────────────────────────────────────────
-function abrirSheet(id) { document.getElementById(id).classList.add('show'); }
+function abrirSheet(id) {
+  document.getElementById(id).classList.add('show');
+  if (id === 'sheetConfig') updateStats();
+}
 function fecharSheets() { document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('show')); }
+
+// ── Funções de Configuração ──────────────────────────────────
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-mode');
+  const btn = document.getElementById('themeToggle');
+  btn.textContent = isLight ? '☀️ Claro' : '🌙 Escuro';
+  localStorage.setItem('financas_theme', isLight ? 'light' : 'dark');
+}
+
+function loadTheme() {
+  const theme = localStorage.getItem('financas_theme');
+  if (theme === 'light') {
+    document.body.classList.add('light-mode');
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = '☀️ Claro';
+  }
+}
+
+function resetApp() {
+  if (confirm('⚠️ ATENÇÃO: Isso apagará TODOS os seus lançamentos, contas e metas permanentemente. Deseja continuar?')) {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+}
+
+function updateStats() {
+  const d = loadData();
+  const nItems = d.items.length;
+  const nPends = d.pends.length;
+  const nMetas = d.metas.length;
+  const size = (JSON.stringify(d).length / 1024).toFixed(2);
+  
+  document.getElementById('appStats').innerHTML = `
+    • <b>${nItems}</b> Lançamentos realizados<br>
+    • <b>${nPends}</b> Contas a pagar cadastradas<br>
+    • <b>${nMetas}</b> Metas financeiras ativas<br>
+    • <b>${size} KB</b> de espaço utilizado
+  `;
+}
 function abrirModal() { abrirSheet('sheetConfig'); }
 
 function populateCats(id, tipo) {
@@ -1385,6 +1454,7 @@ function limparMes() {
 })();
 
 // ── Início ──────────────────────────────────────────────────
+loadTheme();
 render();
 </script>
 </body>
