@@ -626,7 +626,10 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
     </div>
     <div class="field">
       <label>Categoria</label>
-      <select id="cat" class="input"></select>
+      <div style="position:relative">
+        <select id="cat" class="input" style="padding-left:40px"></select>
+        <div id="catIcon" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted)"></div>
+      </div>
     </div>
     <div class="field">
       <label>Observação (opcional)</label>
@@ -664,7 +667,10 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
     </div>
     <div class="field">
       <label>Categoria</label>
-      <select id="pcat" class="input"></select>
+      <div style="position:relative">
+        <select id="pcat" class="input" style="padding-left:40px"></select>
+        <div id="pcatIcon" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted)"></div>
+      </div>
     </div>
     <div class="field">
       <label>Observação</label>
@@ -954,7 +960,19 @@ function abrirModal() { abrirSheet('sheetConfig'); }
 function populateCats(id, tipo) {
   const d = loadData();
   const cats = d.cats[tipo] || DEFAULT_CATS[tipo];
-  document.getElementById(id).innerHTML = cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+  const el = document.getElementById(id);
+  el.innerHTML = cats.map(c=>`<option value="${c}">${catNome(c)}</option>`).join('');
+  
+  const iconId = id === 'cat' ? 'catIcon' : 'pcatIcon';
+  const updateIcon = () => {
+    const iconDiv = document.getElementById(iconId);
+    if (iconDiv) {
+      iconDiv.innerHTML = renderIcon(catEmoji(el.value));
+      lucide.createIcons();
+    }
+  };
+  el.onchange = updateIcon;
+  updateIcon();
 }
 
 function abrirForm(tipo, editObj = null) {
