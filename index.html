@@ -345,12 +345,25 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 
 /* Gráficos / Anual / Metas specific styles (minified for space) */
 /* Gráficos e Tabelas */
-.bar-row { margin-bottom: 16px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 14px; border: 1px solid var(--border); }
-body.light-mode .bar-row { background: rgba(0,0,0,0.01); }
-.bar-cat { font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-.bar-track { height: 8px; background: var(--card2); border-radius: 4px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.bar-amt { font-size: 0.9rem; font-weight: 800; margin-top: 6px; text-align: right; }
+.bar-row { 
+  margin-bottom: 12px; 
+  background: var(--card2); 
+  padding: 20px; 
+  border-radius: 20px; 
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.bar-cat { 
+  font-size: 0.7rem; 
+  font-weight: 800; 
+  color: var(--muted); 
+  margin-bottom: 12px; 
+  text-transform: uppercase; 
+  letter-spacing: 1px; 
+}
+.bar-track { height: 12px; background: rgba(255,255,255,0.03); border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
+.bar-fill { height: 100%; border-radius: 6px; transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.bar-amt { font-size: 1.1rem; font-weight: 900; text-align: right; color: var(--text); letter-spacing: -0.5px; }
 
 .anual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .anual-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; transition: 0.2s; }
@@ -1281,15 +1294,35 @@ function renderGraficos() {
   cx.clearRect(0,0,200,200);
   const total = rec + desp;
   if (!total) {
-    cx.fillStyle='#21262d'; cx.beginPath(); cx.arc(100,100,80,0,Math.PI*2); cx.fill();
-    cx.fillStyle='#8b949e'; cx.font='13px sans-serif'; cx.textAlign='center'; cx.fillText('Sem dados',100,105);
+    cx.beginPath(); cx.arc(100,100,80,0,Math.PI*2);
+    cx.strokeStyle='#1c212b'; cx.lineWidth=15; cx.stroke();
+    cx.fillStyle='#64748b'; cx.font='600 14px Inter, sans-serif'; cx.textAlign='center'; cx.fillText('Sem dados',100,105);
   } else {
+    const dPR = window.devicePixelRatio || 1;
+    cv.width = 200 * dPR; cv.height = 200 * dPR;
+    cv.style.width = '200px'; cv.style.height = '200px';
+    cx.scale(dPR, dPR);
+    
     const a = (rec/total)*Math.PI*2;
-    cx.beginPath(); cx.moveTo(100,100); cx.arc(100,100,80,-Math.PI/2,-Math.PI/2+a); cx.closePath(); cx.fillStyle='#4ade80'; cx.fill();
-    cx.beginPath(); cx.moveTo(100,100); cx.arc(100,100,80,-Math.PI/2+a,-Math.PI/2+Math.PI*2); cx.closePath(); cx.fillStyle='#f87171'; cx.fill();
-    cx.beginPath(); cx.arc(100,100,55,0,Math.PI*2); cx.fillStyle='#0d1117'; cx.fill();
-    cx.fillStyle='#e6edf3'; cx.font='bold 12px sans-serif'; cx.textAlign='center';
-    cx.fillText(Math.round(rec/total*100)+'% rec',100,95); cx.fillText(Math.round(desp/total*100)+'% desp',100,115);
+    cx.lineCap = 'round'; cx.lineWidth = 18;
+    
+    // Background track
+    cx.beginPath(); cx.arc(100,100,75,0,Math.PI*2);
+    cx.strokeStyle='rgba(255,255,255,0.05)'; cx.stroke();
+
+    // Receita (Verde)
+    cx.beginPath(); cx.arc(100,100,75,-Math.PI/2,-Math.PI/2+a);
+    cx.strokeStyle='#10b981'; cx.stroke();
+
+    // Despesa (Vermelho)
+    cx.beginPath(); cx.arc(100,100,75,-Math.PI/2+a,-Math.PI/2+Math.PI*2);
+    cx.strokeStyle='#f43f5e'; cx.stroke();
+
+    // Center Text
+    cx.fillStyle='var(--text)'; cx.font='900 22px Inter, sans-serif'; cx.textAlign='center';
+    cx.fillText(Math.round(rec/total*100)+'%', 100, 95);
+    cx.fillStyle='var(--muted)'; cx.font='700 12px Inter, sans-serif';
+    cx.fillText('RECEITA', 100, 115);
   }
 }
 
