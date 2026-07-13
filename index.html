@@ -775,10 +775,18 @@ let filtro    = 'all';
 let tipoAtivo = 'despesa';
 
 const DEFAULT_CATS = {
-  receita: ['💼 Salário','💻 Freelance','📈 Investimento','🎁 Presente','💡 Outros'],
-  despesa: ['🏠 Moradia','🍔 Alimentação','🚗 Transporte','❤️ Saúde','🎉 Lazer','📚 Educação','📱 Assinatura','👗 Compras','💡 Outros']
+  receita: ['💰 Salário', '🚀 Freelance', '📈 Investimentos', '🎁 Presentes', '✨ Outros'],
+  despesa: ['🏠 Moradia', '🍽️ Alimentação', '🚗 Transporte', '🏥 Saúde', '🎭 Lazer', '🎓 Educação', '📲 Assinaturas', '🛍️ Compras', '🛠️ Manutenção', '💳 Crédito', '🔋 Contas Fixas', '💸 Outros']
 };
-const EMOJIS = ['💼','💻','📈','🏠','🍔','🚗','❤️','🎉','📚','📱','👗','💡','🎁','✈️','🏋️','🐾','🎓','🔧','💊','🛒','🎮','💰','🏦','☕','🎵'];
+const EMOJIS = [
+  '💰','💳','🏦','📈','💸','✨',
+  '🏠','🏢','🚗','⛽','🚲','✈️',
+  '🍽️','🛒','☕','🍕','🍔','🍻',
+  '🏥','💊','🏋️','🦷','❤️','🛡️',
+  '🎭','🎬','🎮','🎧','🎉','🎁',
+  '🎓','📚','💻','📲','💻','🛠️',
+  '🛍️','👕','👶','🐾','🧼','💈'
+];
 let selectedEmoji = '💡';
 
 const catNome     = c => {
