@@ -362,7 +362,7 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   <div style="display:flex; gap:10px">
     <button class="act-btn" onclick="mudarMes(-1)">◀</button>
     <button class="act-btn" onclick="mudarMes(1)">▶</button>
-    <button class="act-btn" onclick="abrirModal()">⚙</button>
+    <button class="act-btn" onclick="abrirSheet('sheetConfig')">⋮</button>
   </div>
 </header>
 
@@ -549,9 +549,6 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   <button class="bnav-btn" id="bnav-metas" onclick="setPage('metas')">
     <span class="icon">🎯</span>Metas
   </button>
-  <button class="bnav-btn" id="bnav-categorias" onclick="setPage('categorias')">
-    <span class="icon">🏷</span>Cats
-  </button>
   <button class="bnav-btn" id="bnav-simulador" onclick="setPage('simulador')">
     <span class="icon">⚖</span>Simular
   </button>
@@ -716,6 +713,12 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
     </div>
     <input type="file" id="fileIn" style="display:none" onchange="importarArquivo(event)">
     
+    <div class="resumo" style="margin-top:16px">
+      <div class="resumo-title">Personalização</div>
+      <button class="btn-add" style="background:var(--roxo)" onclick="fecharSheets(); setPage('categorias')">🏷 Gerenciar Categorias</button>
+      <p style="font-size:0.7rem; color:var(--muted); margin-top:8px">Adicione ou remova categorias e emojis personalizados.</p>
+    </div>
+
     <div id="installBanner" style="display:none; margin-top:20px; background:var(--azul); padding:16px; border-radius:12px; align-items:center; gap:12px">
       <div style="font-size:1.5rem">📱</div>
       <div style="flex:1; font-size:0.85rem; font-weight:600">Instalar o app no seu Android?</div>
