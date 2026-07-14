@@ -145,6 +145,15 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
   <div class="list" id="list"></div>
 </section>
 
+<section id="sec-compras" class="content-section">
+  <div class="widget" style="background: rgba(59, 130, 246, 0.05); border-color: var(--azul); text-align:center;">
+    <div class="widget-title" style="color: var(--azul);">Total do Orçamento</div>
+    <div id="totalComprasValue" style="font-size:1.4rem; font-weight:800; color: var(--azul);">R$ 0,00</div>
+  </div>
+  <button class="btn-action plus" style="width:100%; margin-bottom:14px;" onclick="openModal('compra')">＋ Item de Compra</button>
+  <div class="list" id="listCompras"></div>
+</section>
+
 <section id="sec-pendencias" class="content-section">
   <div class="widget" style="background: rgba(245, 158, 11, 0.05); border-color: var(--amarelo); text-align:center;">
     <div class="widget-title" style="color: var(--amarelo);">Total Pendente</div>
@@ -192,6 +201,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 
 <nav class="bottom-nav">
   <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><i class="fas fa-list-ul"></i>Lançamentos</button>
+  <button id="nav-compras" onclick="setTab('compras')"><i class="fas fa-shopping-basket"></i>Compras</button>
   <button id="nav-pendencias" onclick="setTab('pendencias')"><i class="fas fa-clock"></i>Pendências</button>
   <button id="nav-comparativo" onclick="setTab('comparativo')"><i class="fas fa-history"></i>Mensal</button>
   <button id="nav-simular" onclick="setTab('simular')"><i class="fas fa-calculator"></i>Simular</button>
@@ -283,6 +293,7 @@ function initDB() {
                 metas: data.metas.map(m => ({
                     id: m.id, nome: m.nome, pretendido: m.objetivo, acumulado: m.acumulado
                 })),
+                compras: [],
                 previstos: [],
                 icons: { 'Salário': 'payments', 'Pix Recebido': 'account_balance_wallet', 'Ajuste': 'settings', 'Alimentação': 'restaurant', 'Transporte': 'directions_car', 'Moradia': 'home', 'Lazer': 'celebration', 'Saúde': 'medical_services', 'Educação': 'school', 'Assinaturas': 'subscriptions', 'Outros': 'inventory_2', 'Empréstimo': 'handshake', 'Cartão': 'credit_card' }, 
                 categories: {
@@ -295,7 +306,7 @@ function initDB() {
         } else {
             // Se tudo falhar, cria o padrão
             db = { 
-                items: [], pendencias: [], metas: [], previstos: [], 
+                items: [], pendencias: [], metas: [], previstos: [], compras: [],
                 icons: { 'Salário': 'payments', 'Pix Recebido': 'account_balance_wallet', 'Ajuste': 'settings', 'Alimentação': 'restaurant', 'Transporte': 'directions_car', 'Moradia': 'home', 'Lazer': 'celebration', 'Saúde': 'medical_services', 'Educação': 'school', 'Assinaturas': 'subscriptions', 'Outros': 'inventory_2', 'Empréstimo': 'handshake', 'Cartão': 'credit_card' }, 
                 categories: {
                     receita: ['Salário', 'Pix Recebido', 'Ajuste', 'Empréstimo'],
@@ -401,28 +412,50 @@ function setTab(t) {
   document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('sec-'+t).classList.add('active'); document.getElementById('nav-'+t).classList.add('active');
-  if(t==='analise') initChart(); render();
+  if(t==='analise') initChart();
+  if(t==='compras') renderCompras();
+  render();
+}
+
+function renderCompras() {
+    const list = document.getElementById('listCompras');
+    list.innerHTML = '';
+    let total = 0;
+    if(!db.compras) db.compras = [];
+    db.compras.forEach(item => {
+        total += item.val;
+        list.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon" style="background:var(--azul)"><span class="material-icons-round">shopping_basket</span></div><div class="item-text"><b>${item.desc}</b><span>Compra</span></div></div><div class="item-right"><b class="item-val" style="color:var(--azul)">R$ ${item.val.toFixed(2)}</b><button class="btn-del" onclick="deleteItem(${item.id}, 'compra', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
+    });
+    document.getElementById('totalComprasValue').innerText = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
 }
 
 function openModal(mode, id = null) {
   const select = document.getElementById('tipoSub'); select.innerHTML = '';
-  const cats = db.categories[mode] || []; cats.forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
+  if(mode === 'compra') {
+      select.innerHTML = '<option value="Compra">Compra</option>';
+  } else {
+      const cats = db.categories[mode] || []; cats.forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
+  }
   document.getElementById('editType').value = mode;
   document.getElementById('editId').value = id || '';
   
   if(id) {
-    const list = mode === 'pendencia' ? db.pendencias : db.items; 
+    let list;
+    if(mode === 'pendencia') list = db.pendencias;
+    else if(mode === 'compra') list = db.compras;
+    else list = db.items;
+    
     const item = list.find(x => x.id == id);
     if(item) {
         document.getElementById('modalTitle').innerText = 'Editar'; 
         document.getElementById('desc').value = item.desc; 
         document.getElementById('val').value = item.val; 
-        document.getElementById('tipoSub').value = item.sub;
+        document.getElementById('tipoSub').value = item.sub || 'Compra';
         document.getElementById('entryDate').value = item.data ? item.data.split('T')[0] : new Date().toISOString().split('T')[0];
         document.getElementById('obs').value = item.obs || '';
     }
   } else { 
-    document.getElementById('modalTitle').innerText = mode==='receita'?'Nova Receita':(mode==='despesa'?'Nova Despesa':'Nova Pendência'); 
+    document.getElementById('modalTitle').innerText = mode==='receita'?'Nova Receita':(mode==='despesa'?'Nova Despesa':(mode==='compra'?'Nova Compra':'Nova Pendência')); 
     document.getElementById('desc').value = ''; 
     document.getElementById('val').value = ''; 
     document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
@@ -439,6 +472,11 @@ function saveEntry() {
   if(type === 'pendencia') {
     if(id) { const idx = db.pendencias.findIndex(x => x.id == id); if(idx!==-1) db.pendencias[idx] = { ...db.pendencias[idx], desc: d, val: v, sub: s, data: isoDate, obs: o }; }
     else db.pendencias.push({ id: Date.now(), desc: d, val: v, sub: s, data: isoDate, obs: o });
+  } else if(type === 'compra') {
+    if(!db.compras) db.compras = [];
+    if(id) { const idx = db.compras.findIndex(x => x.id == id); if(idx!==-1) db.compras[idx] = { ...db.compras[idx], desc: d, val: v, sub: s, data: isoDate, obs: o }; }
+    else db.compras.push({ id: Date.now(), desc: d, val: v, sub: s, data: isoDate, obs: o });
+    renderCompras();
   } else {
     if(id) { const idx = db.items.findIndex(x => x.id == id); if(idx!==-1) db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s, data: isoDate, obs: o }; }
     else db.items.push({ id: Date.now(), desc: d, val: v, tipo: type, sub: s, data: isoDate, obs: o });
@@ -451,6 +489,7 @@ function deleteItem(id, type, event) {
   if(type === 'pendencia') db.pendencias = db.pendencias.filter(x => x.id != id);
   else if(type === 'meta') db.metas = db.metas.filter(x => x.id != id);
   else if(type === 'previsto') db.previstos = db.previstos.filter(x => x.id != id);
+  else if(type === 'compra') { db.compras = db.compras.filter(x => x.id != id); renderCompras(); }
   else db.items = db.items.filter(x => x.id != id);
   save();
 }
