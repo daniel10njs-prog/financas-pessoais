@@ -20,82 +20,55 @@ header { height: 80px; padding: 0 24px; display: flex; align-items: center; just
 .logo { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.04em; color: var(--text); }
 .logo span { color: var(--azul); }
 
-.balance-section { margin: 24px 20px; padding: 32px 24px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border-radius: 28px; border: 1px solid var(--border); text-align: center; position: relative; overflow: hidden; }
-.balance-label { font-size: 0.85rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.balance-section { margin: 24px 20px; padding: 32px 24px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border-radius: 28px; border: 1px solid var(--border); text-align: center; }
+.balance-label { font-size: 0.85rem; color: var(--muted); font-weight: 600; text-transform: uppercase; }
 .balance-val { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.06em; margin: 12px 0; color: #fff; }
 
-.quick-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 0 20px 24px; }
-.q-box { padding: 20px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
-.q-label { font-size: 0.75rem; color: var(--muted); font-weight: 700; }
-.q-val { font-size: 1.2rem; font-weight: 700; }
-.q-val.up { color: var(--verde); }
-.q-val.down { color: var(--verm); }
-
-.section-title { padding: 0 24px 16px; display: flex; justify-content: space-between; align-items: center; }
-.section-title h3 { font-size: 1.1rem; font-weight: 700; margin: 0; }
+.tabs { display: flex; gap: 10px; padding: 0 20px 20px; overflow-x: auto; scrollbar-width: none; }
+.tab { padding: 10px 20px; background: var(--card); border-radius: 14px; font-size: 0.85rem; font-weight: 600; color: var(--muted); border: 1px solid var(--border); white-space: nowrap; }
+.tab.active { background: var(--azul); color: white; border-color: var(--azul); }
 
 .item-list { padding: 0 20px; display: flex; flex-direction: column; gap: 12px; }
-.item-card { padding: 16px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); display: flex; align-items: center; gap: 16px; transition: transform 0.2s; }
-.item-card:active { transform: scale(0.98); }
-.icon-wrap { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-.icon-wrap.rec { background: rgba(16, 185, 129, 0.15); color: var(--verde); }
-.icon-wrap.desp { background: rgba(239, 68, 68, 0.15); color: var(--verm); }
+.item-card { padding: 16px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); display: flex; align-items: center; gap: 16px; }
+.icon-wrap { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.icon-wrap.receita { background: rgba(16, 185, 129, 0.15); color: var(--verde); }
+.icon-wrap.despesa { background: rgba(239, 68, 68, 0.15); color: var(--verm); }
+.icon-wrap.pend { background: rgba(245, 158, 11, 0.15); color: var(--amar); }
+
 .item-body { flex: 1; }
 .item-head { font-weight: 600; font-size: 0.95rem; margin-bottom: 2px; }
 .item-sub { font-size: 0.75rem; color: var(--muted); }
 .item-side { text-align: right; }
 .item-amt { font-weight: 700; font-size: 1rem; }
-.item-amt.rec { color: var(--verde); }
+.item-amt.receita { color: var(--verde); }
 
 .fab { position: fixed; bottom: 32px; right: 24px; width: 64px; height: 64px; background: var(--azul); border-radius: 22px; display: flex; align-items: center; justify-content: center; color: white; border: none; box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3); z-index: 1000; }
-
-/* MODAL */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
 .sheet { background: #1e293b; width: 100%; max-width: 400px; border-radius: 28px; padding: 32px; border: 1px solid var(--border); }
-.input-group { margin-bottom: 20px; }
-.input-label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
-input, select { width: 100%; padding: 16px; background: #0f172a; border: 1px solid var(--border); border-radius: 14px; color: white; font-size: 1rem; }
-.btn-main { width: 100%; padding: 18px; background: var(--azul); color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 1.1rem; margin-top: 10px; }
-
-/* BACKUP UI */
-.backup-zone { margin: 40px 20px; padding: 20px; border: 2px dashed var(--border); border-radius: 20px; text-align: center; }
-.btn-restore { background: transparent; color: var(--azul); border: 1px solid var(--azul); padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; }
+input, select { width: 100%; padding: 16px; background: #0f172a; border: 1px solid var(--border); border-radius: 14px; color: white; margin-bottom: 16px; font-size: 1rem; }
+.btn-main { width: 100%; padding: 18px; background: var(--azul); color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 1.1rem; }
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">ZAPIA <span>FINANCE</span></div>
-  <button onclick="exportData()" style="background:none; border:none; color:var(--muted)"><span class="material-icons-round">settings</span></button>
+  <button onclick="importData()" style="background:none; border:none; color:var(--muted)"><span class="material-icons-round">cloud_download</span></button>
 </header>
 
 <div class="balance-section">
-  <div class="balance-label">Patrimônio Total</div>
+  <div class="balance-label" id="balanceLabel">Saldo Atual</div>
   <div class="balance-val" id="totalBalance">R$ 0,00</div>
 </div>
 
-<div class="quick-stats">
-  <div class="q-box">
-    <div class="q-label">Entradas</div>
-    <div class="q-val up" id="totalInc">R$ 0,00</div>
-  </div>
-  <div class="q-box">
-    <div class="q-label">Saídas</div>
-    <div class="q-val down" id="totalExp">R$ 0,00</div>
-  </div>
-</div>
-
-<div class="section-title">
-  <h3>Transações</h3>
-  <span style="font-size: 0.8rem; color: var(--muted); font-weight: 600;" id="itemCount">0 itens</span>
+<div class="tabs">
+  <div class="tab active" onclick="setTab('all', this)">Geral</div>
+  <div class="tab" onclick="setTab('receita', this)">Entradas</div>
+  <div class="tab" onclick="setTab('despesa', this)">Saídas</div>
+  <div class="tab" onclick="setTab('pend', this)">Pendências</div>
 </div>
 
 <div id="list" class="item-list"></div>
-
-<div class="backup-zone" id="emptyState">
-  <p style="color: var(--muted); margin-bottom: 16px;">Nenhum dado encontrado.</p>
-  <button class="btn-restore" onclick="importData()">RESTAURAR BACKUP</button>
-</div>
 
 <button class="fab" onclick="openModal()"><span class="material-icons-round" style="font-size:32px">add</span></button>
 
@@ -105,132 +78,118 @@ input, select { width: 100%; padding: 16px; background: #0f172a; border: 1px sol
       <h2 style="margin:0; font-weight:800;">Novo Registro</h2>
       <button onclick="closeModal()" style="background:none; border:none; color:var(--muted)"><span class="material-icons-round">close</span></button>
     </div>
-    
-    <div class="input-group">
-      <span class="input-label">Valor</span>
-      <input type="number" id="fVal" placeholder="0,00" step="0.01">
-    </div>
-    
-    <div class="input-group">
-      <span class="input-label">Descrição</span>
-      <input type="text" id="fDesc" placeholder="Ex: Supermercado">
-    </div>
-    
-    <div class="input-group">
-      <span class="input-label">Categoria</span>
-      <select id="fTipo">
-        <option value="desp">Despesa (Saída)</option>
-        <option value="rec">Receita (Entrada)</option>
-      </select>
-    </div>
-    
-    <button class="btn-main" onclick="save()">Confirmar</button>
+    <input type="number" id="fVal" placeholder="Valor (0,00)" step="0.01">
+    <input type="text" id="fDesc" placeholder="Descrição">
+    <select id="fTipo">
+      <option value="despesa">Despesa</option>
+      <option value="receita">Receita</option>
+      <option value="pend">Pendência (A pagar)</option>
+    </select>
+    <button class="btn-main" onclick="save()">Salvar</button>
   </div>
 </div>
 
 <script>
-let data = JSON.parse(localStorage.getItem('zapia_pro_data')) || [];
+let store = JSON.parse(localStorage.getItem('zapia_pro_v5')) || { items: [], pends: [] };
+let currentTab = 'all';
 
 function save() {
   const v = parseFloat(document.getElementById('fVal').value);
   const d = document.getElementById('fDesc').value;
   const t = document.getElementById('fTipo').value;
+  if (!v || !d) return alert('Preencha os campos.');
   
-  if (!v || !d) return alert('Por favor, preencha o valor e a descrição.');
+  const item = { id: Date.now(), val: v, desc: d, tipo: t, data: new Date().toISOString().split('T')[0] };
   
-  const newItem = {
-    id: Date.now(),
-    val: v,
-    desc: d,
-    tipo: t,
-    date: new Date().toLocaleDateString('pt-BR')
-  };
+  if (t === 'pend') {
+    store.pends.unshift(item);
+  } else {
+    store.items.unshift(item);
+  }
   
-  data.unshift(newItem);
   persist();
   closeModal();
   render();
 }
 
-function persist() {
-  localStorage.setItem('zapia_pro_data', JSON.stringify(data));
+function persist() { localStorage.setItem('zapia_pro_v5', JSON.stringify(store)); }
+function openModal() { document.getElementById('modal').style.display = 'flex'; }
+function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+function setTab(t, el) {
+  currentTab = t;
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  el.classList.add('active');
+  render();
 }
 
-function del(id) {
-  if(!confirm('Deseja excluir esta transação?')) return;
-  data = data.filter(i => i.id !== id);
+function del(id, isPend) {
+  if(!confirm('Excluir?')) return;
+  if(isPend) store.pends = store.pends.filter(i => i.id !== id);
+  else store.items = store.items.filter(i => i.id !== id);
   persist();
   render();
 }
 
-function openModal() { document.getElementById('modal').style.display = 'flex'; }
-function closeModal() { document.getElementById('modal').style.display = 'none'; }
-
 function importData() {
-  const backup = prompt('Cole aqui o texto do seu backup:');
-  if (backup) {
-    try {
-      const parsed = JSON.parse(backup);
-      if (Array.isArray(parsed)) {
-        data = parsed;
-        persist();
-        render();
-        alert('Backup restaurado com sucesso! ' + data.length + ' transações recuperadas.');
-      } else {
-        alert('Formato de backup inválido.');
-      }
-    } catch(e) {
-      alert('Erro ao ler backup. Verifique se copiou o texto completo.');
+  const b = prompt('Cole seu backup JSON aqui:');
+  if(!b) return;
+  try {
+    const p = JSON.parse(b);
+    if(p.items || p.pends) {
+      store = { items: p.items || [], pends: p.pends || [] };
+      persist();
+      render();
+      alert('Backup restaurado!');
     }
-  }
-}
-
-function exportData() {
-  const str = JSON.stringify(data);
-  console.log(str);
-  prompt('Copie seu backup para guardar em lugar seguro:', str);
+  } catch(e) { alert('Erro no formato do backup.'); }
 }
 
 function render() {
-  const list = document.getElementById('list');
-  const empty = document.getElementById('emptyState');
-  list.innerHTML = '';
+  const l = document.getElementById('list');
+  l.innerHTML = '';
+  let bal = 0, pTotal = 0;
   
-  let inc = 0, exp = 0;
-  
-  if (data.length === 0) {
-    empty.style.display = 'block';
+  // Cálculo de Saldo (apenas itens confirmados)
+  store.items.forEach(i => { if(i.tipo === 'receita') bal += i.val; else bal -= i.val; });
+  // Cálculo de Pendências
+  store.pends.forEach(i => pTotal += i.val);
+
+  if (currentTab === 'pend') {
+    document.getElementById('balanceLabel').innerText = 'Total Pendente';
+    document.getElementById('totalBalance').innerText = 'R$ ' + pTotal.toLocaleString('pt-BR', {minimumFractionDigits:2});
+    document.getElementById('totalBalance').style.color = 'var(--amar)';
   } else {
-    empty.style.display = 'none';
+    document.getElementById('balanceLabel').innerText = 'Saldo Disponível';
+    document.getElementById('totalBalance').innerText = 'R$ ' + bal.toLocaleString('pt-BR', {minimumFractionDigits:2});
+    document.getElementById('totalBalance').style.color = '#fff';
   }
-  
-  data.forEach(i => {
-    if (i.tipo === 'rec') inc += i.val; else exp += i.val;
-    
+
+  const showItems = currentTab === 'all' || currentTab === 'receita' || currentTab === 'despesa';
+  const showPends = currentTab === 'all' || currentTab === 'pend';
+
+  const combined = [];
+  if(showItems) store.items.forEach(i => { if(currentTab==='all' || i.tipo===currentTab) combined.push({...i, isPend: false})});
+  if(showPends) store.pends.forEach(i => combined.push({...i, tipo: 'pend', isPend: true}));
+
+  combined.sort((a,b) => (b.data || '').localeCompare(a.data || '')).forEach(i => {
     const div = document.createElement('div');
     div.className = 'item-card';
     div.innerHTML = `
       <div class="icon-wrap ${i.tipo}">
-        <span class="material-icons-round">${i.tipo==='rec' ? 'trending_up' : 'trending_down'}</span>
+        <span class="material-icons-round">${i.tipo==='receita'?'trending_up':(i.tipo==='despesa'?'trending_down':'schedule')}</span>
       </div>
       <div class="item-body">
         <div class="item-head">${i.desc}</div>
-        <div class="item-sub">${i.date}</div>
+        <div class="item-sub">${i.data || i.venc || ''}</div>
       </div>
       <div class="item-side">
-        <div class="item-amt ${i.tipo==='rec' ? 'rec' : ''}">
-          ${i.tipo==='desp' ? '-' : ''} R$ ${i.val.toLocaleString('pt-BR', {minimumFractionDigits:2})}
-        </div>
-        <div onclick="del(${i.id})" style="font-size:10px; color:var(--muted); margin-top:4px; cursor:pointer;">REMOVER</div>
+        <div class="item-amt ${i.tipo==='receita'?'receita':''}">R$ ${i.val.toLocaleString('pt-BR', {minimumFractionDigits:2})}</div>
+        <div onclick="del(${i.id}, ${i.isPend})" style="font-size:10px; color:var(--muted); cursor:pointer;">EXCLUIR</div>
       </div>
     `;
-    list.appendChild(div);
+    l.appendChild(div);
   });
-  
-  document.getElementById('totalBalance').innerText = 'R$ ' + (inc - exp).toLocaleString('pt-BR', {minimumFractionDigits:2});
-  document.getElementById('totalInc').innerText = 'R$ ' + inc.toLocaleString('pt-BR', {minimumFractionDigits:2});
-  document.getElementById('totalExp').innerText = 'R$ ' + exp.toLocaleString('pt-BR', {minimumFractionDigits:2});
-  document.getElementById('itemCount').innerText = data.length + ' itens';
 }
 
 render();
