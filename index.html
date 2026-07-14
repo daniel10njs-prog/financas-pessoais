@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 <title>Finanças Pessoais</title>
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1"></script>
 <meta name="description" content="Controle suas receitas, despesas e pendências.">
 <meta name="theme-color" content="#0d1117">
 <meta name="mobile-web-app-capable" content="yes">
@@ -853,42 +854,46 @@ let pageAtual = 'lancamentos';
 let filtro    = 'all';
 let tipoAtivo = 'despesa';
 
-const DEFAULT_CATS = {
-  receita: ['sparkles 💰 Ganho Boss', 'trending-up 📈 Level Up', 'gift 🎁 Loot Drop', 'banknote 💵 Cash Out', 'rocket 🚀 Moonshot'],
-  despesa: ['home 🏠 Base HQ', 'utensils-crossed 🍜 Ramen Time', 'car 🏎️ Drift/Transporte', 'heart-pulse 💊 HP Restore', 'clapperboard 🎮 Grind/Lazer', 'graduation-cap 📜 Skill Book', 'smartphone 📱 Comm-Link', 'shopping-bag 🛍️ Item Shop', 'wrench 🛠️ Crafting/Fix', 'credit-card 💳 Credit Card', 'zap ⚡ Energy/Contas', 'dollar-sign 💸 Gold Sink']
-};
 const EMOJIS = [
-  'apple', 'baby', 'banana', 'beer', 'bike', 'bird', 'bone', 'book', 'briefcase', 'bus', 
-  'cake', 'camera', 'car', 'cat', 'clapperboard', 'cloud', 'coffee', 'coins', 'computer', 'controller', 
-  'cookie', 'credit-card', 'crown', 'cup-soda', 'dog', 'dollar-sign', 'dumbbell', 'egg', 'eye', 'feather', 
-  'fish', 'flame', 'flower-2', 'footprints', 'ghost', 'gift', 'glasses', 'graduation-cap', 'guitar', 'hammer', 
-  'hard-drive', 'heart', 'home', 'ice-cream', 'key', 'lamp', 'laptop', 'leaf', 'library', 'lightbulb', 
-  'lock', 'map-pin', 'megaphone', 'microphone', 'moon', 'mountain', 'mouse', 'music', 'package', 'palette', 
-  'paperclip', 'party-popper', 'paw-print', 'pen', 'phone', 'pill', 'pizza', 'plane', 'plug', 'popcorn', 
-  'puzzle', 'rocket', 'sandwich', 'scissors', 'settings', 'shield', 'shirt', 'shopping-bag', 'shopping-cart', 'skull', 
-  'smartphone', 'smile', 'snowflake', 'sparkles', 'speaker', 'star', 'sun', 'swords', 'target', 'ticket', 
-  'train-front', 'trash-2', 'trophy', 'truck', 'tv-2', 'umbrella', 'utensils', 'wallet', 'watch', 'wrench', 'zap'
+  'ph-money', 'ph-bank', 'ph-credit-card', 'ph-coins', 'ph-wallet', 'ph-trend-up', 'ph-trend-down', 'ph-piggy-bank',
+  'ph-house', 'ph-buildings', 'ph-storefront', 'ph-car', 'ph-motorcycle', 'ph-bus', 'ph-airplane', 'ph-gas-pump',
+  'ph-shopping-cart', 'ph-shopping-bag', 'ph-basket', 'ph-gift', 'ph-package', 'ph-tag',
+  'ph-pizza', 'ph-hamburger', 'ph-coffee', 'ph-beer-bottle', 'ph-cooking-pot', 'ph-fork-knife',
+  'ph-heart', 'ph-first-aid', 'ph-stethoscope', 'ph-pill', 'ph-barbell', 'ph-sneaker',
+  'ph-game-controller', 'ph-film-strip', 'ph-music-notes', 'ph-headphones', 'ph-television', 'ph-device-mobile',
+  'ph-book', 'ph-graduation-cap', 'ph-laptop', 'ph-monitor', 'ph-keyboard', 'ph-mouse',
+  'ph-wrench', 'ph-hammer', 'ph-paint-brush', 'ph-scissors', 'ph-camera', 'ph-microphone',
+  'ph-lightning', 'ph-flame', 'ph-drop', 'ph-wind', 'ph-snowflake', 'ph-sun', 'ph-moon',
+  'ph-star', 'ph-crown', 'ph-trophy', 'ph-medal', 'ph-skull', 'ph-ghost', 'ph-alien',
+  'ph-cat', 'ph-dog', 'ph-rabbit', 'ph-bird', 'ph-paw-print', 'ph-leaf', 'ph-tree', 'ph-flower'
 ];
-let selectedEmoji = 'dollar-sign';
+
+const DEFAULT_CATS = {
+  receita: ['ph-sparkle Salário', 'ph-trend-up Investimentos', 'ph-gift Presentes', 'ph-rocket-launch Freelance', 'ph-magic-wand Outros'],
+  despesa: ['ph-house Moradia', 'ph-fork-knife Alimentação', 'ph-car Transporte', 'ph-first-aid Saúde', 'ph-game-controller Lazer', 'ph-graduation-cap Educação', 'ph-device-mobile Assinaturas', 'ph-shopping-bag Compras', 'ph-wrench Manutenção', 'ph-credit-card Crédito', 'ph-lightning Contas Fixas', 'ph-dots-three Outros']
+};
+let selectedEmoji = 'ph-money';
 
 const catEmoji    = c => {
-  if (!c) return 'circle';
+  if (!c) return 'ph-circle';
   const parts = c.trim().split(' ');
-  // Se tem espaço, o primeiro é o nome do ícone
   if (parts.length > 1) return parts[0];
-  return 'circle';
+  return 'ph-circle';
 };
 
 const catNome     = c => {
   if (!c) return '';
   const parts = c.trim().split(' ');
-  // Se tem espaço, o resto é o nome da categoria (incluindo o emoji se houver)
   if (parts.length > 1) return parts.slice(1).join(' ');
   return c;
 };
 
 function renderIcon(iconName) {
-  return `<i data-lucide="${iconName}" style="width:24px; height:24px"></i>`;
+  if (!iconName) return '';
+  if (iconName.startsWith('ph-')) {
+    return `<i class="ph-bold ${iconName}" style="font-size:24px"></i>`;
+  }
+  return `<i data-lucide="${iconName}" style="width:20px; height:20px"></i>`;
 }
 
 // ── Storage ─────────────────────────────────────────────────
