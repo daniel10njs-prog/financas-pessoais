@@ -3,7 +3,7 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
-    <title>Zapia Finance Executive v14</title>
+    <title>Zapia Finance Executive v15</title>
     <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css' rel='stylesheet'>
     <style>
@@ -14,7 +14,6 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* Android Specific Styling */
         body { 
             background: var(--bg); 
             color: var(--text); 
@@ -26,7 +25,6 @@
             letter-spacing: -0.01em;
         }
 
-        /* Executive Header */
         header { 
             padding: 24px 20px; 
             display: flex; 
@@ -41,12 +39,10 @@
         header h1 { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
         .header-actions { display: flex; gap: 16px; color: var(--muted); }
 
-        /* Navigation */
         .tab-content { display: none; padding: 20px; animation: androidFade 0.2s ease-out; }
         .tab-content.active { display: block; }
         @keyframes androidFade { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Dashboard Executive */
         .executive-summary { margin-bottom: 32px; }
         .summary-label { font-size: 0.7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; display: block; }
         .summary-val { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 24px; }
@@ -54,7 +50,6 @@
         .grid-item { background: var(--bg); padding: 16px; }
         .grid-val { font-size: 1rem; font-weight: 700; margin-top: 4px; }
 
-        /* Forms - Material Design Inspired */
         .input-field { background: var(--card); border-radius: 12px; margin-bottom: 12px; padding: 12px 16px; border: 1px solid var(--border); }
         .input-field label { display: block; font-size: 0.65rem; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
         input, select { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 1rem; font-weight: 500; }
@@ -64,7 +59,6 @@
         .btn-primary { background: var(--primary); color: #000; }
         .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
 
-        /* List Items */
         .list-header { font-size: 0.7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin: 32px 0 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
         .transaction { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
         .trans-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
@@ -73,7 +67,6 @@
         .trans-meta { font-size: 0.75rem; color: var(--muted); }
         .trans-val { font-weight: 700; font-size: 1rem; text-align: right; }
 
-        /* Android Bottom Nav */
         .android-nav { 
             position: fixed; bottom: 0; left: 0; width: 100%; 
             background: #000; border-top: 1px solid var(--border); 
@@ -88,126 +81,125 @@
         .nav-link i { font-size: 1.4rem; }
         .nav-link span { font-size: 0.6rem; font-weight: 600; }
 
-        /* Progress Components */
         .progress-box { background: var(--card); padding: 20px; border-radius: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
         .bar-bg { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 12px 0; }
         .bar-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: 0.6s ease; }
-
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Zapia Executive</h1>
+    <h1>Zapia Executivo</h1>
     <div class='header-actions'>
-        <i class='lucide-search' onclick='alert("Pesquisa em breve")'></i>
-        <i class='lucide-settings' onclick='resetAll()'></i>
+        <i class='lucide-download' onclick='exportar()'></i>
+        <i class='lucide-rotate-ccw' onclick='resetAll()'></i>
     </div>
 </header>
 
 <!-- 1. DASHBOARD / LANÇAR -->
 <div id='view-lancar' class='tab-content active'>
     <div class='executive-summary'>
-        <span class='summary-label'>Available Balance</span>
+        <span class='summary-label'>Saldo Disponível</span>
         <div class='summary-val' id='lSaldo'>R$ 0,00</div>
         <div class='summary-grid'>
             <div class='grid-item'>
-                <span class='summary-label' style='color:var(--up)'>Income</span>
+                <span class='summary-label' style='color:var(--up)'>Receitas</span>
                 <div class='grid-val' id='lRec'>R$ 0,00</div>
             </div>
             <div class='grid-item'>
-                <span class='summary-label' style='color:var(--down)'>Expenses</span>
+                <span class='summary-label' style='color:var(--down)'>Despesas</span>
                 <div class='grid-val' id='lDesp'>R$ 0,00</div>
             </div>
         </div>
     </div>
 
-    <div class='input-field'><label>Description</label><input type='text' id='fDesc' placeholder='Merchant or Source'></div>
+    <div class='input-field'><label>Descrição</label><input type='text' id='fDesc' placeholder='Ex: Aluguel, Salário...'></div>
     <div style='display:flex; gap:12px'>
-        <div class='input-field' style='flex:1'><label>Amount</label><input type='number' id='fVal' placeholder='0.00'></div>
-        <div class='input-field' style='flex:1'><label>Category</label>
+        <div class='input-field' style='flex:1'><label>Valor</label><input type='number' id='fVal' placeholder='0,00'></div>
+        <div class='input-field' style='flex:1'><label>Categoria</label>
             <select id='fCat'>
-                <option value='Corporate'>Corporate</option>
-                <option value='Lifestyle'>Lifestyle</option>
-                <option value='Healthcare'>Healthcare</option>
-                <option value='Fixed'>Fixed Cost</option>
+                <option value='Corporativo'>Corporativo</option>
+                <option value='Estilo de Vida'>Estilo de Vida</option>
+                <option value='Saúde'>Saúde</option>
+                <option value='Custo Fixo'>Custo Fixo</option>
+                <option value='Investimento'>Investimento</option>
             </select>
         </div>
     </div>
     
     <div class='action-row'>
-        <button class='btn-exec btn-secondary' onclick='add("desp")'>Track Expense</button>
-        <button class='btn-exec btn-primary' onclick='add("rec")'>Record Income</button>
+        <button class='btn-exec btn-secondary' onclick='add("desp")'>Lançar Gasto</button>
+        <button class='btn-exec btn-primary' onclick='add("rec")'>Lançar Ganho</button>
     </div>
 
-    <h2 class='list-header'>Transaction History</h2>
+    <h2 class='list-header'>Histórico de Transações</h2>
     <div id='lList'></div>
 </div>
 
-<!-- 2. PENDING -->
+<!-- 2. PENDENTES -->
 <div id='view-contas' class='tab-content'>
     <div class='executive-summary'>
-        <span class='summary-label'>Upcoming Liabilities</span>
+        <span class='summary-label'>Obrigações Pendentes</span>
         <div class='summary-val' style='color:var(--warn)' id='pTotal'>R$ 0,00</div>
     </div>
-    <div class='input-field'><label>Account Name</label><input type='text' id='pDesc' placeholder='Vendor or Bill'></div>
-    <div class='input-field'><label>Amount</label><input type='number' id='pVal' placeholder='0.00'></div>
-    <button class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Schedule Liability</button>
+    <div class='input-field'><label>Nome da Conta</label><input type='text' id='pDesc' placeholder='Fornecedor ou Boleto'></div>
+    <div class='input-field'><label>Valor</label><input type='number' id='pVal' placeholder='0,00'></div>
+    <button class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Agendar Obrigação</button>
     
-    <h2 class='list-header'>Pending Obligations</h2>
+    <h2 class='list-header'>Lista de Pendências</h2>
     <div id='pList'></div>
 </div>
 
-<!-- 3. ANALYTICS -->
+<!-- 3. ANÁLISE -->
 <div id='view-analise' class='tab-content'>
-    <h2 class='list-header'>Spending Analysis</h2>
+    <h2 class='list-header'>Análise de Gastos</h2>
     <div id='cList'></div>
 </div>
 
-<!-- 4. ZAPIA AI -->
+<!-- 4. ZAPIA IA -->
 <div id='view-ia' class='tab-content'>
     <div style='text-align:center; padding:60px 0'>
         <i class='lucide-shield-check' style='font-size:3rem; color:var(--accent); margin-bottom:24px'></i>
-        <h2 style='font-size:1.4rem; margin-bottom:12px'>Executive Briefing</h2>
+        <h2 style='font-size:1.4rem; margin-bottom:12px'>Relatório Executivo</h2>
         <p id='iaMsg' style='color:var(--muted); line-height:1.6; font-size:0.95rem'></p>
     </div>
 </div>
 
 <!-- 5. ANUAL -->
 <div id='view-anual' class='tab-content'>
-    <h2 class='list-header'>Annual Fiscal Review</h2>
+    <h2 class='list-header'>Revisão Fiscal Anual</h2>
     <div id='aList'></div>
 </div>
 
-<!-- 6. OBJECTIVES (METAS) -->
+<!-- 6. METAS -->
 <div id='view-metas' class='tab-content'>
-    <div class='input-field'><label>Objective</label><input type='text' id='mNome' placeholder='Investment Goal'></div>
-    <div class='input-field'><label>Target Value</label><input type='number' id='mAlvo' placeholder='0.00'></div>
-    <button class='btn-exec btn-primary' style='width:100%; margin-bottom:32px' onclick='addGoal()'>Lock Objective</button>
+    <div class='input-field'><label>Objetivo</label><input type='text' id='mNome' placeholder='Ex: Reserva de Emergência'></div>
+    <div class='input-field'><label>Valor Alvo</label><input type='number' id='mAlvo' placeholder='0,00'></div>
+    <button class='btn-exec btn-primary' style='width:100%; margin-bottom:32px' onclick='addGoal()'>Fixar Objetivo</button>
     <div id='mList'></div>
 </div>
 
-<!-- 7. SIMULATION -->
+<!-- 7. SIMULAR -->
 <div id='view-simular' class='tab-content'>
     <div class='executive-summary' style='text-align:center'>
-        <span class='summary-label'>Post-Liability Liquid Balance</span>
+        <span class='summary-label'>Saldo Líquido Pós-Obrigações</span>
         <div class='summary-val' id='simVal'>R$ 0,00</div>
-        <p style='font-size:0.8rem; color:var(--muted)'>Simulation based on immediate settlement of all pending obligations.</p>
+        <p style='font-size:0.8rem; color:var(--muted); padding: 0 20px'>Simulação baseada na liquidação imediata de todas as obrigações pendentes.</p>
     </div>
 </div>
 
 <nav class='android-nav'>
-    <div class='nav-link active' onclick='switchTab("lancar")'><i class='lucide-layout-grid'></i><span>Main</span></div>
-    <div class='nav-link' onclick='switchTab("contas")'><i class='lucide-layers'></i><span>Bills</span></div>
-    <div class='nav-link' onclick='switchTab("analise")'><i class='lucide-pie-chart'></i><span>Stats</span></div>
-    <div class='nav-link' onclick='switchTab("ia")'><i class='lucide-zap'></i><span>IA</span></div>
-    <div class='nav-link' onclick='switchTab("anual")'><i class='lucide-calendar'></i><span>Year</span></div>
-    <div class='nav-link' onclick='switchTab("metas")'><i class='lucide-target'></i><span>Goals</span></div>
-    <div class='nav-link' onclick='switchTab("simular")'><i class='lucide-scale'></i><span>Sim</span></div>
+    <div class='nav-link active' onclick='switchTab("lancar")'><i class='lucide-layout-grid'></i><span>Início</span></div>
+    <div class='nav-link' onclick='switchTab("contas")'><i class='lucide-layers'></i><span>Contas</span></div>
+    <div class='nav-link' onclick='switchTab("analise")'><i class='lucide-pie-chart'></i><span>Status</span></div>
+    <div class='nav-link' onclick='switchTab("ia")'><i class='lucide-zap'></i><span>Zapia</span></div>
+    <div class='nav-link' onclick='switchTab("anual")'><i class='lucide-calendar'></i><span>Anual</span></div>
+    <div class='nav-link' onclick='switchTab("metas")'><i class='lucide-target'></i><span>Metas</span></div>
+    <div class='nav-link' onclick='switchTab("simular")'><i class='lucide-scale'></i><span>Simular</span></div>
 </nav>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('zapia_exec_v14')) || { items: [], goals: [] };
+    let db = JSON.parse(localStorage.getItem('zapia_exec_v15')) || { items: [], goals: [] };
 
     function switchTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -228,7 +220,7 @@
     function addPend() {
         const d = document.getElementById('pDesc').value, v = parseFloat(document.getElementById('pVal').value);
         if(!d || isNaN(v)) return;
-        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: 'pend', cat: 'Liability', date: new Date().toISOString() });
+        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: 'pend', cat: 'Obrigação', date: new Date().toISOString() });
         document.getElementById('pDesc').value = ''; document.getElementById('pVal').value = '';
         save();
     }
@@ -241,8 +233,17 @@
         save();
     }
 
-    function save() { localStorage.setItem('zapia_exec_v14', JSON.stringify(db)); render(); }
-    function resetAll() { if(confirm('Factory Reset?')) { db = {items:[], goals:[]}; save(); } }
+    function save() { localStorage.setItem('zapia_exec_v15', JSON.stringify(db)); render(); }
+    function resetAll() { if(confirm('Deseja resetar todos os dados de fábrica?')) { db = {items:[], goals:[]}; save(); } }
+    function exportar() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "zapia_finance_backup.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
 
     function render() {
         let rec = 0, desp = 0, pnd = 0;
@@ -266,37 +267,33 @@
                     <div class='trans-icon' style='color:${color}'><i class='${icon}'></i></div>
                     <div class='trans-info'>
                         <span class='trans-name'>${i.desc}</span>
-                        <span class='trans-meta'>${i.cat} • ${new Date(i.date).toLocaleDateString()}</span>
+                        <span class='trans-meta'>${i.cat} • ${new Date(i.date).toLocaleDateString('pt-BR')}</span>
                     </div>
-                    <div class='trans-val' style='color:${color}'>R$ ${i.val.toLocaleString()}</div>
+                    <div class='trans-val' style='color:${color}'>R$ ${i.val.toLocaleString('pt-BR')}</div>
                 </div>`;
 
             if(i.tipo === 'pend') pList.innerHTML += html; else lList.innerHTML += html;
         });
 
         const bal = rec - desp;
-        document.getElementById('lSaldo').innerText = 'R$ ' + bal.toLocaleString();
-        document.getElementById('lRec').innerText = 'R$ ' + rec.toLocaleString();
-        document.getElementById('lDesp').innerText = 'R$ ' + desp.toLocaleString();
-        document.getElementById('pTotal').innerText = 'R$ ' + pnd.toLocaleString();
+        document.getElementById('lSaldo').innerText = 'R$ ' + bal.toLocaleString('pt-BR');
+        document.getElementById('lRec').innerText = 'R$ ' + rec.toLocaleString('pt-BR');
+        document.getElementById('lDesp').innerText = 'R$ ' + desp.toLocaleString('pt-BR');
+        document.getElementById('pTotal').innerText = 'R$ ' + pnd.toLocaleString('pt-BR');
 
-        // Analytics
         Object.keys(cats).forEach(c => {
             const perc = (cats[c] / (desp || 1)) * 100;
-            cList.innerHTML += `<div class='progress-box'><span>${c}</span><div class='bar-bg'><div class='bar-fill' style='width:${perc}%'></div></div><div style='font-size:0.75rem; text-align:right'>R$ ${cats[c].toLocaleString()}</div></div>`;
+            cList.innerHTML += `<div class='progress-box'><span>${c}</span><div class='bar-bg'><div class='bar-fill' style='width:${perc}%'></div></div><div style='font-size:0.75rem; text-align:right'>R$ ${cats[c].toLocaleString('pt-BR')}</div></div>`;
         });
 
-        // Metas
         db.goals.forEach(g => {
             const perc = Math.min((bal > 0 ? (bal/g.alvo)*100 : 0), 100);
-            mList.innerHTML += `<div class='progress-box'><strong>${g.nome}</strong><div class='bar-bg'><div class='bar-fill' style='width:${perc}%'></div></div><div style='font-size:0.7rem'>${perc.toFixed(1)}% complete</div></div>`;
+            mList.innerHTML += `<div class='progress-box'><strong>${g.nome}</strong><div class='bar-bg'><div class='bar-fill' style='width:${perc}%'></div></div><div style='font-size:0.7rem'>${perc.toFixed(1)}% completo</div></div>`;
         });
 
-        // IA
-        document.getElementById('iaMsg').innerText = bal >= pnd ? `Fiscal status: Stable. Your current liquidity of R$ ${bal.toLocaleString()} fully covers all projected liabilities.` : `Action required: Projected liabilities exceed current liquidity by R$ ${(pnd-bal).toLocaleString()}.`;
+        document.getElementById('iaMsg').innerText = bal >= pnd ? `Status fiscal: Estável. Sua liquidez atual de R$ ${bal.toLocaleString('pt-BR')} cobre integralmente todas as obrigações projetadas.` : `Atenção: Suas obrigações projetadas excedem sua liquidez atual em R$ ${(pnd-bal).toLocaleString('pt-BR')}.`;
         
-        // Simular
-        document.getElementById('simVal').innerText = 'R$ ' + (bal - pnd).toLocaleString();
+        document.getElementById('simVal').innerText = 'R$ ' + (bal - pnd).toLocaleString('pt-BR');
         document.getElementById('simVal').style.color = (bal - pnd) < 0 ? 'var(--down)' : 'var(--up)';
     }
 
