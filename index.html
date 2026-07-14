@@ -932,7 +932,10 @@ function setPage(p) {
   pageAtual = p;
   document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
-  document.querySelectorAll('.bnav-btn').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(e=>{
+    e.classList.remove('active');
+    e.style.opacity = ""; // Resetar qualquer estilo manual
+  });
   document.getElementById('bnav-'+p).classList.add('active');
   window.scrollTo(0,0);
   if (p === 'lancamentos') render();
