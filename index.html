@@ -16,32 +16,35 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Finanças">
 <style>
-/* ===== TOKENS ANIME TECH ===== */
+/* ===== TOKENS MINIMAL ANIME ===== */
 :root {
-  --verde: #00ff9d;
-  --verm: #ff3e3e;
+  --verde: #00ffa3;
+  --verm: #ff4d4d;
   --amar: #ffcc00;
-  --azul: #00d4ff;
-  --roxo: #bd00ff;
-  --bg: #0d0d0f;
-  --card: rgba(22, 22, 26, 0.8);
-  --card2: rgba(31, 31, 35, 0.6);
-  --border: rgba(0, 212, 255, 0.3);
-  --text: #ffffff;
-  --muted: #a0a0b5;
-  --shadow: 0 0 25px rgba(0, 212, 255, 0.15);
-  --radius: 4px; /* Estética mais angular/industrial */
+  --azul: #4da6ff;
+  --roxo: #cc66ff;
+  --bg: #ffffff;
+  --card: #f8f9fa;
+  --card2: #ffffff;
+  --border: #e9ecef;
+  --text: #2d3436;
+  --muted: #b2bec3;
+  --shadow: 0 10px 30px rgba(0,0,0,0.05);
+  --radius: 20px;
   --header-h: 70px;
-  --accent-glow: 0 0 15px rgba(0, 212, 255, 0.4);
 }
+body.dark-mode {
+  --bg: #1a1a1c;
+  --card: #252529;
+  --card2: #2d2d33;
+  --border: #333338;
+  --text: #f1f2f6;
+  --muted: #636e72;
+  --shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
 body {
   background: var(--bg);
-  background-image: 
-    linear-gradient(rgba(13, 13, 15, 0.9), rgba(13, 13, 15, 0.9)),
-    url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop'); /* Fundo tech abstrato */
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
   color: var(--text);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
@@ -52,11 +55,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ===== UI COMPONENTS ANIME REWORK ===== */
+/* ===== UI COMPONENTS ===== */
 header {
   height: var(--header-h);
-  background: rgba(13, 13, 15, 0.95);
-  backdrop-filter: blur(10px);
+  background: var(--bg);
   padding: 0 20px;
   display: flex;
   align-items: center;
@@ -64,33 +66,31 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
-  border-bottom: 2px solid var(--azul);
-  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+  border-bottom: 1px solid var(--border);
 }
 header h1 { 
-  font-size: 1.1rem; 
-  font-weight: 900; 
-  text-transform: uppercase; 
-  letter-spacing: 2px;
-  color: var(--azul);
-  text-shadow: var(--accent-glow);
+  font-size: 1.2rem; 
+  font-weight: 800; 
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--azul), var(--roxo));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Bottom Nav Estilo Console */
+/* Bottom Nav Estilo "Pill" Moderno */
 .bnav {
   position: fixed;
-  bottom: 15px;
-  left: 15px;
-  right: 15px;
-  background: rgba(22, 22, 26, 0.95);
-  backdrop-filter: blur(15px);
-  border: 1px solid var(--azul);
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: var(--bg);
+  border: 1px solid var(--border);
   display: flex;
   height: 65px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-radius: 30px;
+  box-shadow: var(--shadow);
   z-index: 200;
-  max-width: 470px;
+  max-width: 460px;
   margin: 0 auto;
 }
 .bnav-btn {
@@ -102,48 +102,38 @@ header h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 0.55rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  transition: 0.3s;
 }
 .bnav-btn.active { 
-  color: var(--azul); 
-  background: rgba(0, 212, 255, 0.05) !important;
+  color: var(--azul);
 }
 
-/* Card Principal: HUD Estilo Anime */
+/* Resumo Estilo Soft Card */
 .resumo {
-  background: rgba(22, 22, 26, 0.9);
-  border: 1px solid var(--azul);
-  clip-path: polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%); /* Corte diagonal tech */
+  background: var(--card);
+  border-radius: var(--radius);
   padding: 24px;
   margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
   position: relative;
-  border-left: 4px solid var(--azul);
-}
-.resumo::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 2px;
-  background: linear-gradient(90deg, var(--azul), transparent);
 }
 .resumo-title { 
-  font-size: 0.65rem; 
-  color: var(--azul); 
-  margin-bottom: 5px; 
-  font-weight: 900; 
+  font-size: 0.8rem; 
+  color: var(--muted); 
+  margin-bottom: 8px; 
+  font-weight: 600; 
   text-transform: uppercase; 
-  letter-spacing: 2px; 
-  opacity: 0.8;
+  letter-spacing: 0.5px; 
 }
 .resumo-val { 
-  font-size: 2.6rem; 
+  font-size: 2.4rem; 
   font-weight: 900; 
+  margin-bottom: 20px; 
   letter-spacing: -1.5px; 
   color: var(--text);
-  text-shadow: 0 0 15px rgba(255,255,255,0.3);
 }
 
 /* Listagem HUD */
@@ -167,66 +157,72 @@ header h1 {
 /* Tabs HUD Style */
 .tabs { 
   display: flex; 
-  background: rgba(22, 22, 26, 0.9); 
-  border-radius: 4px; 
-  padding: 3px; 
+  background: var(--card); 
+  border-radius: var(--radius); 
+  padding: 5px; 
   margin-bottom: 20px; 
-  border: 1px solid var(--azul);
+  border: 1px solid var(--border);
   position: sticky;
   top: calc(var(--header-h) + 1px);
   z-index: 90;
-  backdrop-filter: blur(10px);
 }
 .tab-btn {
   flex: 1;
-  padding: 10px;
+  padding: 12px;
   border: none;
   background: none;
   color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  border-radius: 2px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 15px;
   transition: 0.2s;
 }
 .tab-btn.active { 
-  background: var(--azul); 
-  color: var(--bg); 
-  box-shadow: var(--accent-glow);
+  background: var(--bg); 
+  color: var(--azul); 
+  box-shadow: var(--shadow);
 }
 
 /* Itens da Lista HUD */
 .item {
-  background: rgba(255,255,255,0.03);
+  background: var(--card2);
   padding: 16px;
   margin-bottom: 12px;
   border: 1px solid var(--border);
   transition: 0.2s;
   position: relative;
   overflow: hidden;
-  clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 0 100%);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
-.item:active { background: rgba(0, 212, 255, 0.1); transform: scale(0.98); }
+.item:active { background: var(--bg); transform: scale(0.98); }
 
 .item-ico {
-  width: 44px;
-  height: 44px;
-  border-radius: 4px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
 }
-.item-ico.rec  { color: var(--verde); border-color: var(--verde); box-shadow: 0 0 10px rgba(0,255,157,0.2); }
-.item-ico.desp { color: var(--verm); border-color: var(--verm); box-shadow: 0 0 10px rgba(255,62,62,0.2); }
-.item-ico.pend { color: var(--amar); border-color: var(--amar); box-shadow: 0 0 10px rgba(255,204,0,0.2); }
+.item-ico.rec  { background: rgba(0,255,163,0.1); color: var(--verde); }
+.item-ico.desp { background: rgba(255,77,77,0.1); color: var(--verm); }
+.item-ico.pend { background: rgba(255,204,0,0.1); color: var(--amar); }
 
-.item-desc { font-weight: 900; font-size: 1rem; margin-bottom: 4px; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
-.item-val { font-weight: 900; font-size: 1.2rem; margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+.item-body { flex: 1; overflow: hidden; }
+.item-desc { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; color: var(--text); letter-spacing: -0.3px; }
+.item-meta { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+.item-obs { font-size: 0.75rem; color: var(--amar); font-style: italic; margin-top: 4px; opacity: 0.8; }
+
+.item-right { text-align: right; min-width: 100px; }
+.item-val { font-weight: 900; font-size: 1.2rem; margin-bottom: 4px; letter-spacing: -0.5px; }
+.item-val.rec { color: var(--verde); }
+.item-val.desp { color: var(--verm); }
 .item-val.rec { color: var(--verde); }
 .item-val.desp { color: var(--verm); }
 .item-val.pend { color: var(--amar); }
