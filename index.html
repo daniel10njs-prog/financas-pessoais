@@ -843,12 +843,6 @@ const EMOJIS = [
 ];
 let selectedEmoji = 'dollar-sign';
 
-const catNome     = c => {
-  if (!c) return '';
-  const parts = c.split(' ');
-  if (parts.length > 1) return parts.slice(1).join(' ');
-  return c;
-};
 const catEmoji    = c => {
   if (!c) return 'circle';
   const parts = c.trim().split(' ');
