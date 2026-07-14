@@ -12,67 +12,77 @@
   --bg: #0f172a; --card: #1e293b; --card2: #253047; --border: #334155; --text: #f1f5f9; --muted: #94a3b8;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding-bottom: 24px; }
-header { padding: 18px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding-bottom: 80px; min-height: 100vh; }
+
+/* Header Fixo */
+header { padding: 18px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 100; }
 header h1 { font-size: 1.2rem; font-weight: 700; }
 .sync-btn { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); padding: 5px 8px; font-size: .75rem; cursor: pointer; }
-.tab-nav { display: flex; border-bottom: 1px solid var(--border); background: var(--card); }
-.tab-nav button { flex: 1; padding: 12px 4px; background: none; border: none; color: var(--muted); font-size: .85rem; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
-.tab-nav button.active { color: var(--text); border-bottom-color: var(--azul); }
-.cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 14px 12px; }
+
+/* Navegação Inferior (Novo padrão Mobile) */
+.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--card); border-top: 1px solid var(--border); display: flex; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
+.bottom-nav button { flex: 1; padding: 14px 0; background: none; border: none; color: var(--muted); font-size: .7rem; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.bottom-nav button i { font-size: 1.2rem; font-style: normal; }
+.bottom-nav button.active { color: var(--azul); }
+
+/* Conteúdo */
+.content-section { display: none; padding: 14px 12px; }
+.content-section.active { display: block; }
+
+/* Cards e Listas */
+.cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
 .card { background: var(--card); border-radius: 12px; padding: 12px 10px; border: 1px solid var(--border); text-align: center; }
 .card .label { font-size: .65rem; text-transform: uppercase; color: var(--muted); }
 .card .value { font-size: 1rem; font-weight: 700; }
 .card.rec .value { color: var(--verde); } .card.desp .value { color: var(--vermelho); } .card.saldo .value { color: var(--azul); }
-.real-card { background: rgba(59, 130, 246, 0.1); border: 1px dashed var(--azul); margin: 0 12px 12px; padding: 12px; border-radius: 12px; text-align: center; }
+
+.real-card { background: rgba(59, 130, 246, 0.1); border: 1px dashed var(--azul); margin-bottom: 16px; padding: 12px; border-radius: 12px; text-align: center; }
 .real-card .label { font-size: .7rem; color: var(--azul); font-weight: 700; }
 .real-card .value { font-size: 1.2rem; font-weight: 800; }
 
-.action-buttons { display: flex; gap: 12px; padding: 0 12px 16px; }
-.btn-action { flex: 1; padding: 16px; border-radius: 14px; border: none; color: #fff; font-size: 1.2rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+.action-buttons { display: flex; gap: 12px; margin-bottom: 16px; }
+.btn-action { flex: 1; padding: 16px; border-radius: 14px; border: none; color: #fff; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
 .btn-action.plus { background: var(--verde); }
 .btn-action.minus { background: var(--vermelho); }
 
-/* MODAL */
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+.list { display: flex; flex-direction: column; gap: 8px; }
+.item { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.item-info { display: flex; align-items: center; gap: 12px; }
+.item-icon { font-size: 1.4rem; background: var(--card2); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
+.item-text b { font-size: .95rem; }
+.item-text div { font-size: .7rem; color: var(--muted); }
+.item-val { font-weight: 700; }
+.item-val.receita { color: var(--verde); } .item-val.despesa { color: var(--vermelho); }
+
+/* Modais */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
 .modal-overlay.show { display: flex; }
-.modal { background: var(--card); border-radius: 20px; padding: 24px; width: 100%; max-width: 380px; border: 1px solid var(--border); position: relative; }
+.modal { background: var(--card); border-radius: 20px; padding: 24px; width: 100%; max-width: 380px; border: 1px solid var(--border); }
 .modal h2 { margin-bottom: 20px; font-size: 1.2rem; }
 .form-group { margin-bottom: 16px; }
 .form-group label { display: block; font-size: .75rem; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; }
 .form-group input, .form-group select { width: 100%; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: #fff; font-size: 1rem; outline: none; }
 .modal-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
-.modal-actions-row { display: flex; gap: 10px; width: 100%; }
-.btn-save { flex: 2; padding: 14px; border-radius: 10px; border: none; background: var(--azul); color: #fff; font-weight: 700; cursor: pointer; }
-.btn-cancel { flex: 1; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: none; color: var(--muted); font-weight: 600; cursor: pointer; }
-.btn-delete { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--vermelho); background: rgba(239, 68, 68, 0.1); color: var(--vermelho); font-weight: 600; cursor: pointer; margin-top: 5px; }
+.btn-save { padding: 14px; border-radius: 10px; border: none; background: var(--azul); color: #fff; font-weight: 700; cursor: pointer; }
+.btn-cancel { padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: none; color: var(--muted); font-weight: 600; cursor: pointer; }
+.btn-delete { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--vermelho); background: rgba(239, 68, 68, 0.1); color: var(--vermelho); font-weight: 600; cursor: pointer; }
 
-/* LISTA */
-.list { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
-.item { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.1s; }
-.item:active { transform: scale(0.98); }
-.item-info { display: flex; align-items: center; gap: 12px; pointer-events: none; }
-.item-icon { font-size: 1.4rem; background: var(--card2); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
-.item-text b { font-size: .95rem; }
-.item-text div { font-size: .7rem; color: var(--muted); }
-.item-val { font-weight: 700; white-space: nowrap; pointer-events: none; }
-.item-val.receita { color: var(--verde); } .item-val.despesa { color: var(--vermelho); }
+/* Widgets de Metas e Reservas */
+.widget { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+.widget-title { font-size: .8rem; font-weight: 700; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; }
+.progress-bar { height: 10px; background: var(--card2); border-radius: 5px; overflow: hidden; margin: 10px 0; }
+.progress-fill { height: 100%; background: var(--azul); width: 0%; transition: width 0.5s; }
 </style>
 </head>
 <body>
+
 <header>
   <h1>💰 Finanças</h1>
-  <div class="header-sync">
-    <button class="sync-btn" onclick="exportCSV()">📊 CSV</button>
-  </div>
+  <button class="sync-btn" onclick="exportCSV()">📊 EXPORTAR</button>
 </header>
-<div class="tab-nav">
-  <button class="active" onclick="setTab('lancamentos')">Lançamentos</button>
-  <button onclick="setTab('pendencias')">Pendências</button>
-  <button onclick="setTab('graficos')">Análise</button>
-</div>
 
-<div id="tab-lancamentos">
+<!-- SEÇÃO LANÇAMENTOS -->
+<section id="sec-lancamentos" class="content-section active">
   <div class="cards">
     <div class="card rec"><div class="label">Receitas</div><div class="value" id="totalRec">R$ 0</div></div>
     <div class="card desp"><div class="label">Despesas</div><div class="value" id="totalDesp">R$ 0</div></div>
@@ -85,73 +95,93 @@ header h1 { font-size: 1.2rem; font-weight: 700; }
     <button class="btn-action minus" onclick="openModal('despesa')">－ Despesa</button>
   </div>
 
-  <div id="search-container" style="padding: 0 12px 12px;">
-    <input id="searchInput" type="text" placeholder="🔍 Buscar lançamento..." onkeyup="render()" style="width:100%; background:var(--card2); border:1px solid var(--border); border-radius:10px; color:#fff; padding:10px;">
+  <input id="searchInput" type="text" placeholder="🔍 Buscar lançamento..." onkeyup="render()" style="width:100%; background:var(--card2); border:1px solid var(--border); border-radius:10px; color:#fff; padding:12px; margin-bottom:16px;">
+  
+  <div class="list" id="list"></div>
+</section>
+
+<!-- SEÇÃO PLANEJAMENTO (NOVA) -->
+<section id="sec-planejamento" class="content-section">
+  <div class="widget">
+    <div class="widget-title">🎯 Reserva de Emergência</div>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div id="reservaValue" style="font-size:1.5rem; font-weight:800;">R$ 0,00</div>
+      <button class="sync-btn" onclick="openReservaModal()">ADICIONAR</button>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="reservaProgress"></div></div>
+    <div style="font-size:.7rem; color:var(--muted)">Foco: Crescimento progressivo</div>
   </div>
 
-  <div class="list" id="list"></div>
-</div>
+  <div class="widget">
+    <div class="widget-title">📅 Pendências do Mês</div>
+    <div class="list" id="listPend"></div>
+  </div>
+</section>
 
-<div id="tab-pendencias" style="display:none">
-  <div class="list" id="listPend" style="margin-top:20px"></div>
-</div>
+<!-- SEÇÃO ANÁLISE -->
+<section id="sec-analise" class="content-section">
+  <div class="widget" style="text-align:center;">
+    <div class="widget-title">📊 Gastos por Categoria</div>
+    <canvas id="myChart" style="max-height:300px;"></canvas>
+  </div>
+</section>
 
-<div id="tab-graficos" style="display:none"><div class="form-box" style="text-align:center; padding:20px;"><canvas id="myChart"></canvas></div></div>
+<!-- NAVEGAÇÃO INFERIOR -->
+<nav class="bottom-nav">
+  <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><i>📝</i>Lançamentos</button>
+  <button id="nav-planejamento" onclick="setTab('planejamento')"><i>🎯</i>Planejar</button>
+  <button id="nav-analise" onclick="setTab('analise')"><i>📈</i>Análise</button>
+</nav>
 
-<!-- MODAL DE LANÇAMENTO -->
+<!-- MODAIS -->
 <div class="modal-overlay" id="modalEntry">
   <div class="modal">
     <h2 id="modalTitle">Novo Lançamento</h2>
     <input type="hidden" id="editId">
-    <div class="form-group">
-      <label>Descrição</label>
-      <input id="desc" type="text" placeholder="Ex: Salário, Mercado...">
-    </div>
-    <div class="form-group">
-      <label>Valor (R$)</label>
-      <input id="val" type="number" step="0.01" placeholder="0,00">
-    </div>
-    <div class="form-group">
-      <label>Tipo / Categoria</label>
-      <select id="tipoSub"></select>
-    </div>
+    <div class="form-group"><label>Descrição</label><input id="desc" type="text"></div>
+    <div class="form-group"><label>Valor (R$)</label><input id="val" type="number" step="0.01"></div>
+    <div class="form-group"><label>Tipo / Categoria</label><select id="tipoSub"></select></div>
     <div class="modal-actions">
-      <div class="modal-actions-row">
-        <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-        <button class="btn-save" onclick="saveEntry()">Salvar</button>
-      </div>
-      <button id="btnDelete" class="btn-delete" style="display:none;" onclick="deleteEntry()">Excluir Lançamento</button>
+      <div style="display:flex; gap:10px;"><button class="btn-cancel" onclick="closeModal()" style="flex:1">Voltar</button><button class="btn-save" onclick="saveEntry()" style="flex:1">Salvar</button></div>
+      <button id="btnDelete" class="btn-delete" style="display:none;" onclick="deleteEntry()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalReserva">
+  <div class="modal">
+    <h2>Reserva de Emergência</h2>
+    <div class="form-group"><label>Valor para Adicionar (R$)</label><input id="reservaAdd" type="number" step="0.01"></div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="saveReserva()">Confirmar</button>
+      <button class="btn-cancel" onclick="closeReservaModal()">Cancelar</button>
     </div>
   </div>
 </div>
 
 <script>
-let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { items: [], pendencias: [] };
+let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { items: [], pendencias: [], reserva: 0 };
 let chartInstance = null;
-let currentMode = 'receita';
-
-const icons = {
-  'Salário': '💰', 'Pix Recebido': '💸', 'Ajuste': '⚙️',
-  'Alimentação': '🍽️', 'Transporte': '🚗', 'Moradia': '🏠', 'Lazer': '🎡', 'Saúde': '🏥', 'Outros': '📦'
-};
-
-const categorias = {
-  'receita': ['Salário', 'Pix Recebido', 'Ajuste'],
-  'despesa': ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros']
-};
+const icons = { 'Salário': '💰', 'Pix Recebido': '💸', 'Ajuste': '⚙️', 'Alimentação': '🍽️', 'Transporte': '🚗', 'Moradia': '🏠', 'Lazer': '🎡', 'Saúde': '🏥', 'Outros': '📦' };
+const categorias = { 'receita': ['Salário', 'Pix Recebido', 'Ajuste'], 'despesa': ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'] };
 
 function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
-function setTab(tab) { ['lancamentos', 'pendencias', 'graficos'].forEach(t => document.getElementById('tab-'+t).style.display = (t===tab?'block':'none')); render(); }
+
+function setTab(tab) {
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-'+tab).classList.add('active');
+  document.getElementById('nav-'+tab).classList.add('active');
+  if(tab==='analise') initChart();
+  render();
+}
 
 function openModal(mode, id = null) {
-  currentMode = mode;
   const select = document.getElementById('tipoSub');
-  select.innerHTML = '';
-  categorias[mode].forEach(cat => { select.innerHTML += `<option value="${cat}">${cat}</option>`; });
-
-  if (id) {
+  select.innerHTML = ''; categorias[mode].forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
+  if(id) {
     const item = db.items.find(x => x.id === id);
-    document.getElementById('modalTitle').innerText = 'Editar Lançamento';
+    document.getElementById('modalTitle').innerText = 'Editar';
     document.getElementById('editId').value = id;
     document.getElementById('desc').value = item.desc;
     document.getElementById('val').value = item.val;
@@ -160,60 +190,50 @@ function openModal(mode, id = null) {
   } else {
     document.getElementById('modalTitle').innerText = mode === 'receita' ? 'Nova Receita' : 'Nova Despesa';
     document.getElementById('editId').value = '';
+    document.getElementById('desc').value = ''; document.getElementById('val').value = '';
     document.getElementById('btnDelete').style.display = 'none';
-    document.getElementById('desc').value = '';
-    document.getElementById('val').value = '';
   }
   document.getElementById('modalEntry').classList.add('show');
 }
-
-function closeModal() {
-  document.getElementById('modalEntry').classList.remove('show');
-}
+function closeModal() { document.getElementById('modalEntry').classList.remove('show'); }
 
 function saveEntry() {
-  const d = document.getElementById('desc').value;
-  const v = parseFloat(document.getElementById('val').value);
-  const s = document.getElementById('tipoSub').value;
-  const id = document.getElementById('editId').value;
+  const d = document.getElementById('desc').value, v = parseFloat(document.getElementById('val').value), s = document.getElementById('tipoSub').value, id = document.getElementById('editId').value;
   if(!d || !v) return;
-
-  if (id) {
-    const idx = db.items.findIndex(x => x.id == id);
-    db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s };
-  } else {
-    db.items.push({ id: Date.now(), desc: d, val: v, tipo: currentMode, sub: s, data: new Date().toISOString() });
-  }
+  if(id) { const idx = db.items.findIndex(x => x.id == id); db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s }; }
+  else db.items.push({ id: Date.now(), desc: d, val: v, tipo: d.includes('Receita')||categorias.receita.includes(s)?'receita':'despesa', sub: s, data: new Date().toISOString() });
   save(); closeModal();
 }
+function deleteEntry() { db.items = db.items.filter(x => x.id != document.getElementById('editId').value); save(); closeModal(); }
 
-function deleteEntry() {
-  const id = document.getElementById('editId').value;
-  db.items = db.items.filter(x => x.id != id);
-  save(); closeModal();
+function openReservaModal() { document.getElementById('modalReserva').classList.add('show'); }
+function closeReservaModal() { document.getElementById('modalReserva').classList.remove('show'); }
+function saveReserva() { const v = parseFloat(document.getElementById('reservaAdd').value); if(v) { db.reserva = (db.reserva||0) + v; save(); closeReservaModal(); } }
+
+function initChart() {
+  const ctx = document.getElementById('myChart').getContext('2d');
+  if(chartInstance) chartInstance.destroy();
+  const totals = {}; db.items.filter(i=>i.tipo==='despesa').forEach(i => totals[i.sub] = (totals[i.sub]||0) + i.val);
+  chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(totals), datasets: [{ data: Object.values(totals), backgroundColor: ['#ef4444', '#3b82f6', '#f59e0b', '#22c55e', '#8b5cf6', '#ec4899'] }] }, options: { plugins: { legend: { position: 'bottom', labels: { color: '#f1f5f9' } } } } });
 }
 
 function render() {
-    const s = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = db.items.filter(i => i.desc.toLowerCase().includes(s));
-    let r=0, d=0; filtered.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val);
-    const pTotal = db.pendencias.reduce((a,b)=>a+b.val, 0);
-    
-    document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR', {minimumFractionDigits:2});
-    document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR', {minimumFractionDigits:2});
-    document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR', {minimumFractionDigits:2});
-    document.getElementById('saldoReal').innerText = 'R$ '+(r-d-pTotal).toLocaleString('pt-BR', {minimumFractionDigits:2});
-    
-    const l = document.getElementById('list'); l.innerHTML = '';
-    filtered.slice().reverse().forEach(i => {
-        l.innerHTML += `<div class="item" onclick="openModal('${i.tipo}', ${i.id})">
-            <div class="item-info">
-                <div class="item-icon">${icons[i.sub] || '📦'}</div>
-                <div class="item-text"><b>${i.desc}</b><div>${i.sub}</div></div>
-            </div>
-            <b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b>
-        </div>`;
-    });
+  const s = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = db.items.filter(i => i.desc.toLowerCase().includes(s));
+  let r=0, d=0; filtered.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val);
+  
+  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR');
+  document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR');
+  document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
+  document.getElementById('saldoReal').innerText = 'R$ '+(r-d-(db.pendencias||[]).reduce((a,b)=>a+b.val,0)).toLocaleString('pt-BR');
+  
+  document.getElementById('reservaValue').innerText = 'R$ '+(db.reserva||0).toLocaleString('pt-BR');
+  document.getElementById('reservaProgress').style.width = Math.min((db.reserva/5000)*100, 100) + '%';
+
+  const l = document.getElementById('list'); l.innerHTML = '';
+  filtered.slice().reverse().forEach(i => {
+    l.innerHTML += `<div class="item" onclick="openModal('${i.tipo}', ${i.id})"><div class="item-info"><div class="item-icon">${icons[i.sub]||'📦'}</div><div class="item-text"><b>${i.desc}</b><div>${i.sub}</div></div></div><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b></div>`;
+  });
 }
 window.onload = render;
 </script>
