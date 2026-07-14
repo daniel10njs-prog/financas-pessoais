@@ -3,7 +3,7 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
-    <title>Zapia Finance Executive v18</title>
+    <title>Finanças Executive v19</title>
     <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css' rel='stylesheet'>
     <style>
@@ -13,14 +13,31 @@
             --border: rgba(255, 255, 255, 0.15);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 110px; max-width: 500px; margin: 0 auto; min-height: 100vh; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 110px; max-width: 500px; margin: 0 auto; min-height: 100vh; overflow-x: hidden; }
         
+        /* HEADER ESTILIZADO */
         header { padding: 24px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
-        header h1 { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
-        
+        header h1 { font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; }
+        .menu-dots { padding: 10px; cursor: pointer; color: var(--primary); font-size: 1.4rem; }
+
+        /* MENU DROPDOWN */
+        #mainMenu { 
+            position: fixed; top: 70px; right: 20px; background: #1a1a1a; border: 1px solid var(--border); 
+            border-radius: 12px; width: 220px; display: none; flex-direction: column; z-index: 3000; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden;
+        }
+        .menu-item { padding: 16px; display: flex; align-items: center; gap: 12px; font-size: 0.85rem; font-weight: 600; color: white; cursor: pointer; border-bottom: 1px solid var(--border); }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-item i { font-size: 1.1rem; color: var(--muted); }
+        .menu-item:active { background: #333; }
+
         .tab-content { display: none; padding: 20px; animation: androidFade 0.2s ease-out; }
         .tab-content.active { display: block; }
         @keyframes androidFade { from { opacity: 0; } to { opacity: 1; } }
+
+        /* TÍTULOS COM ÍCONES */
+        .tab-title { display: flex; align-items: center; gap: 12px; font-size: 0.75rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 24px; letter-spacing: 0.1em; }
+        .tab-title i { font-size: 1.2rem; color: var(--primary); }
 
         .summary-val { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 24px; }
         .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 24px; }
@@ -34,116 +51,120 @@
         .btn-primary { background: var(--primary); color: #000; }
         .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
 
-        /* LISTA REESTRUTURADA PARA VISIBILIDADE */
-        .list-header { font-size: 0.7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin: 32px 0 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        .transaction-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 12px; }
+        .transaction-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
         .trans-main { display: flex; justify-content: space-between; align-items: flex-start; }
-        .trans-info { display: flex; flex-direction: column; gap: 4px; }
-        .trans-name { font-size: 1rem; font-weight: 700; }
-        .trans-meta { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; font-weight: 600; }
-        .trans-val { font-size: 1.1rem; font-weight: 800; }
-        
-        .trans-actions-row { display: flex; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px; }
-        .btn-action { flex: 1; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--primary); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-        .btn-action i { font-size: 1rem; }
-        .btn-delete { color: var(--down); }
+        .trans-actions-row { display: flex; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
+        .btn-action { flex: 1; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--primary); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.75rem; font-weight: 700; }
 
         .android-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; border-top: 1px solid var(--border); display: flex; height: 75px; z-index: 2000; padding-bottom: env(safe-area-inset-bottom); }
         .nav-link { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); }
         .nav-link.active { color: var(--primary); }
         .nav-link span { font-size: 0.6rem; font-weight: 600; margin-top: 4px; }
 
-        #editModeBadgeL, #editModeBadgeP { background: var(--accent); color: white; padding: 6px 16px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; display: none; margin-bottom: 16px; text-transform: uppercase; width: 100%; text-align: center; }
+        #editBadge { background: var(--accent); color: white; padding: 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; display: none; margin-bottom: 16px; width: 100%; text-align: center; text-transform: uppercase; }
+        
+        /* OVERLAY PARA O MENU */
+        #menuOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2500; display: none; }
     </style>
 </head>
 <body>
 
+<div id='menuOverlay' onclick='toggleMenu()'></div>
+
 <header>
-    <h1>Zapia Executivo</h1>
-    <div style='display:flex; gap:20px; color:var(--muted)'>
-        <i class='lucide-download' onclick='exportar()'></i>
-        <i class='lucide-rotate-ccw' onclick='resetAll()'></i>
+    <h1>Finanças</h1>
+    <div class='menu-dots' onclick='toggleMenu()'>
+        <i class='lucide-more-vertical'></i>
     </div>
 </header>
 
+<div id='mainMenu'>
+    <div class='menu-item' onclick='exportToClipboard()'><i class='lucide-copy'></i> Copiar Backup (Drive)</div>
+    <div class='menu-item' onclick='importFromClipboard()'><i class='lucide-file-input'></i> Importar do Drive</div>
+    <div class='menu-item' onclick='exportar()'><i class='lucide-download'></i> Exportar Arquivo .JSON</div>
+    <div class='menu-item' onclick='toggleTheme()'><i class='lucide-moon'></i> Alternar Tema</div>
+    <div class='menu-item' onclick='resetAll()' style='color:var(--down)'><i class='lucide-trash-2' style='color:var(--down)'></i> Limpar Tudo</div>
+</div>
+
+<!-- INÍCIO -->
 <div id='view-lancar' class='tab-content active'>
-    <div id='editModeBadgeL'>Modo Edição Ativo</div>
+    <div class='tab-title'><i class='lucide-layout-grid'></i> Painel Executivo</div>
+    <div id='editBadge'>Modo Edição Ativo</div>
     <div class='summary-val' id='lSaldo'>R$ 0,00</div>
     <div class='summary-grid'>
-        <div class='grid-item'><span style='font-size:0.6rem; color:var(--muted); font-weight:700'>GANHOS</span><div id='lRec' style='color:var(--up); font-weight:800; font-size:1.1rem'>R$ 0,00</div></div>
-        <div class='grid-item'><span style='font-size:0.6rem; color:var(--muted); font-weight:700'>GASTOS</span><div id='lDesp' style='color:var(--down); font-weight:800; font-size:1.1rem'>R$ 0,00</div></div>
+        <div class='grid-item'><span style='font-size:0.6rem; color:var(--muted); font-weight:700'>GANHOS</span><div id='lRec' style='color:var(--up); font-weight:800'>R$ 0,00</div></div>
+        <div class='grid-item'><span style='font-size:0.6rem; color:var(--muted); font-weight:700'>GASTOS</span><div id='lDesp' style='color:var(--down); font-weight:800'>R$ 0,00</div></div>
     </div>
-
-    <div class='input-field'><label>Descrição</label><input type='text' id='fDesc' placeholder='O que foi?'></div>
+    <div class='input-field'><label>Descrição</label><input type='text' id='fDesc'></div>
     <div style='display:flex; gap:12px'>
-        <div class='input-field' style='flex:1'><label>Valor</label><input type='number' id='fVal' placeholder='0.00'></div>
+        <div class='input-field' style='flex:1'><label>Valor</label><input type='number' id='fVal'></div>
         <div class='input-field' style='flex:1'><label>Categoria</label>
-            <select id='fCat'>
-                <option value='Corporativo'>Corporativo</option>
-                <option value='Estilo de Vida'>Estilo de Vida</option>
-                <option value='Saúde'>Saúde</option>
-                <option value='Custo Fixo'>Custo Fixo</option>
-                <option value='Investimento'>Investimento</option>
-            </select>
+            <select id='fCat'><option value='Corporativo'>Corporativo</option><option value='Estilo de Vida'>Estilo de Vida</option><option value='Saúde'>Saúde</option><option value='Custo Fixo'>Custo Fixo</option><option value='Investimento'>Investimento</option></select>
         </div>
     </div>
-    
-    <div id='formLancarBtns' style='display:flex; gap:12px'>
-        <button class='btn-exec btn-secondary' onclick='add("desp")'>Gasto</button>
-        <button class='btn-exec btn-primary' onclick='add("rec")'>Ganho</button>
-    </div>
-    <div id='editLancarBtns' style='display:none; gap:12px'>
-        <button class='btn-exec btn-secondary' onclick='cancelEdit()'>Cancelar</button>
-        <button class='btn-exec btn-primary' onclick='saveUpdate()'>Salvar Alteração</button>
-    </div>
-
-    <h2 class='list-header'>Transações Recentes</h2>
-    <div id='lList'></div>
+    <div id='formBtns' style='display:flex; gap:12px'><button class='btn-exec btn-secondary' onclick='add("desp")'>Gasto</button><button class='btn-exec btn-primary' onclick='add("rec")'>Ganho</button></div>
+    <div id='editBtns' style='display:none; gap:12px'><button class='btn-exec btn-secondary' onclick='cancelEdit()'>Cancelar</button><button class='btn-exec btn-primary' onclick='saveUpdate()'>Salvar</button></div>
+    <div id='lList' style='margin-top:30px'></div>
 </div>
 
+<!-- CONTAS -->
 <div id='view-contas' class='tab-content'>
-    <div id='editModeBadgeP'>Modo Edição Ativo</div>
+    <div class='tab-title'><i class='lucide-layers'></i> Obrigações e Contas</div>
     <div class='summary-val' style='color:var(--warn)' id='pTotal'>R$ 0,00</div>
-    <div class='input-field'><label>Nome da Conta</label><input type='text' id='pDesc' placeholder='Ex: Aluguel'></div>
-    <div class='input-field'><label>Valor</label><input type='number' id='pVal' placeholder='0.00'></div>
-    
-    <button id='btnNewPend' class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Agendar Conta</button>
-    <div id='editPendBtns' style='display:none; gap:12px'>
-        <button class='btn-exec btn-secondary' onclick='cancelEdit()'>Cancelar</button>
-        <button class='btn-exec btn-primary' onclick='saveUpdate()'>Salvar Alteração</button>
-    </div>
-    
-    <h2 class='list-header'>Contas a Pagar</h2>
-    <div id='pList'></div>
+    <div class='input-field'><label>Nome</label><input type='text' id='pDesc'></div>
+    <div class='input-field'><label>Valor</label><input type='number' id='pVal'></div>
+    <button id='btnNewP' class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Agendar</button>
+    <div id='pList' style='margin-top:30px'></div>
 </div>
 
-<!-- OUTRAS ABAS (Skeletal para manter v18 leve) -->
-<div id='view-analise' class='tab-content'><div id='cList'></div></div>
-<div id='view-ia' class='tab-content' style='text-align:center; padding-top:40px'><p id='iaMsg'></p></div>
-<div id='view-anual' class='tab-content'><div id='aList'></div></div>
-<div id='view-metas' class='tab-content'><div class='input-field'><label>Meta</label><input type='text' id='mNome'></div><div class='input-field'><label>Alvo</label><input type='number' id='mAlvo'></div><button class='btn-exec btn-primary' style='width:100%' onclick='addGoal()'>Fixar</button><div id='mList' style='margin-top:20px'></div></div>
-<div id='view-simular' class='tab-content' style='text-align:center'><span style='color:var(--muted); font-size:0.7rem'>SALDO LÍQUIDO SIMULADO</span><div class='summary-val' id='simVal'>R$ 0,00</div></div>
+<!-- ANALISE -->
+<div id='view-analise' class='tab-content'><div class='tab-title'><i class='lucide-pie-chart'></i> Análise de Fluxo</div><div id='cList'></div></div>
+
+<!-- ZAPIA IA -->
+<div id='view-ia' class='tab-content'><div class='tab-title'><i class='lucide-zap'></i> Zapia Intelligence</div><p id='iaMsg'></p></div>
 
 <nav class='android-nav'>
     <div class='nav-link active' onclick='switchTab("lancar")'><i class='lucide-layout-grid'></i><span>Início</span></div>
     <div class='nav-link' onclick='switchTab("contas")'><i class='lucide-layers'></i><span>Contas</span></div>
     <div class='nav-link' onclick='switchTab("analise")'><i class='lucide-pie-chart'></i><span>Status</span></div>
-    <div class='nav-link' onclick='switchTab("ia")'><i class='lucide-zap'></i><span>Zapia</span></div>
-    <div class='nav-link' onclick='switchTab("anual")'><i class='lucide-calendar'></i><span>Anual</span></div>
-    <div class='nav-link' onclick='switchTab("metas")'><i class='lucide-target'></i><span>Metas</span></div>
-    <div class='nav-link' onclick='switchTab("simular")'><i class='lucide-scale'></i><span>Simular</span></div>
+    <div class='nav-link' onclick='switchTab("ia")'><i class='lucide-zap'></i><span>IA</span></div>
 </nav>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('zapia_exec_v18')) || { items: [], goals: [] };
+    let db = JSON.parse(localStorage.getItem('financas_v19')) || { items: [], goals: [] };
     let editingId = null;
+
+    function toggleMenu() {
+        const m = document.getElementById('mainMenu'), o = document.getElementById('menuOverlay');
+        const show = m.style.display !== 'flex';
+        m.style.display = show ? 'flex' : 'none';
+        o.style.display = show ? 'block' : 'none';
+    }
+
+    function exportToClipboard() {
+        const data = JSON.stringify(db);
+        navigator.clipboard.writeText(data).then(() => {
+            alert('Dados copiados! Cole-os no seu arquivo do Drive para salvar.');
+            toggleMenu();
+        });
+    }
+
+    function importFromClipboard() {
+        const data = prompt('Cole aqui os dados salvos do seu Drive:');
+        if(data) {
+            try {
+                const parsed = JSON.parse(data);
+                if(parsed.items) { db = parsed; save(); alert('Dados importados com sucesso!'); }
+            } catch(e) { alert('Erro: Dados inválidos.'); }
+        }
+        toggleMenu();
+    }
 
     function switchTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + t).classList.add('active');
         event.currentTarget.classList.add('active');
-        cancelEdit();
         render();
     }
 
@@ -162,27 +183,15 @@
     }
 
     function editItem(id) {
-        editingId = id;
-        const item = db.items.find(x => x.id === id);
+        editingId = id; const item = db.items.find(x => x.id === id);
         if(!item) return;
-
         if(item.tipo === 'pend') {
-            switchTabNoClear('contas');
-            document.getElementById('pDesc').value = item.desc;
-            document.getElementById('pVal').value = item.val;
-            document.getElementById('btnNewPend').style.display = 'none';
-            document.getElementById('editPendBtns').style.display = 'flex';
-            document.getElementById('editModeBadgeP').style.display = 'block';
+            switchTabNoClear('contas'); document.getElementById('pDesc').value = item.desc; document.getElementById('pVal').value = item.val;
         } else {
-            switchTabNoClear('lancar');
-            document.getElementById('fDesc').value = item.desc;
-            document.getElementById('fVal').value = item.val;
-            document.getElementById('fCat').value = item.cat;
-            document.getElementById('formLancarBtns').style.display = 'none';
-            document.getElementById('editLancarBtns').style.display = 'flex';
-            document.getElementById('editModeBadgeL').style.display = 'block';
+            switchTabNoClear('lancar'); document.getElementById('fDesc').value = item.desc; document.getElementById('fVal').value = item.val; document.getElementById('fCat').value = item.cat;
+            document.getElementById('formBtns').style.display = 'none'; document.getElementById('editBtns').style.display = 'flex'; document.getElementById('editBadge').style.display = 'block';
         }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({top:0, behavior:'smooth'});
     }
 
     function switchTabNoClear(t) {
@@ -191,82 +200,39 @@
     }
 
     function saveUpdate() {
-        const index = db.items.findIndex(x => x.id === editingId);
-        if(index === -1) return;
-        const item = db.items[index];
-        if(item.tipo === 'pend') {
-            item.desc = document.getElementById('pDesc').value;
-            item.val = parseFloat(document.getElementById('pVal').value);
-        } else {
-            item.desc = document.getElementById('fDesc').value;
-            item.val = parseFloat(document.getElementById('fVal').value);
-            item.cat = document.getElementById('fCat').value;
+        const item = db.items.find(x => x.id === editingId);
+        if(item) {
+            if(item.tipo === 'pend') { item.desc = document.getElementById('pDesc').value; item.val = parseFloat(document.getElementById('pVal').value); }
+            else { item.desc = document.getElementById('fDesc').value; item.val = parseFloat(document.getElementById('fVal').value); item.cat = document.getElementById('fCat').value; }
         }
-        cancelEdit();
-        save();
+        cancelEdit(); save();
     }
 
     function cancelEdit() {
-        editingId = null;
-        document.getElementById('fDesc').value = ''; document.getElementById('fVal').value = '';
-        document.getElementById('pDesc').value = ''; document.getElementById('pVal').value = '';
-        document.getElementById('formLancarBtns').style.display = 'flex';
-        document.getElementById('editLancarBtns').style.display = 'none';
-        document.getElementById('btnNewPend').style.display = 'block';
-        document.getElementById('editPendBtns').style.display = 'none';
-        document.getElementById('editModeBadgeL').style.display = 'none';
-        document.getElementById('editModeBadgeP').style.display = 'none';
+        editingId = null; document.getElementById('fDesc').value = ''; document.getElementById('fVal').value = '';
+        document.getElementById('formBtns').style.display = 'flex'; document.getElementById('editBtns').style.display = 'none'; document.getElementById('editBadge').style.display = 'none';
     }
 
-    function deleteItem(id) {
-        if(confirm('Excluir permanentemente?')) {
-            db.items = db.items.filter(x => x.id !== id);
-            save();
-        }
-    }
-
-    function save() { localStorage.setItem('zapia_exec_v18', JSON.stringify(db)); render(); }
-    function exportar() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); const a = document.createElement('a'); a.href = dataStr; a.download = "zapia_backup.json"; a.click(); }
-    function resetAll() { if(confirm('Apagar todos os dados?')) { db = {items:[], goals:[]}; save(); } }
+    function deleteItem(id) { if(confirm('Excluir?')) { db.items = db.items.filter(x => x.id !== id); save(); } }
+    function save() { localStorage.setItem('financas_v19', JSON.stringify(db)); render(); }
+    function exportar() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); const a = document.createElement('a'); a.href = dataStr; a.download = "backup.json"; a.click(); }
+    function resetAll() { if(confirm('Apagar tudo?')) { db = {items:[], goals:[]}; save(); toggleMenu(); } }
+    function toggleTheme() { document.body.style.filter = document.body.style.filter ? '' : 'invert(1) hue-rotate(180deg)'; toggleMenu(); }
 
     function render() {
         let rec = 0, desp = 0, pnd = 0;
         const lList = document.getElementById('lList'); lList.innerHTML = '';
         const pList = document.getElementById('pList'); pList.innerHTML = '';
-        
         db.items.forEach(i => {
-            if(i.tipo === 'rec') rec += i.val;
-            else if(i.tipo === 'desp') desp += i.val;
-            else if(i.tipo === 'pend') pnd += i.val;
-
+            if(i.tipo === 'rec') rec += i.val; else if(i.tipo === 'desp') desp += i.val; else if(i.tipo === 'pend') pnd += i.val;
             const color = i.tipo === 'rec' ? 'var(--up)' : (i.tipo === 'pend' ? 'var(--warn)' : 'var(--down)');
-            
-            const html = `
-                <div class='transaction-card'>
-                    <div class='trans-main'>
-                        <div class='trans-info'>
-                            <span class='trans-name'>${i.desc}</span>
-                            <span class='trans-meta'>${i.cat} • ${new Date(i.date).toLocaleDateString('pt-BR')}</span>
-                        </div>
-                        <div class='trans-val' style='color:${color}'>R$ ${i.val.toLocaleString('pt-BR')}</div>
-                    </div>
-                    <div class='trans-actions-row'>
-                        <button class='btn-action' onclick='editItem(${i.id})'>
-                            <i class='lucide-edit-3'></i> EDITAR
-                        </button>
-                        <button class='btn-action btn-delete' onclick='deleteItem(${i.id})'>
-                            <i class='lucide-trash-2'></i> EXCLUIR
-                        </button>
-                    </div>
-                </div>`;
+            const html = `<div class='transaction-card'><div class='trans-main'><div style='display:flex; flex-direction:column; gap:4px'><span style='font-weight:700'>${i.desc}</span><span style='font-size:0.7rem; color:var(--muted); text-transform:uppercase'>${i.cat}</span></div><div style='font-weight:800; color:${color}'>R$ ${i.val.toLocaleString('pt-BR')}</div></div><div class='trans-actions-row'><button class='btn-action' onclick='editItem(${i.id})'><i class='lucide-edit-3'></i> EDITAR</button><button class='btn-action' style='color:var(--down)' onclick='deleteItem(${i.id})'><i class='lucide-trash-2'></i> EXCLUIR</button></div></div>`;
             if(i.tipo === 'pend') pList.innerHTML += html; else lList.innerHTML += html;
         });
-
         document.getElementById('lSaldo').innerText = 'R$ ' + (rec - desp).toLocaleString('pt-BR');
         document.getElementById('lRec').innerText = 'R$ ' + rec.toLocaleString('pt-BR');
         document.getElementById('lDesp').innerText = 'R$ ' + desp.toLocaleString('pt-BR');
         document.getElementById('pTotal').innerText = 'R$ ' + pnd.toLocaleString('pt-BR');
-        document.getElementById('simVal').innerText = 'R$ ' + (rec - desp - pnd).toLocaleString('pt-BR');
     }
     render();
 </script>
