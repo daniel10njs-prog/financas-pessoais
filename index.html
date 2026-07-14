@@ -29,9 +29,22 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .dropdown-item:last-child { border-bottom: none; }
 .dropdown-item:hover { background: var(--card2); }
 
-.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--card); border-top: 1px solid var(--border); display: flex; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); overflow-x: auto; }
-.bottom-nav button { flex: 1; min-width: 65px; padding: 12px 0; background: none; border: none; color: var(--muted); font-size: .6rem; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.bottom-nav button.active { color: var(--azul); }
+.bottom-nav { 
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); 
+  width: 100%; max-width: 480px; 
+  background: var(--card); border-top: 1px solid var(--border); 
+  display: grid; grid-template-columns: repeat(7, 1fr); 
+  z-index: 1000; padding: 10px 4px calc(10px + var(--safe-area-bottom)); 
+}
+.bottom-nav button { 
+  background: none; border: none; color: var(--muted); 
+  display: flex; flex-direction: column; align-items: center; 
+  gap: 5px; font-size: 8px; font-weight: 600; cursor: pointer; 
+  transition: all 0.2s ease;
+  min-width: 0; padding: 4px 0;
+}
+.bottom-nav button.active { color: var(--azul); transform: translateY(-2px); }
+.bottom-nav button i { font-size: 1.1rem; }
 .content-section { display: none; padding: 14px 12px; }
 .content-section.active { display: block; }
 
