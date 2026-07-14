@@ -438,9 +438,9 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
     <div class="date" id="mesTitulo">Julho 2026</div>
   </div>
   <div style="display:flex; gap:10px">
-    <button class="act-btn" onclick="mudarMes(-1)">◀</button>
-    <button class="act-btn" onclick="mudarMes(1)">▶</button>
-    <button class="act-btn" onclick="abrirSheet('sheetConfig')">⋮</button>
+    <button class="act-btn" onclick="mudarMes(-1)"><i class="material-icons-round">chevron_left</i></button>
+    <button class="act-btn" onclick="mudarMes(1)"><i class="material-icons-round">chevron_right</i></button>
+    <button class="act-btn" onclick="abrirSheet('sheetConfig')"><i class="material-icons-round">more_vert</i></button>
   </div>
 </header>
 
@@ -453,8 +453,8 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
         <div class="resumo-val" id="saldo">R$ 0,00</div>
       </div>
       <div class="dash-actions">
-        <button class="btn-mini-add rec" onclick="abrirForm('receita')" title="Nova receita">＋</button>
-        <button class="btn-mini-add desp" onclick="abrirForm('despesa')" title="Nova despesa">－</button>
+        <button class="btn-mini-add rec" onclick="abrirForm('receita')" title="Nova receita"><i class="material-icons-round">add</i></button>
+        <button class="btn-mini-add desp" onclick="abrirForm('despesa')" title="Nova despesa"><i class="material-icons-round">remove</i></button>
       </div>
     </div>
     
@@ -624,26 +624,26 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 <!-- BOTTOM NAV -->
 <nav class="bnav">
   <button class="bnav-btn active" id="bnav-lancamentos" onclick="setPage('lancamentos')">
-    <span class="icon">💸</span>Lançar
+    <span class="icon"><i class="material-icons-round">edit_document</i></span>Lançar
   </button>
   <button class="bnav-btn" id="bnav-pendencias" onclick="setPage('pendencias')" style="position:relative">
-    <span class="icon">⏳</span>Contas
+    <span class="icon"><i class="material-icons-round">schedule</i></span>Contas
     <div id="pendBadge" style="display:none">0</div>
   </button>
   <button class="bnav-btn" id="bnav-graficos" onclick="setPage('graficos')">
-    <span class="icon">📊</span>Gráficos
+    <span class="icon"><i class="material-icons-round">pie_chart</i></span>Gráficos
   </button>
   <button class="bnav-btn" id="bnav-insights" onclick="setPage('insights')">
-    <span class="icon">✨</span>IA
+    <span class="icon"><i class="material-icons-round">auto_awesome</i></span>IA
   </button>
   <button class="bnav-btn" id="bnav-anual" onclick="setPage('anual')">
-    <span class="icon">📅</span>Anual
+    <span class="icon"><i class="material-icons-round">calendar_month</i></span>Anual
   </button>
   <button class="bnav-btn" id="bnav-metas" onclick="setPage('metas')">
-    <span class="icon">🎯</span>Metas
+    <span class="icon"><i class="material-icons-round">ads_click</i></span>Metas
   </button>
   <button class="bnav-btn" id="bnav-simulador" onclick="setPage('simulador')">
-    <span class="icon">⚖</span>Simular
+    <span class="icon"><i class="material-icons-round">balance</i></span>Simular
   </button>
 </nav>
 
