@@ -7,6 +7,7 @@
 <meta name="theme-color" content="#0f172a">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
 :root {
   --verde: #22c55e; --vermelho: #ef4444; --amarelo: #f59e0b; --azul: #3b82f6;
@@ -53,7 +54,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .list { display: flex; flex-direction: column; gap: 10px; }
 .item { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .item-info { display: flex; align-items: center; gap: 12px; flex: 1; }
-.item-icon { font-size: 1.1rem; background: var(--card2); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
+.item-icon { font-size: 1.2rem; background: var(--card2); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; color: var(--azul); }
 .item-text b { font-size: .85rem; display: block; }
 .item-text span { font-size: .65rem; color: var(--muted); }
 .item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
@@ -88,16 +89,17 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .cat-tab.active { color: var(--azul); border-bottom-color: var(--azul); background: rgba(59,130,246,0.05); }
 .cat-list-container { padding: 15px; max-height: 400px; overflow-y: auto; background: var(--bg); }
 .cat-item-row { display: flex; align-items: center; gap: 12px; background: var(--card); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 8px; }
-.cat-item-icon { width: 40px; height: 40px; background: var(--card2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid var(--border); }
+.cat-item-icon { width: 40px; height: 40px; background: var(--card2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid var(--border); color: var(--azul); }
 .cat-item-name { flex: 1; font-weight: 600; font-size: 0.9rem; }
 .cat-actions { display: flex; gap: 8px; }
 .cat-btn-add { margin: 15px; padding: 14px; background: var(--azul); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.9rem; }
 
-/* BIBLIOTECA DE ÍCONES (EMOJIS) */
-.icon-selector-btn { width: 100%; height: 50px; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 10px; }
-.emoji-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; max-height: 200px; overflow-y: auto; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; margin-top: 10px; }
-.emoji-item { font-size: 1.5rem; padding: 10px; cursor: pointer; border-radius: 8px; text-align: center; }
-.emoji-item:hover { background: var(--card2); }
+/* BIBLIOTECA DE ÍCONES (MATERIAL) */
+.icon-selector-btn { width: 100%; height: 60px; background: var(--card2); border: 1px solid var(--border); border-radius: 12px; font-size: 2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 10px; color: var(--azul); }
+.emoji-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; max-height: 250px; overflow-y: auto; padding: 15px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; margin-top: 10px; }
+.emoji-item { font-size: 1.6rem; padding: 12px; cursor: pointer; border-radius: 10px; text-align: center; color: var(--muted); display: flex; align-items: center; justify-content: center; }
+.emoji-item:hover { background: var(--card2); color: var(--azul); }
+.emoji-item.active { background: var(--azul); color: white; }
 
 .widget { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
 .widget-title { font-size: .7rem; font-weight: 700; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; }
@@ -227,8 +229,8 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
         <h2 id="catModalTitle">Categoria</h2>
         <input type="hidden" id="catOldName">
         <div class="form-group"><label>Ícone Selecionado</label>
-            <div id="selectedIconDisplay" class="icon-selector-btn" onclick="toggleEmojiGrid()">❓</div>
-            <input type="hidden" id="catInputIcon" value="❓">
+            <div id="selectedIconDisplay" class="icon-selector-btn" onclick="toggleEmojiGrid()"><span class="material-icons-round">help_outline</span></div>
+            <input type="hidden" id="catInputIcon" value="help_outline">
             <div id="emojiGrid" class="emoji-grid" style="display:none;"></div>
         </div>
         <div class="form-group"><label>Nome da Categoria</label><input type="text" id="catInputName" placeholder="Ex: Internet"></div>
@@ -239,7 +241,6 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
     </div>
 </div>
 
-<!-- Resto dos modais menores -->
 <div class="modal-overlay" id="modalMeta"><div class="modal"><h2>Nova Meta</h2><div class="form-group"><label>Nome</label><input id="metaNome" type="text"></div><div class="form-group"><label>Valor Pretendido (R$)</label><input id="metaPretendido" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeMetaModal()">Cancelar</button><button class="btn-save" onclick="saveMeta()">Criar</button></div></div></div>
 <div class="modal-overlay" id="modalAddMeta"><div class="modal"><h2>Adicionar à Meta</h2><input type="hidden" id="addMetaId"><div class="form-group"><label>Valor (R$)</label><input id="valAddMeta" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeAddMetaModal()">Cancelar</button><button class="btn-save" onclick="confirmAddMeta()">Adicionar</button></div></div></div>
 <div class="modal-overlay" id="modalSimRec"><div class="modal"><h2>Recebimento Previsto</h2><div class="form-group"><label>Descrição</label><input id="simRecDesc" type="text"></div><div class="form-group"><label>Valor (R$)</label><input id="simRecVal" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeSimRecModal()">Cancelar</button><button class="btn-save" onclick="saveSimRec()">Adicionar</button></div></div></div>
@@ -247,7 +248,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 <script>
 let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { 
     items: [], pendencias: [], metas: [], previstos: [], 
-    icons: { 'Salário': '💰', 'Pix Recebido': '💸', 'Ajuste': '⚙️', 'Alimentação': '🍽️', 'Transporte': '🚗', 'Moradia': '🏠', 'Lazer': '🎡', 'Saúde': '🏥', 'Educação': '📚', 'Assinaturas': '📺', 'Outros': '📦' }, 
+    icons: { 'Salário': 'payments', 'Pix Recebido': 'account_balance_wallet', 'Ajuste': 'settings', 'Alimentação': 'restaurant', 'Transporte': 'directions_car', 'Moradia': 'home', 'Lazer': 'celebration', 'Saúde': 'medical_services', 'Educação': 'school', 'Assinaturas': 'subscriptions', 'Outros': 'inventory_2' }, 
     categories: {
         receita: ['Salário', 'Pix Recebido', 'Ajuste'],
         despesa: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'],
@@ -256,8 +257,8 @@ let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || {
     theme: 'dark' 
 };
 
-const emojiLibrary = [
-    '💰','💸','💎','💳','🏧','🏦','🧾','🍽️','🍕','🍔','🛒','🍎','🏠','🛋️','🔌','🌐','🚗','⛽','🚲','✈️','🎡','🎮','🎬','📺','🎧','📚','✏️','🏥','💊','🏋️','🦷','🍼','🧸','👕','👞','💄','📱','💻','📦','⚙️','🔧','🧹','📅','🏷️','❓'
+const materialIcons = [
+    'payments','account_balance_wallet','savings','paid','trending_up','restaurant','shopping_cart','local_mall','home','bolt','water_drop','language','directions_car','local_gas_station','directions_bike','flight','celebration','sports_esports','movie','subscriptions','headset','school','edit','medical_services','medication','fitness_center','medical_information','baby_changing_station','toys','checkroom','shopping_bag','face','smartphone','computer','inventory_2','settings','build','cleaning_services','calendar_month','label','help_outline','work','security','pets','local_shipping'
 ];
 
 let simChecks = {}; let chartInstance = null; let currentCatTab = 'receita';
@@ -294,7 +295,7 @@ function setCatTab(tab) {
     const content = document.getElementById('catListContent'); content.innerHTML = '';
     const list = db.categories[tab] || [];
     list.forEach(catName => {
-        content.innerHTML += `<div class="cat-item-row"><div class="cat-item-icon">${db.icons[catName] || '❓'}</div><div class="cat-item-name">${catName}</div><div class="cat-actions"><button class="icon-btn edit" onclick="editCatForm('${catName}')"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="removeCategory('${catName}')"><i class="fas fa-trash-alt"></i></button></div></div>`;
+        content.innerHTML += `<div class="cat-item-row"><div class="cat-item-icon"><span class="material-icons-round">${db.icons[catName] || 'help_outline'}</span></div><div class="cat-item-name">${catName}</div><div class="cat-actions"><button class="icon-btn edit" onclick="editCatForm('${catName}')"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="removeCategory('${catName}')"><i class="fas fa-trash-alt"></i></button></div></div>`;
     });
 }
 
@@ -302,24 +303,24 @@ function toggleEmojiGrid() {
     const grid = document.getElementById('emojiGrid');
     if(grid.style.display === 'none') {
         grid.innerHTML = '';
-        emojiLibrary.forEach(emoji => { grid.innerHTML += `<div class="emoji-item" onclick="selectEmoji('${emoji}')">${emoji}</div>`; });
+        materialIcons.forEach(icon => { grid.innerHTML += `<div class="emoji-item" onclick="selectEmoji('${icon}')"><span class="material-icons-round">${icon}</span></div>`; });
         grid.style.display = 'grid';
     } else { grid.style.display = 'none'; }
 }
-function selectEmoji(emoji) {
-    document.getElementById('catInputIcon').value = emoji;
-    document.getElementById('selectedIconDisplay').innerText = emoji;
+function selectEmoji(icon) {
+    document.getElementById('catInputIcon').value = icon;
+    document.getElementById('selectedIconDisplay').innerHTML = `<span class="material-icons-round">${icon}</span>`;
     document.getElementById('emojiGrid').style.display = 'none';
 }
 
 function openAddCatForm() {
     document.getElementById('catModalTitle').innerText = 'Nova Categoria'; document.getElementById('catOldName').value = '';
-    document.getElementById('catInputName').value = ''; selectEmoji('❓');
+    document.getElementById('catInputName').value = ''; selectEmoji('help_outline');
     document.getElementById('modalAddEditCat').classList.add('show');
 }
 function editCatForm(name) {
     document.getElementById('catModalTitle').innerText = 'Editar Categoria'; document.getElementById('catOldName').value = name;
-    document.getElementById('catInputName').value = name; selectEmoji(db.icons[name] || '❓');
+    document.getElementById('catInputName').value = name; selectEmoji(db.icons[name] || 'help_outline');
     document.getElementById('modalAddEditCat').classList.add('show');
 }
 function closeAddEditCat() { document.getElementById('modalAddEditCat').classList.remove('show'); }
@@ -329,7 +330,8 @@ function saveCategory() {
     if(!name) return;
     if(oldName) {
         if(oldName !== name) {
-            delete db.icons[oldName]; db.categories[currentCatTab] = db.categories[currentCatTab].map(c => c === oldName ? name : c);
+            const currentIcon = db.icons[oldName]; delete db.icons[oldName];
+            db.categories[currentCatTab] = db.categories[currentCatTab].map(c => c === oldName ? name : c);
             db.items.forEach(i => { if(i.sub === oldName) i.sub = name; }); db.pendencias.forEach(p => { if(p.sub === oldName) p.sub = name; });
         }
     } else { if(!db.categories[currentCatTab].includes(name)) db.categories[currentCatTab].push(name); }
@@ -401,7 +403,7 @@ function renderSim() {
   const sl = document.getElementById('simList'); sl.innerHTML = '';
   db.pendencias.forEach(p => {
     const isChecked = simChecks[p.id] !== false;
-    sl.innerHTML += `<div class="item" onclick="toggleSim(${p.id})"><div class="item-info"><div class="item-icon">${db.icons[p.sub]||'⏳'}</div><div class="item-text"><b>${p.desc}</b><span>${p.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${p.val.toFixed(2)}</b><input type="checkbox" class="sim-check" ${isChecked?'checked':''}></div></div>`;
+    sl.innerHTML += `<div class="item" onclick="toggleSim(${p.id})"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[p.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${p.desc}</b><span>${p.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${p.val.toFixed(2)}</b><input type="checkbox" class="sim-check" ${isChecked?'checked':''}></div></div>`;
   });
 }
 function toggleSim(id) { simChecks[id] = simChecks[id] === false ? true : false; renderSim(); }
@@ -423,9 +425,9 @@ function render() {
   document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); document.getElementById('saldoReal').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
   document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
   const l = document.getElementById('list'); l.innerHTML = '';
-  db.items.slice().reverse().forEach(i => { l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon">${db.icons[i.sub]||'📦'}</div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
+  db.items.slice().reverse().forEach(i => { l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'inventory_2'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
   const lp = document.getElementById('listPend'); lp.innerHTML = '';
-  db.pendencias.forEach(i => { lp.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon">${db.icons[i.sub]||'⏳'}</div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
+  db.pendencias.forEach(i => { lp.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
   const ml = document.getElementById('metasList'); ml.innerHTML = '';
   db.metas.forEach(m => {
     const perc = Math.min((m.acumulado / m.pretendido) * 100, 100).toFixed(1);
