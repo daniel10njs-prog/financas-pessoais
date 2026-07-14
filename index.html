@@ -1,254 +1,121 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang='pt-BR'>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Zapia Finance v3.8</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
+    <title>Zapia Finance v4.0</title>
+    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/icon?family=Material+Icons+Round' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css' rel='stylesheet'>
     <style>
-        :root {
-            --bg: #0b0f1a; --card: #161b2c; --primary: #3b82f6; --text: #f8fafc;
-            --muted: #94a3b8; --up: #10b981; --down: #ef4444; --warn: #f59e0b;
-        }
+        :root { --primary: #6366f1; --bg: #f8fafc; --text: #1e293b; --muted: #64748b; --border: #e2e8f0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 100px; max-width: 500px; margin: 0 auto; overflow-x: hidden; }
-        
-        header { padding: 30px 20px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: -1px; }
-        .logo span { color: var(--primary); }
-
-        .card-main { margin: 0 20px 25px; padding: 25px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .bal-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-        .bal-val { font-size: 2.2rem; font-weight: 800; margin: 8px 0; }
-        
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 0 20px 25px; }
-        .stat-box { padding: 15px; background: var(--card); border-radius: 18px; border: 1px solid rgba(255,255,255,0.03); }
-        .stat-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 5px; }
-        .stat-val { font-size: 1rem; font-weight: 700; }
-        .stat-val.up { color: var(--up); }
-        .stat-val.down { color: var(--down); }
-
-        .chart-container { margin: 0 20px 25px; background: var(--card); border-radius: 24px; padding: 20px; height: 200px; position: relative; }
-
-        .tabs { display: flex; gap: 10px; padding: 0 20px 20px; overflow-x: auto; scrollbar-width: none; }
-        .tab { padding: 10px 18px; background: var(--card); border-radius: 12px; font-size: 0.8rem; font-weight: 600; color: var(--muted); white-space: nowrap; border: 1px solid transparent; }
-        .tab.active { background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: var(--primary); }
-
-        .list { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
-        .item { padding: 14px; background: var(--card); border-radius: 16px; display: flex; align-items: center; gap: 12px; }
-        .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-        .icon.up { background: rgba(16, 185, 129, 0.1); color: var(--up); }
-        .icon.down { background: rgba(239, 68, 68, 0.1); color: var(--down); }
-        .icon.pend { background: rgba(245, 158, 11, 0.1); color: var(--warn); }
-        
-        .item-info { flex: 1; }
-        .item-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 2px; }
-        .item-meta { font-size: 0.7rem; color: var(--muted); }
-        .item-val { font-size: 0.95rem; font-weight: 700; text-align: right; }
-
-        .fab { position: fixed; bottom: 30px; right: 20px; width: 60px; height: 60px; background: var(--primary); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); z-index: 100; border: none; }
-        
-        /* Modal */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; align-items: flex-end; z-index: 1000; }
-        .modal-content { background: var(--card); width: 100%; border-radius: 30px 30px 0 0; padding: 30px 20px; border-top: 1px solid rgba(255,255,255,0.1); }
-        input, select, textarea { width: 100%; padding: 15px; background: var(--bg); border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; color: #fff; margin-bottom: 15px; font-size: 1rem; }
-        .btn { width: 100%; padding: 16px; background: var(--primary); border: none; border-radius: 14px; color: #fff; font-weight: 700; font-size: 1rem; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 120px; max-width: 500px; margin: 0 auto; }
+        header { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: white; }
+        .header-left h1 { font-size: 1.2rem; font-weight: 700; }
+        .header-left p { font-size: 0.8rem; color: var(--muted); }
+        .header-right { display: flex; gap: 8px; }
+        .btn-icon { padding: 8px; background: #f1f5f9; border-radius: 12px; border: none; color: var(--muted); }
+        .card-editor { margin: 15px; padding: 20px; background: white; border-radius: 24px; border: 2px solid var(--primary); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 25px; }
+        .icon-item { aspect-ratio: 1; background: #f1f5f9; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #333; font-size: 1.2rem; }
+        .icon-item.selected { background: var(--primary); color: white; }
+        .input-label { font-size: 0.65rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .row { display: flex; gap: 10px; }
+        .input-text { flex: 1; padding: 16px; background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; }
+        .select-type { padding: 0 15px; background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: var(--muted); }
+        .btn-save { width: 100%; margin-top: 20px; padding: 18px; background: white; border: 2px solid var(--primary); color: #111; font-weight: 700; border-radius: 14px; box-shadow: 0 4px 0 var(--primary); }
+        .pills-section { padding: 0 20px; margin-top: 20px; }
+        .pills-title { font-size: 0.65rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+        .pills-container { display: flex; flex-wrap: wrap; gap: 10px; }
+        .pill { padding: 10px 15px; background: white; border-radius: 14px; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; }
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: white; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 5px 30px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--muted); text-decoration: none; position: relative; }
+        .nav-item i { font-size: 1.4rem; }
+        .nav-item span { font-size: 0.6rem; font-weight: 600; }
+        .nav-item.active { color: var(--primary); }
+        .nav-badge { position: absolute; top: -5px; right: -5px; background: var(--primary); color: white; font-size: 0.6rem; padding: 2px 5px; border-radius: 10px; border: 2px solid white; }
     </style>
 </head>
 <body>
-
 <header>
-    <div class="logo">ZAPIA<span>.3.8</span></div>
-    <div style="display:flex; gap:15px">
-        <span class="material-icons-round" onclick="openImport()" style="color:var(--muted)">cloud_download</span>
-        <span class="material-icons-round" style="color:var(--muted)">account_circle</span>
+    <div class='header-left'><h1>Finanças</h1><p>Julho de 2026</p></div>
+    <div class='header-right'>
+        <button class='btn-icon'><span class='material-icons-round'>chevron_left</span></button>
+        <button class='btn-icon'><span class='material-icons-round'>chevron_right</span></button>
+        <button class='btn-icon'><span class='material-icons-round'>more_vert</span></button>
     </div>
 </header>
-
-<div class="card-main">
-    <div class="bal-label">Saldo em Conta</div>
-    <div class="bal-val" id="mainBalance">R$ 0,00</div>
-</div>
-
-<div class="stats-row">
-    <div class="stat-box">
-        <div class="stat-label">Ganhos</div>
-        <div class="stat-val up" id="totalInc">R$ 0,00</div>
+<div class='card-editor'>
+    <div class='icon-grid'>
+        <div class='icon-item'><i class='lucide-briefcase-medical'></i></div>
+        <div class='icon-item'><i class='lucide-activity'></i></div>
+        <div class='icon-item'><i class='lucide-pill'></i></div>
+        <div class='icon-item'><i class='lucide-dumbbell'></i></div>
+        <div class='icon-item'><i class='lucide-run'></i></div>
+        <div class='icon-item'><i class='lucide-gamepad-2'></i></div>
+        <div class='icon-item'><i class='lucide-clapperboard'></i></div>
+        <div class='icon-item'><i class='lucide-music'></i></div>
+        <div class='icon-item'><i class='lucide-headphones'></i></div>
+        <div class='icon-item'><i class='lucide-tv'></i></div>
+        <div class='icon-item'><i class='lucide-smartphone'></i></div>
+        <div class='icon-item'><i class='lucide-book'></i></div>
+        <div class='icon-item'><i class='lucide-graduation-cap'></i></div>
+        <div class='icon-item'><i class='lucide-laptop'></i></div>
+        <div class='icon-item'><i class='lucide-monitor'></i></div>
+        <div class='icon-item'><i class='lucide-keyboard'></i></div>
+        <div class='icon-item'><i class='lucide-mouse'></i></div>
+        <div class='icon-item'><i class='lucide-wrench'></i></div>
+        <div class='icon-item'><i class='lucide-hammer'></i></div>
+        <div class='icon-item'><i class='lucide-paint-roller'></i></div>
+        <div class='icon-item'><i class='lucide-scissors'></i></div>
+        <div class='icon-item'><i class='lucide-camera'></i></div>
+        <div class='icon-item'><i class='lucide-mic'></i></div>
+        <div class='icon-item'><i class='lucide-zap'></i></div>
+        <div class='icon-item'><i class='lucide-flame'></i></div>
+        <div class='icon-item'><i class='lucide-droplets'></i></div>
+        <div class='icon-item'><i class='lucide-wind'></i></div>
+        <div class='icon-item'><i class='lucide-snowflake'></i></div>
+        <div class='icon-item'><i class='lucide-sun'></i></div>
+        <div class='icon-item'><i class='lucide-moon'></i></div>
+        <div class='icon-item'><i class='lucide-star'></i></div>
+        <div class='icon-item'><i class='lucide-gem'></i></div>
+        <div class='icon-item'><i class='lucide-trophy'></i></div>
+        <div class='icon-item'><i class='lucide-medal'></i></div>
+        <div class='icon-item selected' style='background: #6b73ff'></div>
+        <div class='icon-item'><i class='lucide-rocket'></i></div>
+        <div class='icon-item'><i class='lucide-paw-print'></i></div>
+        <div class='icon-item'><i class='lucide-leaf'></i></div>
+        <div class='icon-item'><i class='lucide-trees'></i></div>
+        <div class='icon-item'><i class='lucide-briefcase'></i></div>
+        <div class='icon-item'><i class='lucide-key'></i></div>
+        <div class='icon-item'><i class='lucide-bell'></i></div>
+        <div class='icon-item'><i class='lucide-settings'></i></div>
     </div>
-    <div class="stat-box">
-        <div class="stat-label">Despesas</div>
-        <div class="stat-val down" id="totalExp">R$ 0,00</div>
+    <div class='input-group'>
+        <span class='input-label'>Nome da Categoria</span>
+        <div class='row'>
+            <input type='text' class='input-text' placeholder='Ex: Viagem'>
+            <div class='select-type'><span>Gasto</span><span class='material-icons-round'>expand_more</span></div>
+        </div>
+    </div>
+    <button class='btn-save'>SALVAR CATEGORIA</button>
+</div>
+<div class='pills-section'>
+    <p class='pills-title'>Ganhos</p>
+    <div class='pills-container'>
+        <div class='pill'><i class='lucide-banknote'></i> Salário <span>×</span></div>
+        <div class='pill'><i class='lucide-dollar-sign'></i> Pix Recebido <span>×</span></div>
     </div>
 </div>
-
-<div class="chart-container">
-    <canvas id="myChart"></canvas>
-</div>
-
-<div class="tabs">
-    <div class="tab active" onclick="setTab('all', this)">Resumo</div>
-    <div class="tab" onclick="setTab('rec', this)">Ganhos</div>
-    <div class="tab" onclick="setTab('desp', this)">Gastos</div>
-    <div class="tab" onclick="setTab('pend', this)">A Pagar</div>
-</div>
-
-<div class="list" id="mainList"></div>
-
-<button class="fab" onclick="openModal()"><span class="material-icons-round">add</span></button>
-
-<!-- MODAL ADD -->
-<div class="modal" id="modal">
-    <div class="modal-content">
-        <h2 style="margin-bottom:20px">Nova Transação</h2>
-        <input type="text" id="fDesc" placeholder="Descrição">
-        <input type="number" id="fVal" placeholder="Valor (0.00)">
-        <select id="fTipo">
-            <option value="desp">Despesa</option>
-            <option value="rec">Receita</option>
-            <option value="pend">Pendência (A pagar)</option>
-        </select>
-        <button class="btn" onclick="add()">Salvar Registro</button>
-        <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:15px">Fechar</button>
-    </div>
-</div>
-
-<!-- MODAL IMPORT -->
-<div class="modal" id="importModal" style="align-items: center; padding: 20px;">
-    <div class="modal-content" style="border-radius:24px">
-        <h2 style="margin-bottom:15px">Importar Backup</h2>
-        <textarea id="importBox" rows="8" placeholder="Cole o JSON aqui..."></textarea>
-        <button class="btn" onclick="doImport()">Restaurar Dados</button>
-        <button onclick="closeImport()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:15px">Cancelar</button>
-    </div>
-</div>
-
-<script>
-    let db = JSON.parse(localStorage.getItem('zapia_38_db')) || { items: [], pends: [] };
-    let activeTab = 'all';
-    let myChart = null;
-
-    function persist() { localStorage.setItem('zapia_38_db', JSON.stringify(db)); }
-    function openModal() { document.getElementById('modal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
-    function openImport() { document.getElementById('importModal').style.display = 'flex'; }
-    function closeImport() { document.getElementById('importModal').style.display = 'none'; }
-
-    function setTab(t, el) {
-        activeTab = t;
-        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-        el.classList.add('active');
-        render();
-    }
-
-    function add() {
-        const d = document.getElementById('fDesc').value;
-        const v = parseFloat(document.getElementById('fVal').value);
-        const t = document.getElementById('fTipo').value;
-        if(!d || !v) return;
-        
-        const obj = { id: Date.now(), desc: d, val: v, tipo: t, data: new Date().toISOString().split('T')[0] };
-        if(t === 'pend') db.pends.push(obj); else db.items.push(obj);
-        
-        persist(); closeModal(); render();
-    }
-
-    function doImport() {
-        try {
-            const raw = document.getElementById('importBox').value;
-            const p = JSON.parse(raw);
-            let items = [], pends = [];
-            
-            // Aceita formato {items: [], pends: []} ou array direto
-            if(p.items) items = p.items; else if(Array.isArray(p)) items = p;
-            if(p.pends) pends = p.pends;
-
-            // Normaliza tipos (receita/receita -> rec, despesa -> desp)
-            db.items = items.map(i => {
-                let t = (i.tipo || '').toLowerCase();
-                if(t.includes('rec')) t = 'rec'; else t = 'desp';
-                return {...i, tipo: t};
-            });
-            db.pends = pends;
-
-            persist(); closeImport(); render();
-            alert('Backup restaurado com sucesso!');
-        } catch(e) { alert('Erro no formato do backup.'); }
-    }
-
-    function del(id, isPend) {
-        if(!confirm('Excluir?')) return;
-        if(isPend) db.pends = db.pends.filter(x => x.id !== id);
-        else db.items = db.items.filter(x => x.id !== id);
-        persist(); render();
-    }
-
-    function render() {
-        const list = document.getElementById('mainList');
-        list.innerHTML = '';
-        let inc = 0, exp = 0, pTotal = 0;
-
-        db.items.forEach(i => { if(i.tipo === 'rec') inc += i.val; else exp += i.val; });
-        db.pends.forEach(i => pTotal += i.val);
-
-        document.getElementById('mainBalance').innerText = 'R$ ' + (inc - exp).toLocaleString('pt-BR', {minimumFractionDigits:2});
-        document.getElementById('totalInc').innerText = 'R$ ' + inc.toLocaleString('pt-BR', {minimumFractionDigits:2});
-        document.getElementById('totalExp').innerText = 'R$ ' + exp.toLocaleString('pt-BR', {minimumFractionDigits:2});
-
-        const filtered = [];
-        if(activeTab === 'all' || activeTab === 'rec' || activeTab === 'desp') {
-            db.items.filter(i => activeTab === 'all' || i.tipo === activeTab).forEach(i => filtered.push({...i, isPend: false}));
-        }
-        if(activeTab === 'all' || activeTab === 'pend') {
-            db.pends.forEach(i => filtered.push({...i, tipo: 'pend', isPend: true}));
-        }
-
-        filtered.sort((a,b) => (b.data || b.venc || '').localeCompare(a.data || a.venc || '')).forEach(i => {
-            const div = document.createElement('div');
-            div.className = 'item';
-            div.innerHTML = `
-                <div class="icon ${i.tipo === 'rec' ? 'up' : (i.tipo === 'desp' ? 'down' : 'pend')}">
-                    <span class="material-icons-round">${i.tipo==='rec'?'add':(i.tipo==='desp'?'remove':'schedule')}</span>
-                </div>
-                <div class="item-info">
-                    <div class="item-title">${i.desc}</div>
-                    <div class="item-meta">${i.data || i.venc || ''}</div>
-                </div>
-                <div class="item-val" style="color:${i.tipo==='rec'?'var(--up)':(i.tipo==='desp'?'#fff':'var(--warn)')}">
-                    R$ ${i.val.toLocaleString('pt-BR', {minimumFractionDigits:2})}
-                    <div onclick="del(${i.id}, ${i.isPend})" style="font-size:9px; color:var(--muted); font-weight:400; margin-top:2px">EXCLUIR</div>
-                </div>
-            `;
-            list.appendChild(div);
-        });
-
-        updateChart(inc, exp);
-    }
-
-    function updateChart(inc, exp) {
-        const ctx = document.getElementById('myChart').getContext('2d');
-        if(myChart) myChart.destroy();
-        myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Ganhos', 'Gastos'],
-                datasets: [{
-                    data: [inc, exp],
-                    backgroundColor: ['#10b981', '#ef4444'],
-                    borderWidth: 0,
-                    cutout: '80%'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } }
-            }
-        });
-    }
-
-    render();
-</script>
+<nav class='bottom-nav'>
+    <a href='#' class='nav-item'><i class='lucide-list-todo'></i><span>Lançar</span></a>
+    <a href='#' class='nav-item active'><i class='lucide-clock'></i><span>Contas</span><div class='nav-badge'>11</div></a>
+    <a href='#' class='nav-item'><i class='lucide-pie-chart'></i><span>Gráficos</span></a>
+    <a href='#' class='nav-item'><i class='lucide-sparkles'></i><span>IA</span></a>
+    <a href='#' class='nav-item'><i class='lucide-calendar-days'></i><span>Anual</span></a>
+    <a href='#' class='nav-item'><i class='lucide-target'></i><span>Metas</span></a>
+    <a href='#' class='nav-item'><i class='lucide-scale'></i><span>Simular</span></a>
+</nav>
 </body>
 </html>
