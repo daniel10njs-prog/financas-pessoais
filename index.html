@@ -330,12 +330,19 @@ function saveCategory() {
     if(!name) return;
     if(oldName) {
         if(oldName !== name) {
-            const currentIcon = db.icons[oldName]; delete db.icons[oldName];
+            delete db.icons[oldName]; 
             db.categories[currentCatTab] = db.categories[currentCatTab].map(c => c === oldName ? name : c);
-            db.items.forEach(i => { if(i.sub === oldName) i.sub = name; }); db.pendencias.forEach(p => { if(p.sub === oldName) p.sub = name; });
+            db.items.forEach(i => { if(i.sub === oldName) i.sub = name; }); 
+            db.pendencias.forEach(p => { if(p.sub === oldName) p.sub = name; });
         }
-    } else { if(!db.categories[currentCatTab].includes(name)) db.categories[currentCatTab].push(name); }
-    db.icons[name] = icon; save(); closeAddEditCat(); setCatTab(currentCatTab);
+    } else { 
+        if(!db.categories[currentCatTab].includes(name)) db.categories[currentCatTab].push(name); 
+    }
+    db.icons[name] = icon; 
+    localStorage.setItem('zapia_financas_db', JSON.stringify(db)); // Salva manualmente
+    closeAddEditCat(); 
+    setCatTab(currentCatTab);
+    render();
 }
 
 function removeCategory(name) { if(!confirm(`Excluir "${name}"?`)) return; delete db.icons[name]; ['receita','despesa','pendencia'].forEach(t => db.categories[t] = db.categories[t].filter(c => c !== name)); save(); setCatTab(currentCatTab); }
