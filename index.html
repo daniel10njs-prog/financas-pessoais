@@ -189,10 +189,8 @@ function saveEntry() {
 
 function deleteEntry() {
   const id = document.getElementById('editId').value;
-  if(confirm('Excluir este lançamento permanentemente?')) {
-    db.items = db.items.filter(x => x.id != id);
-    save(); closeModal();
-  }
+  db.items = db.items.filter(x => x.id != id);
+  save(); closeModal();
 }
 
 function render() {
@@ -217,7 +215,6 @@ function render() {
         </div>`;
     });
 }
-
 window.onload = render;
 </script>
 </body>
