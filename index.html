@@ -339,10 +339,9 @@ function saveCategory() {
         if(!db.categories[currentCatTab].includes(name)) db.categories[currentCatTab].push(name); 
     }
     db.icons[name] = icon; 
-    localStorage.setItem('zapia_financas_db', JSON.stringify(db)); // Salva manualmente
+    save();
     closeAddEditCat(); 
     setCatTab(currentCatTab);
-    render();
 }
 
 function removeCategory(name) { if(!confirm(`Excluir "${name}"?`)) return; delete db.icons[name]; ['receita','despesa','pendencia'].forEach(t => db.categories[t] = db.categories[t].filter(c => c !== name)); save(); setCatTab(currentCatTab); }
@@ -358,13 +357,26 @@ function openModal(mode, id = null) {
   const select = document.getElementById('tipoSub'); select.innerHTML = '';
   const cats = db.categories[mode] || []; cats.forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
   document.getElementById('editType').value = mode;
+  document.getElementById('editId').value = id || '';
+  
   if(id) {
-    const list = mode === 'pendencia' ? db.pendencias : db.items; const item = list.find(x => x.id == id);
-    document.getElementById('modalTitle').innerText = 'Editar'; document.getElementById('editId').value = id; document.getElementById('desc').value = item.desc; document.getElementById('val').value = item.val; document.getElementById('tipoSub').value = item.sub;
-  } else { document.getElementById('modalTitle').innerText = mode==='receita'?'Nova Receita':(mode==='despesa'?'Nova Despesa':'Nova Pendência'); document.getElementById('editId').value = ''; document.getElementById('desc').value = ''; document.getElementById('val').value = ''; }
+    const list = mode === 'pendencia' ? db.pendencias : db.items; 
+    const item = list.find(x => x.id == id);
+    if(item) {
+        document.getElementById('modalTitle').innerText = 'Editar'; 
+        document.getElementById('desc').value = item.desc; 
+        document.getElementById('val').value = item.val; 
+        document.getElementById('tipoSub').value = item.sub;
+    }
+  } else { 
+    document.getElementById('modalTitle').innerText = mode==='receita'?'Nova Receita':(mode==='despesa'?'Nova Despesa':'Nova Pendência'); 
+    document.getElementById('desc').value = ''; 
+    document.getElementById('val').value = ''; 
+  }
   document.getElementById('modalEntry').classList.add('show');
 }
 function closeModal() { document.getElementById('modalEntry').classList.remove('show'); }
+
 function saveEntry() {
   const d = document.getElementById('desc').value, v = parseFloat(document.getElementById('val').value), s = document.getElementById('tipoSub').value, id = document.getElementById('editId').value, type = document.getElementById('editType').value;
   if(!d || isNaN(v)) return;
@@ -432,7 +444,9 @@ function render() {
   document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); document.getElementById('saldoReal').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
   document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
   const l = document.getElementById('list'); l.innerHTML = '';
-  db.items.slice().reverse().forEach(i => { l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'inventory_2'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
+  db.items.slice().reverse().forEach(i => { 
+    l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'inventory_2'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
+  });
   const lp = document.getElementById('listPend'); lp.innerHTML = '';
   db.pendencias.forEach(i => { lp.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
   const ml = document.getElementById('metasList'); ml.innerHTML = '';
