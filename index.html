@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Finanças">
 <style>
-/* ===== TOKENS ===== */
+/* ===== TOKENS ANIME TECH ===== */
 :root {
   --verde: #00ff9d;
   --verm: #ff3e3e;
@@ -24,28 +24,24 @@
   --azul: #00d4ff;
   --roxo: #bd00ff;
   --bg: #0d0d0f;
-  --card: #16161a;
-  --card2: #1f1f23;
-  --border: rgba(0, 212, 255, 0.15);
+  --card: rgba(22, 22, 26, 0.8);
+  --card2: rgba(31, 31, 35, 0.6);
+  --border: rgba(0, 212, 255, 0.3);
   --text: #ffffff;
-  --muted: #8b8b9e;
-  --shadow: 0 0 20px rgba(0, 212, 255, 0.1);
-  --radius: 12px;
+  --muted: #a0a0b5;
+  --shadow: 0 0 25px rgba(0, 212, 255, 0.15);
+  --radius: 4px; /* Estética mais angular/industrial */
   --header-h: 70px;
+  --accent-glow: 0 0 15px rgba(0, 212, 255, 0.4);
 }
-body.light-mode {
-  --bg: #f5f6fa;
-  --card: #ffffff;
-  --card2: #eceef5;
-  --border: rgba(99, 102, 241, 0.1);
-  --text: #1a1a2e;
-  --muted: #64748b;
-  --azul: #6366f1;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body {
   background: var(--bg);
+  background-image: 
+    linear-gradient(rgba(13, 13, 15, 0.9), rgba(13, 13, 15, 0.9)),
+    url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop'); /* Fundo tech abstrato */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: var(--text);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
@@ -56,10 +52,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ===== UI COMPONENTS ===== */
+/* ===== UI COMPONENTS ANIME REWORK ===== */
 header {
   height: var(--header-h);
-  background: var(--bg);
+  background: rgba(13, 13, 15, 0.95);
+  backdrop-filter: blur(10px);
   padding: 0 20px;
   display: flex;
   align-items: center;
@@ -67,26 +64,33 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--azul);
+  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
 }
-header h1 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; }
-header .date { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
+header h1 { 
+  font-size: 1.1rem; 
+  font-weight: 900; 
+  text-transform: uppercase; 
+  letter-spacing: 2px;
+  color: var(--azul);
+  text-shadow: var(--accent-glow);
+}
 
-.container { padding: 20px; }
-
-/* Bottom Nav */
+/* Bottom Nav Estilo Console */
 .bnav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+  background: rgba(22, 22, 26, 0.95);
+  backdrop-filter: blur(15px);
+  border: 1px solid var(--azul);
   display: flex;
-  height: 70px;
-  padding-bottom: env(safe-area-inset-bottom);
+  height: 65px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   z-index: 200;
-  max-width: 500px;
+  max-width: 470px;
   margin: 0 auto;
 }
 .bnav-btn {
@@ -98,129 +102,131 @@ header .date { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 0.6rem;
-  font-weight: 600;
-  transition: 0.2s;
-  text-transform: none;
-  letter-spacing: 0;
-  opacity: 1;
-  min-width: 0;
+  font-size: 0.55rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
-.bnav-btn .icon { font-size: 1.3rem; margin-bottom: 2px; transition: 0.2s; }
-.bnav-btn.active { color: var(--azul); }
-.bnav-btn.active .icon { transform: scale(1.2); filter: drop-shadow(0 0 5px var(--azul)); }
+.bnav-btn.active { 
+  color: var(--azul); 
+  background: rgba(0, 212, 255, 0.05) !important;
+}
 
-/* Resumo Card Cyberpunk Anime */
+/* Card Principal: HUD Estilo Anime */
 .resumo {
-  background: var(--card);
+  background: rgba(22, 22, 26, 0.9);
   border: 1px solid var(--azul);
-  border-left: 5px solid var(--azul);
-  border-radius: 4px 20px 4px 20px;
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%); /* Corte diagonal tech */
   padding: 24px;
   margin-bottom: 24px;
-  box-shadow: 10px 10px 0px rgba(0, 212, 255, 0.05);
   position: relative;
-  overflow: hidden;
+  border-left: 4px solid var(--azul);
 }
-.resumo::after {
-  content: 'ZAPIA FINANCE v3.8';
+.resumo::before {
+  content: '';
   position: absolute;
-  top: 5px;
-  right: 10px;
-  font-size: 0.5rem;
-  font-weight: 900;
-  color: var(--azul);
-  opacity: 0.5;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, var(--azul), transparent);
 }
-.resumo-title { font-size: 0.7rem; color: var(--azul); margin-bottom: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-.resumo-val { font-size: 2.4rem; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px; color: var(--text); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+.resumo-title { 
+  font-size: 0.65rem; 
+  color: var(--azul); 
+  margin-bottom: 5px; 
+  font-weight: 900; 
+  text-transform: uppercase; 
+  letter-spacing: 2px; 
+  opacity: 0.8;
+}
+.resumo-val { 
+  font-size: 2.6rem; 
+  font-weight: 900; 
+  letter-spacing: -1.5px; 
+  color: var(--text);
+  text-shadow: 0 0 15px rgba(255,255,255,0.3);
+}
+
+/* Listagem HUD */
+.item {
+  background: rgba(255,255,255,0.03);
+  border-left: 3px solid var(--border);
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 0 10px 10px 0;
+  transition: 0.3s;
+}
+.item:hover {
+  background: rgba(0, 212, 255, 0.05);
+  border-left-color: var(--azul);
+}
 .resumo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .resumo-item { background: var(--card2); padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
 .resumo-item .lab { font-size: 0.6rem; color: var(--muted); font-weight: 700; text-transform: uppercase; }
 .resumo-item .amt { font-size: 1rem; font-weight: 800; margin-top: 2px; color: var(--text); }
 
-/* Tabs Modernas */
+/* Tabs HUD Style */
 .tabs { 
   display: flex; 
-  background: var(--card2); 
-  border-radius: 14px; 
-  padding: 5px; 
+  background: rgba(22, 22, 26, 0.9); 
+  border-radius: 4px; 
+  padding: 3px; 
   margin-bottom: 20px; 
-  border: 1px solid var(--border);
+  border: 1px solid var(--azul);
   position: sticky;
   top: calc(var(--header-h) + 1px);
   z-index: 90;
+  backdrop-filter: blur(10px);
 }
 .tab-btn {
   flex: 1;
-  padding: 12px;
+  padding: 10px;
   border: none;
   background: none;
   color: var(--muted);
-  font-size: 0.85rem;
-  font-weight: 700;
-  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-radius: 2px;
   transition: 0.2s;
 }
-.tab-btn.active { background: var(--card); color: var(--text); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-
-/* Itens da Lista */
-.list-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  padding: 0 4px;
+.tab-btn.active { 
+  background: var(--azul); 
+  color: var(--bg); 
+  box-shadow: var(--accent-glow);
 }
-.list-header h2 { font-size: 1rem; font-weight: 700; }
 
+/* Itens da Lista HUD */
 .item {
-  background: var(--card);
+  background: rgba(255,255,255,0.03);
   padding: 16px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
   margin-bottom: 12px;
   border: 1px solid var(--border);
   transition: 0.2s;
   position: relative;
   overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 0 100%);
 }
-.item::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--border);
-  transition: 0.2s;
-}
-.item:active { background: var(--card2); transform: translateX(5px); }
-.item:active::before { background: var(--azul); }
+.item:active { background: rgba(0, 212, 255, 0.1); transform: scale(0.98); }
+
 .item-ico {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   flex-shrink: 0;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.3);
 }
-.item-ico.rec  { background: rgba(34,197,94,0.1); color: var(--verde); }
-.item-ico.desp { background: rgba(239,68,68,0.1); color: var(--verm); }
-.item-ico.pend { background: rgba(245,158,11,0.1); color: var(--amar); }
+.item-ico.rec  { color: var(--verde); border-color: var(--verde); box-shadow: 0 0 10px rgba(0,255,157,0.2); }
+.item-ico.desp { color: var(--verm); border-color: var(--verm); box-shadow: 0 0 10px rgba(255,62,62,0.2); }
+.item-ico.pend { color: var(--amar); border-color: var(--amar); box-shadow: 0 0 10px rgba(255,204,0,0.2); }
 
-.item-body { flex: 1; overflow: hidden; }
-.item-desc { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; color: var(--text); letter-spacing: -0.3px; }
-.item-meta { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
-.item-obs { font-size: 0.75rem; color: var(--amar); font-style: italic; margin-top: 4px; opacity: 0.8; }
-
-.item-right { text-align: right; min-width: 100px; }
-.item-val { font-weight: 900; font-size: 1.1rem; margin-bottom: 4px; letter-spacing: -0.5px; }
+.item-desc { font-weight: 900; font-size: 1rem; margin-bottom: 4px; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
+.item-val { font-weight: 900; font-size: 1.2rem; margin-bottom: 4px; font-variant-numeric: tabular-nums; }
 .item-val.rec { color: var(--verde); }
 .item-val.desp { color: var(--verm); }
 .item-val.pend { color: var(--amar); }
