@@ -854,8 +854,8 @@ let filtro    = 'all';
 let tipoAtivo = 'despesa';
 
 const DEFAULT_CATS = {
-  receita: ['banknote Salário', 'rocket Freelance', 'trending-up Investimentos', 'gift Presentes', 'sparkles Outros'],
-  despesa: ['home Moradia', 'utensils-crossed Alimentação', 'car Transporte', 'heart-pulse Saúde', 'clapperboard Lazer', 'graduation-cap Educação', 'smartphone Assinaturas', 'shopping-bag Compras', 'wrench Manutenção', 'credit-card Crédito', 'zap Contas Fixas', 'dollar-sign Outros']
+  receita: ['sparkles 💰 Ganho Boss', 'trending-up 📈 Level Up', 'gift 🎁 Loot Drop', 'banknote 💵 Cash Out', 'rocket 🚀 Moonshot'],
+  despesa: ['home 🏠 Base HQ', 'utensils-crossed 🍜 Ramen Time', 'car 🏎️ Drift/Transporte', 'heart-pulse 💊 HP Restore', 'clapperboard 🎮 Grind/Lazer', 'graduation-cap 📜 Skill Book', 'smartphone 📱 Comm-Link', 'shopping-bag 🛍️ Item Shop', 'wrench 🛠️ Crafting/Fix', 'credit-card 💳 Credit Card', 'zap ⚡ Energy/Contas', 'dollar-sign 💸 Gold Sink']
 };
 const EMOJIS = [
   'banknote', 'credit-card', 'landmark', 'trending-up', 'dollar-sign', 'sparkles',
@@ -879,7 +879,7 @@ const catEmoji    = c => {
 const catNome     = c => {
   if (!c) return '';
   const parts = c.trim().split(' ');
-  // Se tem espaço, o resto é o nome da categoria
+  // Se tem espaço, o resto é o nome da categoria (incluindo o emoji se houver)
   if (parts.length > 1) return parts.slice(1).join(' ');
   return c;
 };
