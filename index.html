@@ -57,6 +57,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .item-icon { font-size: 1.2rem; background: var(--card2); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; color: var(--azul); }
 .item-text b { font-size: .85rem; display: block; }
 .item-text span { font-size: .65rem; color: var(--muted); }
+.item-obs { font-size: 0.65rem; color: var(--azul); font-style: italic; margin-top: 2px; }
 .item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
 .item-val { font-weight: 700; font-size: 0.9rem; }
 .item-val.receita { color: var(--verde); } .item-val.despesa { color: var(--vermelho); } .item-val.pendencia { color: var(--amarelo); }
@@ -74,7 +75,8 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 
 .form-group { margin-bottom: 14px; }
 .form-group label { display: block; font-size: .65rem; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; }
-.form-group input, .form-group select { width: 100%; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; color: var(--text); font-size: .9rem; outline: none; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; color: var(--text); font-size: .9rem; outline: none; }
+.form-group textarea { resize: none; min-height: 60px; font-family: inherit; }
 
 .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
 .btn-save { flex: 1; padding: 12px; border-radius: 8px; border: none; background: var(--azul); color: #fff; font-weight: 700; cursor: pointer; }
@@ -207,6 +209,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
     <div class="form-group"><label>Descrição</label><input id="desc" type="text"></div>
     <div class="form-group"><label>Valor (R$)</label><input id="val" type="number" step="0.01"></div>
     <div class="form-group"><label>Categoria</label><select id="tipoSub"></select></div>
+    <div class="form-group"><label>Observação (Opcional)</label><textarea id="obs" placeholder="Algum detalhe extra?"></textarea></div>
     <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-save" onclick="saveEntry()">Salvar</button></div>
   </div>
 </div>
@@ -375,27 +378,29 @@ function openModal(mode, id = null) {
         document.getElementById('val').value = item.val; 
         document.getElementById('tipoSub').value = item.sub;
         document.getElementById('entryDate').value = item.data ? item.data.split('T')[0] : new Date().toISOString().split('T')[0];
+        document.getElementById('obs').value = item.obs || '';
     }
   } else { 
     document.getElementById('modalTitle').innerText = mode==='receita'?'Nova Receita':(mode==='despesa'?'Nova Despesa':'Nova Pendência'); 
     document.getElementById('desc').value = ''; 
     document.getElementById('val').value = ''; 
     document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('obs').value = '';
   }
   document.getElementById('modalEntry').classList.add('show');
 }
 function closeModal() { document.getElementById('modalEntry').classList.remove('show'); }
 
 function saveEntry() {
-  const d = document.getElementById('desc').value, v = parseFloat(document.getElementById('val').value), s = document.getElementById('tipoSub').value, id = document.getElementById('editId').value, type = document.getElementById('editType').value, dt = document.getElementById('entryDate').value;
+  const d = document.getElementById('desc').value, v = parseFloat(document.getElementById('val').value), s = document.getElementById('tipoSub').value, id = document.getElementById('editId').value, type = document.getElementById('editType').value, dt = document.getElementById('entryDate').value, o = document.getElementById('obs').value;
   if(!d || isNaN(v)) return;
   const isoDate = dt ? new Date(dt + 'T12:00:00').toISOString() : new Date().toISOString();
   if(type === 'pendencia') {
-    if(id) { const idx = db.pendencias.findIndex(x => x.id == id); if(idx!==-1) db.pendencias[idx] = { ...db.pendencias[idx], desc: d, val: v, sub: s, data: isoDate }; }
-    else db.pendencias.push({ id: Date.now(), desc: d, val: v, sub: s, data: isoDate });
+    if(id) { const idx = db.pendencias.findIndex(x => x.id == id); if(idx!==-1) db.pendencias[idx] = { ...db.pendencias[idx], desc: d, val: v, sub: s, data: isoDate, obs: o }; }
+    else db.pendencias.push({ id: Date.now(), desc: d, val: v, sub: s, data: isoDate, obs: o });
   } else {
-    if(id) { const idx = db.items.findIndex(x => x.id == id); if(idx!==-1) db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s, data: isoDate }; }
-    else db.items.push({ id: Date.now(), desc: d, val: v, tipo: type, sub: s, data: isoDate });
+    if(id) { const idx = db.items.findIndex(x => x.id == id); if(idx!==-1) db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s, data: isoDate, obs: o }; }
+    else db.items.push({ id: Date.now(), desc: d, val: v, tipo: type, sub: s, data: isoDate, obs: o });
   }
   save(); closeModal();
 }
@@ -411,7 +416,7 @@ function deleteItem(id, type, event) {
 
 function directPay(id, event) {
   event.stopPropagation(); const p = db.pendencias.find(x => x.id == id);
-  if(p) { db.items.push({ id: Date.now(), desc: p.desc, val: p.val, tipo: 'despesa', sub: p.sub, data: new Date().toISOString() }); db.pendencias = db.pendencias.filter(x => x.id != id); save(); }
+  if(p) { db.items.push({ id: Date.now(), desc: p.desc, val: p.val, tipo: 'despesa', sub: p.sub, data: new Date().toISOString(), obs: p.obs || '' }); db.pendencias = db.pendencias.filter(x => x.id != id); save(); }
 }
 
 function openSimRecModal() { document.getElementById('modalSimRec').classList.add('show'); }
@@ -454,14 +459,17 @@ function render() {
   document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); document.getElementById('saldoReal').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
   document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
   const l = document.getElementById('list'); l.innerHTML = '';
-  // Ordenar por data (mais recente primeiro)
   const sortedItems = [...db.items].sort((a,b) => new Date(b.data) - new Date(a.data));
   sortedItems.forEach(i => { 
     const dateFormatted = new Date(i.data).toLocaleDateString('pt-BR');
-    l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'inventory_2'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub} • ${dateFormatted}</span></div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
+    const obsHtml = i.obs ? `<div class="item-obs">${i.obs}</div>` : '';
+    l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'inventory_2'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub} • ${dateFormatted}</span>${obsHtml}</div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
   });
   const lp = document.getElementById('listPend'); lp.innerHTML = '';
-  db.pendencias.forEach(i => { lp.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
+  db.pendencias.forEach(i => { 
+    const obsHtml = i.obs ? `<div class="item-obs">${i.obs}</div>` : '';
+    lp.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span>${obsHtml}</div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
+  });
   const ml = document.getElementById('metasList'); ml.innerHTML = '';
   db.metas.forEach(m => {
     const perc = Math.min((m.acumulado / m.pretendido) * 100, 100).toFixed(1);
