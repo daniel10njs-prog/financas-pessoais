@@ -709,15 +709,47 @@ function renderSim() {
 function toggleSim(id) { simChecks[id] = simChecks[id] === false ? true : false; renderSim(); }
 
 function renderComp() {
-  const months = {}; db.items.forEach(i => {
-    const m = new Date(i.data).toLocaleDateString('pt-BR', {month:'short', year:'2-digit'}).toUpperCase();
-    if(!months[m]) months[m] = {r:0, d:0}; if(i.tipo==='receita') months[m].r += i.val; else months[m].d += i.val;
+  const container = document.getElementById('compList');
+  if(!container) return;
+  container.innerHTML = '';
+  
+  const groups = {};
+  db.items.forEach(i => {
+    const d = new Date(i.data);
+    const key = d.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+    if(!groups[key]) groups[key] = { r: 0, d: 0 };
+    if(i.tipo === 'receita') groups[key].r += i.val; else groups[key].d += i.val;
   });
-  const cl = document.getElementById('compList'); cl.innerHTML = '';
-  Object.keys(months).reverse().forEach(m => {
-    const r = months[m].r, d = months[m].d, real = r - d;
-    cl.innerHTML += `<div class="comp-row"><div>${m}</div><div style="color:var(--verde)">${r.toFixed(0)}</div><div style="color:var(--vermelho)">${d.toFixed(0)}</div><div style="font-weight:700; color:${real>=0?'var(--azul)':'var(--vermelho)'}">${real.toFixed(0)}</div></div>`;
+
+  const sortedKeys = Object.keys(groups).sort((a, b) => {
+    const months = { janeiro:0, fevereiro:1, março:2, abril:3, maio:4, junho:5, julho:6, agosto:7, setembro:8, outubro:9, novembro:10, dezembro:11 };
+    const [m1, y1] = a.split(' de '); const [m2, y2] = b.split(' de ');
+    return new Date(y2, months[m2]) - new Date(y1, months[m1]);
   });
+
+  sortedKeys.forEach(key => {
+    const g = groups[key];
+    const saldo = g.r - g.d;
+    const color = saldo >= 0 ? 'var(--verde)' : 'var(--vermelho)';
+    container.innerHTML += `
+      <div class="widget" style="margin-bottom: 16px; padding: 16px; border-left: 4px solid ${color};">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <b style="text-transform: capitalize; font-size: 1rem;">${key}</b>
+          <span style="font-size: 0.9rem; color: ${color}; font-weight: 800;">R$ ${saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--card2); padding: 12px; border-radius: 10px;">
+          <div>
+            <div style="font-size: 0.65rem; color: var(--muted); text-transform: uppercase; margin-bottom: 4px;">Receitas</div>
+            <div style="font-size: 0.9rem; color: var(--verde); font-weight: 700;">R$ ${g.r.toLocaleString('pt-BR')}</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.65rem; color: var(--muted); text-transform: uppercase; margin-bottom: 4px;">Despesas</div>
+            <div style="font-size: 0.9rem; color: var(--vermelho); font-weight: 700;">R$ ${g.d.toLocaleString('pt-BR')}</div>
+          </div>
+        </div>
+      </div>`;
+  });
+  if(sortedKeys.length === 0) container.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--muted);">Sem dados para o histórico mensal.</div>';
 }
 
 function render() {
