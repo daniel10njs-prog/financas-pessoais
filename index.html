@@ -337,7 +337,26 @@ header .date {
 </div>
 
 <script>
-let transactions = JSON.parse(localStorage.getItem('zapia_fin_v4') || '[]');
+// Migração e carregamento de dados
+function loadData() {
+  const keys = ['zapia_fin_v4', 'zapia_fin_v3', 'zapia_fin_v2', 'zapia_fin'];
+  for (let key of keys) {
+    const data = localStorage.getItem(key);
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // Se achou dados em chaves antigas, migra para a v4 se necessário
+        if (key !== 'zapia_fin_v4') {
+          localStorage.setItem('zapia_fin_v4', data);
+        }
+        return parsed;
+      }
+    }
+  }
+  return [];
+}
+
+let transactions = loadData();
 
 function switchTab(type) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
