@@ -246,16 +246,24 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 <div class="modal-overlay" id="modalSimRec"><div class="modal"><h2>Recebimento Previsto</h2><div class="form-group"><label>Descrição</label><input id="simRecDesc" type="text"></div><div class="form-group"><label>Valor (R$)</label><input id="simRecVal" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeSimRecModal()">Cancelar</button><button class="btn-save" onclick="saveSimRec()">Adicionar</button></div></div></div>
 
 <script>
-let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { 
-    items: [], pendencias: [], metas: [], previstos: [], 
-    icons: { 'Salário': 'payments', 'Pix Recebido': 'account_balance_wallet', 'Ajuste': 'settings', 'Alimentação': 'restaurant', 'Transporte': 'directions_car', 'Moradia': 'home', 'Lazer': 'celebration', 'Saúde': 'medical_services', 'Educação': 'school', 'Assinaturas': 'subscriptions', 'Outros': 'inventory_2' }, 
-    categories: {
-        receita: ['Salário', 'Pix Recebido', 'Ajuste'],
-        despesa: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'],
-        pendencia: ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros']
-    },
-    theme: 'dark' 
-};
+// Inicialização Robusta do Banco de Dados
+let db;
+try {
+    const raw = localStorage.getItem('zapia_financas_db');
+    db = raw ? JSON.parse(raw) : null;
+    if(!db || !db.categories) throw "new";
+} catch(e) {
+    db = { 
+        items: [], pendencias: [], metas: [], previstos: [], 
+        icons: { 'Salário': 'payments', 'Pix Recebido': 'account_balance_wallet', 'Ajuste': 'settings', 'Alimentação': 'restaurant', 'Transporte': 'directions_car', 'Moradia': 'home', 'Lazer': 'celebration', 'Saúde': 'medical_services', 'Educação': 'school', 'Assinaturas': 'subscriptions', 'Outros': 'inventory_2' }, 
+        categories: {
+            receita: ['Salário', 'Pix Recebido', 'Ajuste'],
+            despesa: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'],
+            pendencia: ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros']
+        },
+        theme: 'dark' 
+    };
+}
 
 const materialIcons = [
     'payments','account_balance_wallet','savings','paid','trending_up','restaurant','shopping_cart','local_mall','home','bolt','water_drop','language','directions_car','local_gas_station','directions_bike','flight','celebration','sports_esports','movie','subscriptions','headset','school','edit','medical_services','medication','fitness_center','medical_information','baby_changing_station','toys','checkroom','shopping_bag','face','smartphone','computer','inventory_2','settings','build','cleaning_services','calendar_month','label','help_outline','work','security','pets','local_shipping'
@@ -339,9 +347,7 @@ function saveCategory() {
         if(!db.categories[currentCatTab].includes(name)) db.categories[currentCatTab].push(name); 
     }
     db.icons[name] = icon; 
-    save();
-    closeAddEditCat(); 
-    setCatTab(currentCatTab);
+    save(); closeAddEditCat(); setCatTab(currentCatTab);
 }
 
 function removeCategory(name) { if(!confirm(`Excluir "${name}"?`)) return; delete db.icons[name]; ['receita','despesa','pendencia'].forEach(t => db.categories[t] = db.categories[t].filter(c => c !== name)); save(); setCatTab(currentCatTab); }
