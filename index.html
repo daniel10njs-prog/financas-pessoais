@@ -15,7 +15,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Finanças">
-<style>
 /* ===== TOKENS PREMIUM DEEP DARK ===== */
 :root {
   --verde: #10b981;
@@ -34,6 +33,22 @@
   --header-h: 72px;
 }
 
+<style>
+/* Reset de Zoom e Scroll Horizontal Android/iOS */
+* {
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  position: relative;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background: var(--bg);
   background-image: 
@@ -45,7 +60,7 @@ body {
   min-height: 100vh;
   max-width: 500px;
   margin: 0 auto;
-  padding-bottom: 100px;
+  padding-bottom: 120px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
