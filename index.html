@@ -28,7 +28,6 @@ header h1 { font-size: 1.2rem; font-weight: 700; }
 .real-card .label { font-size: .7rem; color: var(--azul); font-weight: 700; }
 .real-card .value { font-size: 1.2rem; font-weight: 800; }
 
-/* BOTÕES DE AÇÃO */
 .action-buttons { display: flex; gap: 12px; padding: 0 12px 16px; }
 .btn-action { flex: 1; padding: 16px; border-radius: 14px; border: none; color: #fff; font-size: 1.2rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
 .btn-action.plus { background: var(--verde); }
@@ -42,19 +41,22 @@ header h1 { font-size: 1.2rem; font-weight: 700; }
 .form-group { margin-bottom: 16px; }
 .form-group label { display: block; font-size: .75rem; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; }
 .form-group input, .form-group select { width: 100%; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: #fff; font-size: 1rem; outline: none; }
-.modal-actions { display: flex; gap: 10px; margin-top: 24px; }
+.modal-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+.modal-actions-row { display: flex; gap: 10px; width: 100%; }
 .btn-save { flex: 2; padding: 14px; border-radius: 10px; border: none; background: var(--azul); color: #fff; font-weight: 700; cursor: pointer; }
 .btn-cancel { flex: 1; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: none; color: var(--muted); font-weight: 600; cursor: pointer; }
+.btn-delete { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--vermelho); background: rgba(239, 68, 68, 0.1); color: var(--vermelho); font-weight: 600; cursor: pointer; margin-top: 5px; }
 
 /* LISTA */
 .list { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
-.item { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-.item-info { display: flex; align-items: center; gap: 12px; }
+.item { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.1s; }
+.item:active { transform: scale(0.98); }
+.item-info { display: flex; align-items: center; gap: 12px; pointer-events: none; }
 .item-icon { font-size: 1.4rem; background: var(--card2); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
 .item-text b { font-size: .95rem; }
 .item-text div { font-size: .7rem; color: var(--muted); }
-.item-val { font-weight: 700; white-space: nowrap; }
-.item-val.receita { color: var(--verde); } .item-val.despesa { color: var(--vermelho); } .item-val.pend { color: var(--amarelo); }
+.item-val { font-weight: 700; white-space: nowrap; pointer-events: none; }
+.item-val.receita { color: var(--verde); } .item-val.despesa { color: var(--vermelho); }
 </style>
 </head>
 <body>
@@ -100,6 +102,7 @@ header h1 { font-size: 1.2rem; font-weight: 700; }
 <div class="modal-overlay" id="modalEntry">
   <div class="modal">
     <h2 id="modalTitle">Novo Lançamento</h2>
+    <input type="hidden" id="editId">
     <div class="form-group">
       <label>Descrição</label>
       <input id="desc" type="text" placeholder="Ex: Salário, Mercado...">
@@ -110,13 +113,14 @@ header h1 { font-size: 1.2rem; font-weight: 700; }
     </div>
     <div class="form-group">
       <label>Tipo / Categoria</label>
-      <select id="tipoSub">
-        <!-- Preenchido dinamicamente via JS -->
-      </select>
+      <select id="tipoSub"></select>
     </div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-      <button class="btn-save" onclick="saveEntry()">Salvar</button>
+      <div class="modal-actions-row">
+        <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+        <button class="btn-save" onclick="saveEntry()">Salvar</button>
+      </div>
+      <button id="btnDelete" class="btn-delete" style="display:none;" onclick="deleteEntry()">Excluir Lançamento</button>
     </div>
   </div>
 </div>
@@ -139,16 +143,26 @@ const categorias = {
 function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
 function setTab(tab) { ['lancamentos', 'pendencias', 'graficos'].forEach(t => document.getElementById('tab-'+t).style.display = (t===tab?'block':'none')); render(); }
 
-function openModal(mode) {
+function openModal(mode, id = null) {
   currentMode = mode;
-  document.getElementById('modalTitle').innerText = mode === 'receita' ? 'Nova Receita' : 'Nova Despesa';
   const select = document.getElementById('tipoSub');
   select.innerHTML = '';
-  categorias[mode].forEach(cat => {
-    select.innerHTML += `<option value="${cat}">${cat}</option>`;
-  });
+  categorias[mode].forEach(cat => { select.innerHTML += `<option value="${cat}">${cat}</option>`; });
+
+  if (id) {
+    const item = db.items.find(x => x.id === id);
+    document.getElementById('modalTitle').innerText = 'Editar Lançamento';
+    document.getElementById('editId').value = id;
+    document.getElementById('desc').value = item.desc;
+    document.getElementById('val').value = item.val;
+    document.getElementById('tipoSub').value = item.sub;
+    document.getElementById('btnDelete').style.display = 'block';
+  } else {
+    document.getElementById('modalTitle').innerText = mode === 'receita' ? 'Nova Receita' : 'Nova Despesa';
+    document.getElementById('editId').value = '';
+    document.getElementById('btnDelete').style.display = 'none';
+  }
   document.getElementById('modalEntry').classList.add('show');
-  document.getElementById('desc').focus();
 }
 
 function closeModal() {
@@ -161,10 +175,24 @@ function saveEntry() {
   const d = document.getElementById('desc').value;
   const v = parseFloat(document.getElementById('val').value);
   const s = document.getElementById('tipoSub').value;
-  if(!d || !v) return alert('Preencha todos os campos!');
-  db.items.push({ id: Date.now(), desc: d.toUpperCase(), val: v, tipo: currentMode, sub: s, data: new Date().toISOString() });
-  save();
-  closeModal();
+  const id = document.getElementById('editId').value;
+  if(!d || !v) return;
+
+  if (id) {
+    const idx = db.items.findIndex(x => x.id == id);
+    db.items[idx] = { ...db.items[idx], desc: d.toUpperCase(), val: v, sub: s };
+  } else {
+    db.items.push({ id: Date.now(), desc: d.toUpperCase(), val: v, tipo: currentMode, sub: s, data: new Date().toISOString() });
+  }
+  save(); closeModal();
+}
+
+function deleteEntry() {
+  const id = document.getElementById('editId').value;
+  if(confirm('Excluir este lançamento permanentemente?')) {
+    db.items = db.items.filter(x => x.id != id);
+    save(); closeModal();
+  }
 }
 
 function render() {
@@ -180,7 +208,7 @@ function render() {
     
     const l = document.getElementById('list'); l.innerHTML = '';
     filtered.slice().reverse().forEach(i => {
-        l.innerHTML += `<div class="item">
+        l.innerHTML += `<div class="item" onclick="openModal('${i.tipo}', ${i.id})">
             <div class="item-info">
                 <div class="item-icon">${icons[i.sub] || '📦'}</div>
                 <div class="item-text"><b>${i.desc}</b><div>${i.sub}</div></div>
@@ -188,22 +216,6 @@ function render() {
             <b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b>
         </div>`;
     });
-    
-    if(document.getElementById('tab-graficos').style.display === 'block') updateChart(filtered);
-}
-
-function updateChart(data) {
-    const ctx = document.getElementById('myChart'); if(!ctx) return;
-    const cats = {}; data.forEach(i => cats[i.tipo] = (cats[i.tipo]||0)+i.val);
-    if(chartInstance) chartInstance.destroy();
-    chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: ['Despesas', 'Receitas'], datasets: [{ data: [cats.despesa||0, cats.receita||0], backgroundColor: ['#ef4444','#22c55e'], borderWidth: 0 }] }, options: { plugins: { legend: { labels: { color: '#fff' } } } } });
-}
-
-function exportCSV() { 
-    let csv = "Data,Desc,Val,Tipo,Subtipo\n"; 
-    db.items.forEach(i => csv += `${i.data},${i.desc},${i.val},${i.tipo},${i.sub}\n`); 
-    const blob = new Blob([csv], {type:'text/csv'});
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'financas.csv'; a.click();
 }
 
 window.onload = render;
