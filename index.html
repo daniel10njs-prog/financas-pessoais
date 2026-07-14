@@ -339,18 +339,25 @@ header .date {
 <script>
 // Migração e carregamento de dados
 function loadData() {
-  const keys = ['zapia_fin_v4', 'zapia_fin_v3', 'zapia_fin_v2', 'zapia_fin'];
-  for (let key of keys) {
-    const data = localStorage.getItem(key);
-    if (data) {
-      const parsed = JSON.parse(data);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        // Se achou dados em chaves antigas, migra para a v4 se necessário
-        if (key !== 'zapia_fin_v4') {
-          localStorage.setItem('zapia_fin_v4', data);
-        }
-        return parsed;
-      }
+  const keys = ['zapia_fin_v4', 'zapia_fin_v3', 'zapia_fin_v2', 'zapia_fin', 'zapia_fin_v4.2', 'zapia_fin_v4.0', 'zapia_fin_premium'];
+  
+  // Debug para o console do usuário ver o que está acontecendo
+  console.log("Iniciando varredura de dados...");
+  
+  // Tenta encontrar em TODAS as chaves possíveis do localStorage
+  for (let i = 0; i < localStorage.length; i++) {
+    const storageKey = localStorage.key(i);
+    console.log("Chave encontrada no storage:", storageKey);
+    if (storageKey.startsWith('zapia_fin')) {
+       const data = localStorage.getItem(storageKey);
+       try {
+         const parsed = JSON.parse(data);
+         if (Array.isArray(parsed) && parsed.length > 0) {
+            console.log("DADOS LOCALIZADOS NA CHAVE:", storageKey);
+            localStorage.setItem('zapia_fin_v4', data); // Consolida na chave atual
+            return parsed;
+         }
+       } catch(e) {}
     }
   }
   return [];
