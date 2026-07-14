@@ -33,7 +33,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
   position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); 
   width: 100%; max-width: 480px; 
   background: var(--card); border-top: 1px solid var(--border); 
-  display: grid; grid-template-columns: repeat(7, 1fr); 
+  display: grid; grid-template-columns: repeat(6, 1fr); 
   z-index: 1000; padding: 10px 4px calc(10px + var(--safe-area-bottom)); 
 }
 .bottom-nav button { 
@@ -134,13 +134,16 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 <header style="display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; position: relative;">
   <h1 id="tab-title" style="font-size: 1.1rem; font-weight: 800; color: var(--azul); z-index: 2;">Lançamentos</h1>
   <h1 style="position: absolute; width: 100%; left: 0; text-align: center; font-size: 0.9rem; font-weight: 400; opacity: 0.5; pointer-events: none; z-index: 1;">Finanças</h1>
-  <div class="menu-container" style="z-index: 2;">
-    <button class="dots-btn" onclick="toggleMenu()"><i class="fas fa-ellipsis-v"></i></button>
-    <div class="dropdown-menu" id="dropdownMenu">
-      <div class="dropdown-item" onclick="toggleTheme()"><i class="fas fa-circle-half-stroke"></i> Tema Claro/Escuro</div>
-      <div class="dropdown-item" onclick="exportBackup()"><i class="fas fa-file-export"></i> Salvar Backup (JSON)</div>
-      <div class="dropdown-item" onclick="importBackup()"><i class="fas fa-file-import"></i> Restaurar Backup</div>
-      <div class="dropdown-item" onclick="openIconManager()"><i class="fas fa-tags"></i> Gerenciar Categorias</div>
+  <div class="menu-container" style="z-index: 1001;">
+    <button class="dots-btn" onclick="toggleMenu()" style="background: var(--card2); width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); color: var(--text); cursor: pointer;"><i class="fas fa-th-large"></i></button>
+    <div class="dropdown-menu" id="dropdownMenu" style="position: fixed; top: 70px; right: 20px; width: 220px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 1002;">
+      <div style="padding: 12px 16px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--card2);">Ferramentas</div>
+      <div class="dropdown-item" onclick="setTab('compras'); toggleMenu()"><i class="fas fa-shopping-cart"></i> Lista de Compras</div>
+      <div class="dropdown-item" onclick="toggleTheme(); toggleMenu()"><i class="fas fa-circle-half-stroke"></i> Tema Claro/Escuro</div>
+      <div style="padding: 12px 16px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--card2); border-top: 1px solid var(--border);">Dados</div>
+      <div class="dropdown-item" onclick="exportBackup(); toggleMenu()"><i class="fas fa-file-export"></i> Exportar JSON</div>
+      <div class="dropdown-item" onclick="importBackup(); toggleMenu()"><i class="fas fa-file-import"></i> Restaurar Backup</div>
+      <div class="dropdown-item" onclick="openIconManager(); toggleMenu()"><i class="fas fa-tags"></i> Categorias</div>
     </div>
   </div>
 </header>
@@ -237,9 +240,8 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </section>
 
 <nav class="bottom-nav">
-  <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><i class="fas fa-list-ul"></i>Lançamentos</button>
-  <button id="nav-compras" onclick="setTab('compras')"><i class="fas fa-shopping-basket"></i>Compras</button>
-  <button id="nav-pendencias" onclick="setTab('pendencias')"><i class="fas fa-clock"></i>Pendências</button>
+  <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><i class="fas fa-list-ul"></i>Lançar</button>
+  <button id="nav-pendencias" onclick="setTab('pendencias')"><i class="fas fa-clock"></i>Pendente</button>
   <button id="nav-comparativo" onclick="setTab('comparativo')"><i class="fas fa-history"></i>Mensal</button>
   <button id="nav-simular" onclick="setTab('simular')"><i class="fas fa-calculator"></i>Simular</button>
   <button id="nav-metas" onclick="setTab('metas')"><i class="fas fa-bullseye"></i>Metas</button>
