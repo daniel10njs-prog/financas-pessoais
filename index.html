@@ -79,6 +79,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .sim-check { width: 22px; height: 22px; cursor: pointer; }
 .sim-item { background: var(--card); border-radius: 12px; padding: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .sim-btn-del { color: var(--vermelho); background: none; border: none; font-size: 0.8rem; cursor: pointer; margin-left: 10px; }
+.sync-btn { background: none; border: 1px solid var(--border); padding: 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -165,16 +166,19 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
   <button id="nav-analise" onclick="setTab('analise')"><i class="fas fa-chart-pie"></i>Análise</button>
 </nav>
 
+<!-- MODAIS -->
 <div class="modal-overlay" id="modalEntry"><div class="modal"><h2 id="modalTitle">Lançamento</h2><input type="hidden" id="editId"><input type="hidden" id="editType"><div class="form-group"><label>Descrição</label><input id="desc" type="text"></div><div class="form-group"><label>Valor (R$)</label><input id="val" type="number" step="0.01"></div><div class="form-group"><label>Tipo / Categoria</label><select id="tipoSub"></select></div><div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-save" onclick="saveEntry()">Salvar</button></div></div></div>
 <div class="modal-overlay" id="modalMeta"><div class="modal"><h2>Nova Meta</h2><div class="form-group"><label>Nome da Meta</label><input id="metaNome" type="text"></div><div class="form-group"><label>Valor Pretendido (R$)</label><input id="metaPretendido" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeMetaModal()">Cancelar</button><button class="btn-save" onclick="saveMeta()">Criar</button></div></div></div>
 <div class="modal-overlay" id="modalAddMeta"><div class="modal"><h2>Adicionar à Meta</h2><input type="hidden" id="addMetaId"><div class="form-group"><label>Valor a Guardar (R$)</label><input id="valAddMeta" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeAddMetaModal()">Cancelar</button><button class="btn-save" onclick="confirmAddMeta()">Adicionar</button></div></div></div>
 <div class="modal-overlay" id="modalSimRec"><div class="modal"><h2>Recebimento Previsto</h2><div class="form-group"><label>Descrição (Ex: Salário dia 20)</label><input id="simRecDesc" type="text"></div><div class="form-group"><label>Valor (R$)</label><input id="simRecVal" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeSimRecModal()">Cancelar</button><button class="btn-save" onclick="saveSimRec()">Adicionar</button></div></div></div>
-<div class="modal-overlay" id="modalIcon"><div class="modal"><h2>Gerenciar Ícones</h2><div id="iconList" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px;"></div><div class="modal-actions"><button class="btn-save" style="width:100%" onclick="closeIconManager()">Concluir</button></div></div></div>
+<!-- MODAL DE ICONES CORRIGIDO -->
+<div class="modal-overlay" id="modalIcon" style="z-index: 3000;"><div class="modal" style="max-height: 80vh;"><h2>Gerenciar Ícones</h2><div id="iconList" style="margin-bottom: 20px;"></div><div class="modal-actions"><button class="btn-save" style="width:100%" onclick="closeIconManager()">Concluir</button></div></div></div>
 
 <script>
 let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { items: [], pendencias: [], metas: [], previstos: [], icons: { 'Salário': '💰', 'Pix Recebido': '💸', 'Ajuste': '⚙️', 'Alimentação': '🍽️', 'Transporte': '🚗', 'Moradia': '🏠', 'Lazer': '🎡', 'Saúde': '🏥', 'Educação': '📚', 'Assinaturas': '📺', 'Outros': '📦' }, theme: 'dark' };
 let simChecks = {}; 
 const categorias = { 'receita': ['Salário', 'Pix Recebido', 'Ajuste'], 'despesa': ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'], 'pendencia': ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros'] };
+let chartInstance = null;
 
 function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
 
@@ -223,12 +227,13 @@ function importBackup() {
 function openIconManager() {
     const il = document.getElementById('iconList'); il.innerHTML = '';
     Object.keys(db.icons).forEach(cat => {
-        il.innerHTML += `<div class="form-group" style="display:flex; align-items:center; gap:10px;"><label style="flex:1; margin:0;">${cat}</label><input type="text" style="width:60px; text-align:center;" value="${db.icons[cat]}" oninput="updateIcon('${cat}', this.value)"></div>`;
+        il.innerHTML += `<div class="form-group" style="display:flex; align-items:center; gap:10px; margin-bottom:10px;"><label style="flex:1; margin:0;">${cat}</label><input type="text" style="width:60px; text-align:center; padding:5px; border-radius:5px; border:1px solid var(--border); background:var(--card2); color:var(--text);" value="${db.icons[cat]}" oninput="updateIcon('${cat}', this.value)"></div>`;
     });
     document.getElementById('modalIcon').classList.add('show');
+    document.getElementById('dropdownMenu').classList.remove('show');
 }
 function closeIconManager() { document.getElementById('modalIcon').classList.remove('show'); }
-function updateIcon(cat, val) { db.icons[cat] = val; localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
+function updateIcon(cat, val) { db.icons[cat] = val; localStorage.setItem('zapia_financas_db', JSON.stringify(db)); }
 
 function setTab(t) {
   document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
@@ -240,11 +245,12 @@ function setTab(t) {
 }
 function openModal(mode, id = null) {
   const select = document.getElementById('tipoSub'); select.innerHTML = '';
-  categorias[mode === 'pendencia' ? 'pendencia' : (mode === 'receita' ? 'receita' : 'despesa')].forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
+  const cats = mode === 'pendencia' ? categorias['pendencia'] : (mode === 'receita' ? categorias['receita'] : categorias['despesa']);
+  cats.forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
   document.getElementById('editType').value = mode;
   if(id) {
     const list = mode === 'pendencia' ? db.pendencias : db.items;
-    const item = list.find(x => x.id === id);
+    const item = list.find(x => x.id == id);
     document.getElementById('modalTitle').innerText = 'Editar';
     document.getElementById('editId').value = id; document.getElementById('desc').value = item.desc; document.getElementById('val').value = item.val; document.getElementById('tipoSub').value = item.sub;
   } else {
@@ -267,7 +273,7 @@ function saveEntry() {
   save(); closeModal();
 }
 function deleteItem(id, type, event) {
-  event.stopPropagation();
+  if(event) event.stopPropagation();
   if(type === 'pendencia') db.pendencias = db.pendencias.filter(x => x.id != id);
   else if(type === 'meta') db.metas = db.metas.filter(x => x.id != id);
   else if(type === 'previsto') db.previstos = db.previstos.filter(x => x.id != id);
@@ -338,7 +344,7 @@ function render() {
   const ml = document.getElementById('metasList'); ml.innerHTML = '';
   db.metas.forEach(m => {
     const perc = Math.min((m.acumulado / m.pretendido) * 100, 100).toFixed(1);
-    ml.innerHTML += `<div class="widget"><div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;"><div><b style="font-size:.9rem; color:var(--azul);">${m.nome}</b><div style="font-size:.7rem; color:var(--muted);">Meta: R$ ${m.pretendido.toLocaleString('pt-BR')}</div></div><div style="text-align:right;"><b style="font-size:1rem;">R$ ${m.acumulado.toLocaleString('pt-BR')}</b><div style="font-size:.7rem; color:var(--verde);">${perc}%</div></div></div><div class="progress-bar"><div class="progress-fill" style="width:${perc}%;"></div></div><div style="display:flex; gap:10px; margin-top:15px;"><button class="sync-btn" style="flex:1; color:var(--verde); border-color:var(--verde);" onclick="openAddMeta(${m.id})">ADICIONAR</button><button class="icon-btn delete" onclick="deleteItem(${m.id}, 'meta', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
+    ml.innerHTML += `<div class="widget"><div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;"><div><b style="font-size:.9rem; color:var(--azul);">${m.nome}</b><div style="font-size:.7rem; color:var(--muted);">Meta: R$ ${m.pretendido.toLocaleString('pt-BR')}</div></div><div style="text-align:right;"><b style="font-size:1rem;">R$ ${m.acumulado.toLocaleString('pt-BR')}</b><div style="font-size:.7rem; color:var(--verde);">${perc} %</div></div></div><div class="progress-bar"><div class="progress-fill" style="width:${perc}%;"></div></div><div style="display:flex; gap:10px; margin-top:15px;"><button class="sync-btn" style="flex:1; color:var(--verde); border-color:var(--verde);" onclick="openAddMeta(${m.id})">ADICIONAR</button><button class="icon-btn delete" onclick="deleteItem(${m.id}, 'meta', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
   });
   renderComp(); renderSim();
 }
@@ -358,11 +364,6 @@ function initChart() {
   const ctx = document.getElementById('myChart').getContext('2d'); if(chartInstance) chartInstance.destroy();
   const totals = {}; db.items.filter(i=>i.tipo==='despesa').forEach(i => totals[i.sub] = (totals[i.sub]||0) + i.val);
   chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(totals), datasets: [{ data: Object.values(totals), backgroundColor: ['#ef4444', '#3b82f6', '#f59e0b', '#22c55e', '#8b5cf6', '#ec4899'] }] }, options: { plugins: { legend: { position: 'bottom', labels: { color: db.theme === 'dark' ? '#f1f5f9' : '#0f172a', font: {size: 10} } } } } });
-}
-let chartInstance = null;
-function exportCSV() {
-  let csv = 'Data,Tipo,Descricao,Categoria,Valor\n'; db.items.forEach(i => { csv += `${new Date(i.data).toLocaleDateString()},${i.tipo},${i.desc},${i.sub},${i.val}\n`; });
-  const blob = new Blob([csv], { type: 'text/csv' }); const url = window.URL.createObjectURL(blob); const a = document.createElement('a'); a.setAttribute('hidden', ''); a.setAttribute('href', url); a.setAttribute('download', 'financas.csv'); document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 window.onload = () => { applyTheme(); render(); };
 </script>
