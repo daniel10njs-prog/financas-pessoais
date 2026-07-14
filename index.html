@@ -20,7 +20,7 @@ header { height: 80px; padding: 0 24px; display: flex; align-items: center; just
 .logo { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.04em; color: var(--text); }
 .logo span { color: var(--azul); }
 
-.balance-section { margin: 24px 20px; padding: 32px 24px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border-radius: 28px; border: 1px solid var(--border); text-align: center; }
+.balance-section { margin: 24px 20px; padding: 32px 24px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%); border-radius: 28px; border: 1px solid var(--border); text-align: center; }
 .balance-label { font-size: 0.85rem; color: var(--muted); font-weight: 600; text-transform: uppercase; }
 .balance-val { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.06em; margin: 12px 0; color: #fff; }
 
@@ -45,7 +45,7 @@ header { height: 80px; padding: 0 24px; display: flex; align-items: center; just
 .fab { position: fixed; bottom: 32px; right: 24px; width: 64px; height: 64px; background: var(--azul); border-radius: 22px; display: flex; align-items: center; justify-content: center; color: white; border: none; box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3); z-index: 1000; }
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
 .sheet { background: #1e293b; width: 100%; max-width: 400px; border-radius: 28px; padding: 32px; border: 1px solid var(--border); }
-input, select { width: 100%; padding: 16px; background: #0f172a; border: 1px solid var(--border); border-radius: 14px; color: white; margin-bottom: 16px; font-size: 1rem; }
+input, select, textarea { width: 100%; padding: 16px; background: #0f172a; border: 1px solid var(--border); border-radius: 14px; color: white; margin-bottom: 16px; font-size: 1rem; }
 .btn-main { width: 100%; padding: 18px; background: var(--azul); color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 1.1rem; }
 </style>
 </head>
@@ -53,7 +53,7 @@ input, select { width: 100%; padding: 16px; background: #0f172a; border: 1px sol
 
 <header>
   <div class="logo">ZAPIA <span>FINANCE</span></div>
-  <button onclick="importData()" style="background:none; border:none; color:var(--muted)"><span class="material-icons-round">cloud_download</span></button>
+  <button onclick="openImportModal()" style="background:none; border:none; color:var(--muted)"><span class="material-icons-round">cloud_download</span></button>
 </header>
 
 <div class="balance-section">
@@ -89,6 +89,16 @@ input, select { width: 100%; padding: 16px; background: #0f172a; border: 1px sol
   </div>
 </div>
 
+<div class="modal" id="importModal">
+  <div class="sheet">
+    <h2 style="margin-bottom:16px;">Restaurar Backup</h2>
+    <p style="color:var(--muted); font-size:0.8rem; margin-bottom:16px;">Cole o código do backup abaixo:</p>
+    <textarea id="importText" rows="10" placeholder='{"items": [...], "pends": [...]}'></textarea>
+    <button class="btn-main" onclick="doImport()">Importar Dados</button>
+    <button onclick="closeImportModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:12px;">Cancelar</button>
+  </div>
+</div>
+
 <script>
 let store = JSON.parse(localStorage.getItem('zapia_pro_v5')) || { items: [], pends: [] };
 let currentTab = 'all';
@@ -100,12 +110,8 @@ function save() {
   if (!v || !d) return alert('Preencha os campos.');
   
   const item = { id: Date.now(), val: v, desc: d, tipo: t, data: new Date().toISOString().split('T')[0] };
-  
-  if (t === 'pend') {
-    store.pends.unshift(item);
-  } else {
-    store.items.unshift(item);
-  }
+  if (t === 'pend') store.pends.unshift(item);
+  else store.items.unshift(item);
   
   persist();
   closeModal();
@@ -115,6 +121,8 @@ function save() {
 function persist() { localStorage.setItem('zapia_pro_v5', JSON.stringify(store)); }
 function openModal() { document.getElementById('modal').style.display = 'flex'; }
 function closeModal() { document.getElementById('modal').style.display = 'none'; }
+function openImportModal() { document.getElementById('importModal').style.display = 'flex'; }
+function closeImportModal() { document.getElementById('importModal').style.display = 'none'; }
 
 function setTab(t, el) {
   currentTab = t;
@@ -131,18 +139,28 @@ function del(id, isPend) {
   render();
 }
 
-function importData() {
-  const b = prompt('Cole seu backup JSON aqui:');
+function doImport() {
+  const b = document.getElementById('importText').value.trim();
   if(!b) return;
   try {
     const p = JSON.parse(b);
-    if(p.items || p.pends) {
-      store = { items: p.items || [], pends: p.pends || [] };
-      persist();
-      render();
-      alert('Backup restaurado!');
-    }
-  } catch(e) { alert('Erro no formato do backup.'); }
+    // Validação muito mais robusta: aceita o formato 'items' e 'pends' OU apenas arrays
+    let newItems = [];
+    let newPends = [];
+
+    if (p.items && Array.isArray(p.items)) newItems = p.items;
+    else if (Array.isArray(p)) newItems = p;
+
+    if (p.pends && Array.isArray(p.pends)) newPends = p.pends;
+
+    store = { items: newItems, pends: newPends };
+    persist();
+    render();
+    closeImportModal();
+    alert('Sucesso! Dados restaurados.');
+  } catch(e) {
+    alert('Erro: O texto colado não é um backup válido. Verifique se copiou tudo.');
+  }
 }
 
 function render() {
@@ -150,9 +168,12 @@ function render() {
   l.innerHTML = '';
   let bal = 0, pTotal = 0;
   
-  // Cálculo de Saldo (apenas itens confirmados)
-  store.items.forEach(i => { if(i.tipo === 'receita') bal += i.val; else bal -= i.val; });
-  // Cálculo de Pendências
+  store.items.forEach(i => { 
+    // Garante que o tipo seja tratado corretamente mesmo vindo de backups antigos
+    const t = (i.tipo || '').toLowerCase();
+    if(t === 'receita' || t === 'rec') bal += i.val; 
+    else bal -= i.val; 
+  });
   store.pends.forEach(i => pTotal += i.val);
 
   if (currentTab === 'pend') {
@@ -169,10 +190,14 @@ function render() {
   const showPends = currentTab === 'all' || currentTab === 'pend';
 
   const combined = [];
-  if(showItems) store.items.forEach(i => { if(currentTab==='all' || i.tipo===currentTab) combined.push({...i, isPend: false})});
+  if(showItems) store.items.forEach(i => { 
+    const t = (i.tipo || '').toLowerCase();
+    const cleanTipo = (t === 'receita' || t === 'rec') ? 'receita' : 'despesa';
+    if(currentTab==='all' || cleanTipo===currentTab) combined.push({...i, tipo: cleanTipo, isPend: false})
+  });
   if(showPends) store.pends.forEach(i => combined.push({...i, tipo: 'pend', isPend: true}));
 
-  combined.sort((a,b) => (b.data || '').localeCompare(a.data || '')).forEach(i => {
+  combined.sort((a,b) => (b.data || b.venc || '').localeCompare(a.data || a.venc || '')).forEach(i => {
     const div = document.createElement('div');
     div.className = 'item-card';
     div.innerHTML = `
