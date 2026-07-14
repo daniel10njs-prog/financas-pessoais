@@ -367,8 +367,15 @@ const materialIcons = [
 let simChecks = {}; let chartInstance = null; let currentCatTab = 'receita';
 
 function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
-function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('show'); }
-window.onclick = function(e) { if (!e.target.closest('.menu-container')) { document.getElementById('dropdownMenu').classList.remove('show'); } };
+function toggleMenu() {
+  const menu = document.getElementById('dropdownMenu');
+  if (menu.style.display === 'flex') {
+    menu.style.display = 'none';
+  } else {
+    menu.style.display = 'flex';
+  }
+}
+window.onclick = function(e) { if (!e.target.closest('.menu-container')) { document.getElementById('dropdownMenu').style.display = 'none'; } };
 
 function toggleTheme() { db.theme = db.theme === 'dark' ? 'light' : 'dark'; applyTheme(); save(); }
 function applyTheme() {
