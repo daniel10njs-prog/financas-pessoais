@@ -161,14 +161,14 @@ function openModal(mode, id = null) {
     document.getElementById('modalTitle').innerText = mode === 'receita' ? 'Nova Receita' : 'Nova Despesa';
     document.getElementById('editId').value = '';
     document.getElementById('btnDelete').style.display = 'none';
+    document.getElementById('desc').value = '';
+    document.getElementById('val').value = '';
   }
   document.getElementById('modalEntry').classList.add('show');
 }
 
 function closeModal() {
   document.getElementById('modalEntry').classList.remove('show');
-  document.getElementById('desc').value = '';
-  document.getElementById('val').value = '';
 }
 
 function saveEntry() {
@@ -180,9 +180,9 @@ function saveEntry() {
 
   if (id) {
     const idx = db.items.findIndex(x => x.id == id);
-    db.items[idx] = { ...db.items[idx], desc: d.toUpperCase(), val: v, sub: s };
+    db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s };
   } else {
-    db.items.push({ id: Date.now(), desc: d.toUpperCase(), val: v, tipo: currentMode, sub: s, data: new Date().toISOString() });
+    db.items.push({ id: Date.now(), desc: d, val: v, tipo: currentMode, sub: s, data: new Date().toISOString() });
   }
   save(); closeModal();
 }
