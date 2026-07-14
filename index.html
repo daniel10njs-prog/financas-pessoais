@@ -780,6 +780,7 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
     <div class="resumo">
       <div class="resumo-title">Nuvem & Sincronização</div>
       <button class="btn-add" style="background:var(--azul)" onclick="exportarDrive()">Sincronizar c/ Zapia (Drive)</button>
+      <button class="btn-add" style="background:var(--verde); margin-top:10px" onclick="compartilharWhatsApp()">Mandar Resumo p/ Zapia (WhatsApp)</button>
       <div class="row" style="margin-top:10px; gap:8px">
         <button class="btn-add" style="background:var(--card2); font-size:0.8rem; flex:1" onclick="exportarArquivo()">Baixar JSON</button>
         <button class="btn-add" style="background:var(--card2); font-size:0.8rem; flex:1" onclick="document.getElementById('fileIn').click()">Importar JSON</button>
@@ -1504,6 +1505,44 @@ function cardInsight(icon, title, text, color) {
       </div>
     </div>
   `;
+}
+
+function compartilharWhatsApp() {
+  const d = loadData();
+  const agora = new Date();
+  const mesAtual = agora.getMonth();
+  const anoAtual = agora.getFullYear();
+  const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+
+  const doMes = d.items.filter(it => {
+    const dt = new Date(it.data + 'T12:00:00');
+    return dt.getMonth() === mesAtual && dt.getFullYear() === anoAtual;
+  });
+
+  const rec = doMes.filter(i => i.tipo === 'receita').reduce((a, b) => a + Number(b.val), 0);
+  const desp = doMes.filter(i => i.tipo === 'despesa').reduce((a, b) => a + Number(b.val), 0);
+  const saldo = rec - desp;
+
+  let texto = `*Resumo Financeiro - ${meses[mesAtual]}/${anoAtual}*\n\n`;
+  texto += `💰 *Ganhos:* R$ ${rec.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n`;
+  texto += `💸 *Gastos:* R$ ${desp.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n`;
+  texto += `⚖️ *Saldo:* R$ ${saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n\n`;
+  texto += `📊 *Top Gastos por Categoria:*\n`;
+
+  const cats = {};
+  doMes.filter(i => i.tipo === 'despesa').forEach(i => {
+    const nome = i.cat.split(' ').slice(1).join(' ');
+    cats[nome] = (cats[nome] || 0) + Number(i.val);
+  });
+
+  Object.entries(cats).sort((a,b) => b[1] - a[1]).slice(0, 5).forEach(([c, v]) => {
+    texto += `- ${c}: R$ ${v.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n`;
+  });
+
+  texto += `\n_Enviado via Zapia Finance_`;
+  
+  const url = `https://wa.me/5511952402120?text=${encodeURIComponent(texto)}`;
+  window.open(url, '_blank');
 }
 
 // ── Planos (Simulação) ────────────────────────────────────
