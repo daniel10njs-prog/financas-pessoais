@@ -83,7 +83,7 @@ header .date { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
   background: var(--bg);
   border-top: 1px solid var(--border);
   display: flex;
-  height: 75px;
+  height: 70px;
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 200;
   max-width: 500px;
@@ -98,14 +98,15 @@ header .date { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 600;
   transition: 0.2s;
   text-transform: none;
   letter-spacing: 0;
   opacity: 1;
+  min-width: 0;
 }
-.bnav-btn .icon { font-size: 1.5rem; margin-bottom: 4px; transition: 0.2s; }
+.bnav-btn .icon { font-size: 1.3rem; margin-bottom: 2px; transition: 0.2s; }
 .bnav-btn.active { color: var(--azul); }
 .bnav-btn.active .icon { transform: scale(1.2); filter: drop-shadow(0 0 5px var(--azul)); }
 
@@ -122,7 +123,7 @@ header .date { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
   overflow: hidden;
 }
 .resumo::after {
-  content: 'ZAPIA SYSTEM v3.5';
+  content: 'ZAPIA FINANCE v3.8';
   position: absolute;
   top: 5px;
   right: 10px;
