@@ -3,67 +3,170 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
-    <title>Finanças Executive v19</title>
-    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
+    <title>Finanças Tech-Anime v20</title>
+    <link href='https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Outfit:wght@300;400;700;900&display=swap' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css' rel='stylesheet'>
     <style>
         :root {
-            --bg: #000000; --card: #121212; --primary: #ffffff; --accent: #2563eb;
-            --text: #ffffff; --muted: #a0a0a0; --up: #00e676; --down: #ff5252; --warn: #ffab00;
-            --border: rgba(255, 255, 255, 0.15);
+            --bg: #03040a; 
+            --card: rgba(10, 12, 25, 0.8);
+            --primary: #00f2ff; /* Cyan Neon */
+            --accent: #7000ff; /* Purple Neon */
+            --text: #e0e6ed;
+            --muted: #64748b;
+            --up: #00ff9d;
+            --down: #ff0055;
+            --warn: #ffe600;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(0, 242, 255, 0.15);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 110px; max-width: 500px; margin: 0 auto; min-height: 100vh; overflow-x: hidden; }
         
-        /* HEADER ESTILIZADO */
-        header { padding: 24px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
-        header h1 { font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; }
-        .menu-dots { padding: 10px; cursor: pointer; color: var(--primary); font-size: 1.4rem; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: var(--bg); 
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(112, 0, 255, 0.1) 0%, transparent 50%),
+                linear-gradient(rgba(0, 242, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 20px 20px, 20px 20px;
+            color: var(--text); 
+            font-family: 'Outfit', sans-serif;
+            padding-bottom: 100px;
+            min-height: 100vh;
+        }
 
-        /* MENU DROPDOWN */
+        /* HEADER CYBERPUNK */
+        header { 
+            padding: 24px 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(3, 4, 10, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 4px 20px rgba(0, 242, 255, 0.1);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        header h1 { 
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem; font-weight: 800; 
+            text-transform: uppercase; letter-spacing: 0.2em;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+        }
+
+        /* MENU TECH */
         #mainMenu { 
-            position: fixed; top: 70px; right: 20px; background: #1a1a1a; border: 1px solid var(--border); 
-            border-radius: 12px; width: 220px; display: none; flex-direction: column; z-index: 3000; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden;
+            position: fixed; top: 80px; right: 20px; background: rgba(10, 12, 25, 0.95); 
+            border: 1px solid var(--primary); border-radius: 4px; width: 240px; 
+            display: none; flex-direction: column; z-index: 3000; 
+            backdrop-filter: blur(20px); box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
         }
-        .menu-item { padding: 16px; display: flex; align-items: center; gap: 12px; font-size: 0.85rem; font-weight: 600; color: white; cursor: pointer; border-bottom: 1px solid var(--border); }
-        .menu-item:last-child { border-bottom: none; }
-        .menu-item i { font-size: 1.1rem; color: var(--muted); }
-        .menu-item:active { background: #333; }
+        .menu-item { 
+            padding: 16px; display: flex; align-items: center; gap: 12px; 
+            font-size: 0.8rem; font-family: 'JetBrains Mono', monospace;
+            font-weight: 700; color: var(--primary); cursor: pointer; 
+            border-bottom: 1px solid var(--border); text-transform: uppercase;
+        }
+        .menu-item i { font-size: 1rem; }
 
-        .tab-content { display: none; padding: 20px; animation: androidFade 0.2s ease-out; }
+        .tab-content { display: none; padding: 20px; animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .tab-content.active { display: block; }
-        @keyframes androidFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* TÍTULOS COM ÍCONES */
-        .tab-title { display: flex; align-items: center; gap: 12px; font-size: 0.75rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 24px; letter-spacing: 0.1em; }
-        .tab-title i { font-size: 1.2rem; color: var(--primary); }
+        /* TÍTULOS COM DECORAÇÃO TECH */
+        .tab-title { 
+            display: flex; align-items: center; gap: 12px; font-size: 0.7rem; font-weight: 900; 
+            color: var(--accent); text-transform: uppercase; margin-bottom: 24px; letter-spacing: 0.2em;
+            border-left: 3px solid var(--accent); padding-left: 10px;
+        }
 
-        .summary-val { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 24px; }
-        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 24px; }
-        .grid-item { background: var(--bg); padding: 16px; }
+        /* CARDS GLASSMORPHISM */
+        .summary-val { 
+            font-size: 3.2rem; font-weight: 900; letter-spacing: -0.05em; 
+            margin-bottom: 24px; font-family: 'JetBrains Mono', monospace;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
         
-        .input-field { background: var(--card); border-radius: 12px; margin-bottom: 12px; padding: 12px 16px; border: 1px solid var(--border); }
-        .input-field label { display: block; font-size: 0.65rem; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
-        input, select { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 1rem; font-weight: 500; }
+        .summary-grid { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; 
+        }
+        .grid-item { 
+            background: var(--glass); border: 1px solid var(--border); 
+            border-radius: 4px; padding: 16px; position: relative; overflow: hidden;
+        }
+        .grid-item::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary);
+        }
 
-        .btn-exec { flex: 1; padding: 16px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
-        .btn-primary { background: var(--primary); color: #000; }
-        .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+        /* INPUTS ESTILO TERMINAL */
+        .input-field { 
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); 
+            border-radius: 4px; margin-bottom: 15px; padding: 12px 16px; 
+        }
+        .input-field label { 
+            display: block; font-size: 0.6rem; color: var(--primary); font-weight: 700; 
+            text-transform: uppercase; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace;
+        }
+        input, select { 
+            background: transparent; border: none; color: white; width: 100%; outline: none; 
+            font-size: 0.95rem; font-family: 'JetBrains Mono', monospace;
+        }
 
-        .transaction-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+        /* BOTÕES HIGH-TECH */
+        .btn-exec { 
+            flex: 1; padding: 18px; border-radius: 4px; border: none; font-weight: 800; 
+            cursor: pointer; text-transform: uppercase; font-size: 0.75rem; 
+            font-family: 'JetBrains Mono', monospace; letter-spacing: 0.1em;
+            transition: all 0.2s; position: relative; overflow: hidden;
+        }
+        .btn-primary { 
+            background: var(--primary); color: #000; 
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+        }
+        .btn-secondary { 
+            background: transparent; color: var(--primary); border: 1px solid var(--primary); 
+        }
+
+        /* TRANSAÇÕES ESTILO LOG */
+        .transaction-card { 
+            background: var(--glass); border-left: 2px solid var(--border);
+            padding: 20px; margin-bottom: 15px; position: relative;
+        }
         .trans-main { display: flex; justify-content: space-between; align-items: flex-start; }
-        .trans-actions-row { display: flex; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
-        .btn-action { flex: 1; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--primary); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.75rem; font-weight: 700; }
-
-        .android-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; border-top: 1px solid var(--border); display: flex; height: 75px; z-index: 2000; padding-bottom: env(safe-area-inset-bottom); }
-        .nav-link { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); }
-        .nav-link.active { color: var(--primary); }
-        .nav-link span { font-size: 0.6rem; font-weight: 600; margin-top: 4px; }
-
-        #editBadge { background: var(--accent); color: white; padding: 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; display: none; margin-bottom: 16px; width: 100%; text-align: center; text-transform: uppercase; }
+        .trans-name { font-size: 1rem; font-weight: 700; text-transform: uppercase; color: #fff; }
+        .trans-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--muted); }
+        .trans-val { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 800; }
         
-        /* OVERLAY PARA O MENU */
+        .trans-actions-row { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-action { 
+            flex: 1; padding: 10px; background: rgba(0, 242, 255, 0.05); 
+            border: 1px solid var(--border); color: var(--primary); 
+            font-size: 0.65rem; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+        }
+
+        /* NAV FUTURISTA */
+        .android-nav { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: rgba(3, 4, 10, 0.95); backdrop-filter: blur(15px);
+            border-top: 2px solid var(--accent); display: flex; height: 80px; 
+            z-index: 2000; padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-link { 
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            color: var(--muted); transition: all 0.3s;
+        }
+        .nav-link.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+        .nav-link span { font-size: 0.55rem; font-weight: 800; text-transform: uppercase; margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+
+        #editBadge { 
+            background: var(--accent); color: white; padding: 10px; font-size: 0.7rem; 
+            font-weight: 800; font-family: 'JetBrains Mono', monospace;
+            display: none; margin-bottom: 20px; border: 1px solid var(--primary);
+        }
+        
         #menuOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2500; display: none; }
     </style>
 </head>
@@ -73,65 +176,67 @@
 
 <header>
     <h1>Finanças</h1>
-    <div class='menu-dots' onclick='toggleMenu()'>
-        <i class='lucide-more-vertical'></i>
+    <div onclick='toggleMenu()' style='color:var(--primary); font-size: 1.5rem; cursor:pointer'>
+        <i class='lucide-command'></i>
     </div>
 </header>
 
 <div id='mainMenu'>
-    <div class='menu-item' onclick='exportToClipboard()'><i class='lucide-copy'></i> Copiar Backup (Drive)</div>
-    <div class='menu-item' onclick='importFromClipboard()'><i class='lucide-file-input'></i> Importar do Drive</div>
-    <div class='menu-item' onclick='exportar()'><i class='lucide-download'></i> Exportar Arquivo .JSON</div>
-    <div class='menu-item' onclick='toggleTheme()'><i class='lucide-moon'></i> Alternar Tema</div>
-    <div class='menu-item' onclick='resetAll()' style='color:var(--down)'><i class='lucide-trash-2' style='color:var(--down)'></i> Limpar Tudo</div>
+    <div class='menu-item' onclick='exportToClipboard()'><i class='lucide-database'></i> Sync Data (Drive)</div>
+    <div class='menu-item' onclick='importFromClipboard()'><i class='lucide-upload-cloud'></i> Restore Link</div>
+    <div class='menu-item' onclick='exportar()'><i class='lucide-file-code'></i> Raw JSON</div>
+    <div class='menu-item' onclick='resetAll()' style='color:var(--down)'><i class='lucide-terminal'></i> Format Drive</div>
 </div>
 
 <!-- INÍCIO -->
 <div id='view-lancar' class='tab-content active'>
-    <div class='tab-title'><i class='lucide-layout-grid'></i> Painel Executivo</div>
-    <div id='editBadge'>Modo Edição Ativo</div>
-    <div class='summary-val' id='lSaldo'>R$ 0,00</div>
+    <div class='tab-title'><i class='lucide-activity'></i> System Overview</div>
+    <div id='editBadge'>// EDITING_MODE_ENABLED</div>
+    <div class='summary-val' id='lSaldo'>0.00</div>
     <div class='summary-grid'>
-        <div class='grid-item'><span style='font-size:0.6rem; color:var(--muted); font-weight:700'>GANHOS</span><div id='lRec' style='color:var(--up); font-weight:800'>R$ 0,00</div></div>
-        <div class='grid-item'><span style='font-size:0.6rem; color:var(--muted); font-weight:700'>GASTOS</span><div id='lDesp' style='color:var(--down); font-weight:800'>R$ 0,00</div></div>
+        <div class='grid-item'><span style='font-size:0.55rem; color:var(--primary); font-family:JetBrains Mono'>+ INFLOW</span><div id='lRec' style='color:var(--up); font-weight:800; font-size:1.1rem'>0,00</div></div>
+        <div class='grid-item'><span style='font-size:0.55rem; color:var(--primary); font-family:JetBrains Mono'>- OUTFLOW</span><div id='lDesp' style='color:var(--down); font-weight:800; font-size:1.1rem'>0,00</div></div>
     </div>
-    <div class='input-field'><label>Descrição</label><input type='text' id='fDesc'></div>
+    
+    <div class='input-field'><label>> input_description</label><input type='text' id='fDesc' placeholder='CMD: data_label'></div>
     <div style='display:flex; gap:12px'>
-        <div class='input-field' style='flex:1'><label>Valor</label><input type='number' id='fVal'></div>
-        <div class='input-field' style='flex:1'><label>Categoria</label>
-            <select id='fCat'><option value='Corporativo'>Corporativo</option><option value='Estilo de Vida'>Estilo de Vida</option><option value='Saúde'>Saúde</option><option value='Custo Fixo'>Custo Fixo</option><option value='Investimento'>Investimento</option></select>
+        <div class='input-field' style='flex:1'><label>> amount</label><input type='number' id='fVal' placeholder='0.00'></div>
+        <div class='input-field' style='flex:1'><label>> category</label>
+            <select id='fCat'><option value='Corporativo'>CORP</option><option value='Estilo de Vida'>LIFE</option><option value='Saúde'>MED</option><option value='Custo Fixo'>FIXED</option><option value='Investimento'>INVEST</option></select>
         </div>
     </div>
-    <div id='formBtns' style='display:flex; gap:12px'><button class='btn-exec btn-secondary' onclick='add("desp")'>Gasto</button><button class='btn-exec btn-primary' onclick='add("rec")'>Ganho</button></div>
-    <div id='editBtns' style='display:none; gap:12px'><button class='btn-exec btn-secondary' onclick='cancelEdit()'>Cancelar</button><button class='btn-exec btn-primary' onclick='saveUpdate()'>Salvar</button></div>
-    <div id='lList' style='margin-top:30px'></div>
+    
+    <div id='formBtns' style='display:flex; gap:12px'><button class='btn-exec btn-secondary' onclick='add("desp")'>Execute -</button><button class='btn-exec btn-primary' onclick='add("rec")'>Execute +</button></div>
+    <div id='editBtns' style='display:none; gap:12px'><button class='btn-exec btn-secondary' onclick='cancelEdit()'>Abort</button><button class='btn-exec btn-primary' onclick='saveUpdate()'>Commit</button></div>
+    
+    <div id='lList' style='margin-top:40px'></div>
 </div>
 
 <!-- CONTAS -->
 <div id='view-contas' class='tab-content'>
-    <div class='tab-title'><i class='lucide-layers'></i> Obrigações e Contas</div>
-    <div class='summary-val' style='color:var(--warn)' id='pTotal'>R$ 0,00</div>
-    <div class='input-field'><label>Nome</label><input type='text' id='pDesc'></div>
-    <div class='input-field'><label>Valor</label><input type='number' id='pVal'></div>
-    <button id='btnNewP' class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Agendar</button>
+    <div class='tab-title'><i class='lucide-cpu'></i> Pending Processes</div>
+    <div class='summary-val' style='color:var(--warn)' id='pTotal'>0.00</div>
+    <div class='input-field'><label>> liability_name</label><input type='text' id='pDesc'></div>
+    <div class='input-field'><label>> value_estimate</label><input type='number' id='pVal'></div>
+    <button id='btnNewP' class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Push to Queue</button>
     <div id='pList' style='margin-top:30px'></div>
 </div>
 
 <!-- ANALISE -->
-<div id='view-analise' class='tab-content'><div class='tab-title'><i class='lucide-pie-chart'></i> Análise de Fluxo</div><div id='cList'></div></div>
+<div id='view-analise' class='tab-content'><div class='tab-title'><i class='lucide-bar-chart-3'></i> Data Analytics</div><div id='cList'></div></div>
 
 <!-- ZAPIA IA -->
-<div id='view-ia' class='tab-content'><div class='tab-title'><i class='lucide-zap'></i> Zapia Intelligence</div><p id='iaMsg'></p></div>
+<div id='view-ia' class='tab-content'><div class='tab-title'><i class='lucide-bot'></i> Neural Link</div><p id='iaMsg' style='font-family:JetBrains Mono; color:var(--primary); border: 1px solid var(--border); padding: 20px; background: rgba(0,242,255,0.02)'>SYSTEM_READY: Waiting for user query...</p></div>
 
 <nav class='android-nav'>
-    <div class='nav-link active' onclick='switchTab("lancar")'><i class='lucide-layout-grid'></i><span>Início</span></div>
-    <div class='nav-link' onclick='switchTab("contas")'><i class='lucide-layers'></i><span>Contas</span></div>
-    <div class='nav-link' onclick='switchTab("analise")'><i class='lucide-pie-chart'></i><span>Status</span></div>
-    <div class='nav-link' onclick='switchTab("ia")'><i class='lucide-zap'></i><span>IA</span></div>
+    <div class='nav-link active' onclick='switchTab("lancar")'><i class='lucide-terminal'></i><span>Main</span></div>
+    <div class='nav-link' onclick='switchTab("contas")'><i class='lucide-git-branch'></i><span>Queue</span></div>
+    <div class='nav-link' onclick='switchTab("analise")'><i class='lucide-binary'></i><span>Data</span></div>
+    <div class='nav-link' onclick='switchTab("ia")'><i class='lucide-brain-circuit'></i><span>Core</span></div>
 </nav>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('financas_v19')) || { items: [], goals: [] };
+    let db = JSON.parse(localStorage.getItem('financas_tech_v20')) || { items: [], goals: [] };
     let editingId = null;
 
     function toggleMenu() {
@@ -144,18 +249,18 @@
     function exportToClipboard() {
         const data = JSON.stringify(db);
         navigator.clipboard.writeText(data).then(() => {
-            alert('Dados copiados! Cole-os no seu arquivo do Drive para salvar.');
+            alert('SYNC_COMPLETE: Dados copiados para clipboard do sistema.');
             toggleMenu();
         });
     }
 
     function importFromClipboard() {
-        const data = prompt('Cole aqui os dados salvos do seu Drive:');
+        const data = prompt('INPUT_RESTORE_KEY:');
         if(data) {
             try {
                 const parsed = JSON.parse(data);
-                if(parsed.items) { db = parsed; save(); alert('Dados importados com sucesso!'); }
-            } catch(e) { alert('Erro: Dados inválidos.'); }
+                if(parsed.items) { db = parsed; save(); alert('RESTORE_SUCCESS: Data synchronized.'); }
+            } catch(e) { alert('CRITICAL_ERROR: Invalid data sequence.'); }
         }
         toggleMenu();
     }
@@ -213,11 +318,10 @@
         document.getElementById('formBtns').style.display = 'flex'; document.getElementById('editBtns').style.display = 'none'; document.getElementById('editBadge').style.display = 'none';
     }
 
-    function deleteItem(id) { if(confirm('Excluir?')) { db.items = db.items.filter(x => x.id !== id); save(); } }
-    function save() { localStorage.setItem('financas_v19', JSON.stringify(db)); render(); }
-    function exportar() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); const a = document.createElement('a'); a.href = dataStr; a.download = "backup.json"; a.click(); }
-    function resetAll() { if(confirm('Apagar tudo?')) { db = {items:[], goals:[]}; save(); toggleMenu(); } }
-    function toggleTheme() { document.body.style.filter = document.body.style.filter ? '' : 'invert(1) hue-rotate(180deg)'; toggleMenu(); }
+    function deleteItem(id) { if(confirm('EXECUTE_ERASE_COMMAND?')) { db.items = db.items.filter(x => x.id !== id); save(); } }
+    function save() { localStorage.setItem('financas_tech_v20', JSON.stringify(db)); render(); }
+    function exportar() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); const a = document.createElement('a'); a.href = dataStr; a.download = "system_dump.json"; a.click(); }
+    function resetAll() { if(confirm('HARD_RESET_SYSTEM?')) { db = {items:[], goals:[]}; save(); toggleMenu(); } }
 
     function render() {
         let rec = 0, desp = 0, pnd = 0;
@@ -226,13 +330,26 @@
         db.items.forEach(i => {
             if(i.tipo === 'rec') rec += i.val; else if(i.tipo === 'desp') desp += i.val; else if(i.tipo === 'pend') pnd += i.val;
             const color = i.tipo === 'rec' ? 'var(--up)' : (i.tipo === 'pend' ? 'var(--warn)' : 'var(--down)');
-            const html = `<div class='transaction-card'><div class='trans-main'><div style='display:flex; flex-direction:column; gap:4px'><span style='font-weight:700'>${i.desc}</span><span style='font-size:0.7rem; color:var(--muted); text-transform:uppercase'>${i.cat}</span></div><div style='font-weight:800; color:${color}'>R$ ${i.val.toLocaleString('pt-BR')}</div></div><div class='trans-actions-row'><button class='btn-action' onclick='editItem(${i.id})'><i class='lucide-edit-3'></i> EDITAR</button><button class='btn-action' style='color:var(--down)' onclick='deleteItem(${i.id})'><i class='lucide-trash-2'></i> EXCLUIR</button></div></div>`;
+            const html = `
+                <div class='transaction-card'>
+                    <div class='trans-main'>
+                        <div style='display:flex; flex-direction:column; gap:4px'>
+                            <span class='trans-name'>${i.desc}</span>
+                            <span class='trans-meta'>TAG::${i.cat} // STATUS::LOGGED</span>
+                        </div>
+                        <div class='trans-val' style='color:${color}'>${i.val.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                    </div>
+                    <div class='trans-actions-row'>
+                        <button class='btn-action' onclick='editItem(${i.id})'>> EDIT_VAL</button>
+                        <button class='btn-action' style='color:var(--down); border-color:var(--down)' onclick='deleteItem(${id})'>> PURGE</button>
+                    </div>
+                </div>`;
             if(i.tipo === 'pend') pList.innerHTML += html; else lList.innerHTML += html;
         });
-        document.getElementById('lSaldo').innerText = 'R$ ' + (rec - desp).toLocaleString('pt-BR');
-        document.getElementById('lRec').innerText = 'R$ ' + rec.toLocaleString('pt-BR');
-        document.getElementById('lDesp').innerText = 'R$ ' + desp.toLocaleString('pt-BR');
-        document.getElementById('pTotal').innerText = 'R$ ' + pnd.toLocaleString('pt-BR');
+        document.getElementById('lSaldo').innerText = (rec - desp).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+        document.getElementById('lRec').innerText = rec.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+        document.getElementById('lDesp').innerText = desp.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+        document.getElementById('pTotal').innerText = pnd.toLocaleString('pt-BR', {minimumFractionDigits: 2});
     }
     render();
 </script>
