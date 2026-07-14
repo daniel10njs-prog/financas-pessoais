@@ -76,7 +76,7 @@ header .date { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(var(--bg), 0.8);
+  background: var(--bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
@@ -87,10 +87,14 @@ header .date { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
   max-width: 500px;
   margin: 0 auto;
 }
+body.light-mode .bnav { background: rgba(248, 250, 252, 0.85); }
+body:not(.light-mode) .bnav { background: rgba(9, 11, 15, 0.85); }
 .bnav-btn {
   flex: 1;
   border: none;
-  background: none;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
   color: var(--muted);
   display: flex;
   flex-direction: column;
@@ -102,6 +106,7 @@ header .date { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
   text-transform: uppercase;
   letter-spacing: 0.8px;
   opacity: 0.6;
+  -webkit-tap-highlight-color: transparent;
 }
 .bnav-btn .icon { font-size: 1.4rem; margin-bottom: 6px; }
 .bnav-btn.active { color: var(--azul); opacity: 1; }
@@ -934,9 +939,10 @@ function setPage(p) {
   document.getElementById('page-'+p).classList.add('active');
   document.querySelectorAll('.bnav-btn').forEach(e=>{
     e.classList.remove('active');
-    e.style.opacity = ""; // Resetar qualquer estilo manual
+    e.removeAttribute('style'); // Remover qualquer estilo inline residual
   });
-  document.getElementById('bnav-'+p).classList.add('active');
+  const activeBtn = document.getElementById('bnav-'+p);
+  if (activeBtn) activeBtn.classList.add('active');
   window.scrollTo(0,0);
   if (p === 'lancamentos') render();
   if (p === 'pendencias') renderPends();
