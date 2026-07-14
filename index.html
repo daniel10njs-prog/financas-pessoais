@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <meta name="description" content="Controle suas receitas, despesas e pendências.">
 <meta name="theme-color" content="#0d1117">
 <meta name="mobile-web-app-capable" content="yes">
@@ -857,37 +858,37 @@ let filtro    = 'all';
 let tipoAtivo = 'despesa';
 
 const EMOJIS = [
-  'bi-cash-stack', 'bi-bank', 'bi-credit-card-2-front', 'bi-coin', 'bi-wallet2', 'bi-graph-up-arrow', 'bi-graph-down-arrow', 'bi-piggy-bank',
-  'bi-house-door', 'bi-buildings', 'bi-shop', 'bi-car-front', 'bi-bicycle', 'bi-bus-front', 'bi-airplane', 'bi-fuel-pump',
-  'bi-cart4', 'bi-bag-check', 'bi-basket', 'bi-gift', 'bi-box-seam', 'bi-tags',
-  'bi-cup-hot', 'bi-egg-fried', 'bi-cake2', 'bi-potted-plant', 'bi-utensils', 'bi-bowl-hot',
-  'bi-heart-pulse', 'bi-capsule', 'bi-hospital', 'bi-bandaid', 'bi-activity', 'bi-thermometer-half',
-  'bi-controller', 'bi-film', 'bi-music-note-beamed', 'bi-headphones', 'bi-tv', 'bi-smartphone',
-  'bi-book', 'bi-mortarboard', 'bi-laptop', 'bi-display', 'bi-keyboard', 'bi-mouse3',
-  'bi-wrench-adjustable', 'bi-hammer', 'bi-paint-bucket', 'bi-scissors', 'bi-camera', 'bi-mic',
-  'bi-lightning-charge', 'bi-fire', 'bi-droplet', 'bi-wind', 'bi-snow', 'bi-sun', 'bi-moon-stars',
-  'bi-star', 'bi-gem', 'bi-trophy', 'bi-award', 'bi-skull', 'bi-ghost', 'bi-rocket-takeoff',
-  'bi-cat', 'bi-dog', 'bi-bug', 'bi-tree', 'bi-flower1', 'bi-cloud-sun', 'bi-briefcase'
+  'mi-payments', 'mi-account_balance', 'mi-credit_card', 'mi-savings', 'mi-account_balance_wallet', 'mi-trending_up', 'mi-trending_down', 'mi-monetization_on',
+  'mi-home', 'mi-apartment', 'mi-storefront', 'mi-directions_car', 'mi-pedal_bike', 'mi-directions_bus', 'mi-flight', 'mi-local_gas_station',
+  'mi-shopping_cart', 'mi-shopping_bag', 'mi-shopping_basket', 'mi-redeem', 'mi-inventory_2', 'mi-local_offer',
+  'mi-restaurant', 'mi-fastfood', 'mi-coffee', 'mi-sports_bar', 'mi-lunch_dining', 'mi-dinner_dining',
+  'mi-favorite', 'mi-medical_services', 'mi-monitor_heart', 'mi-medication', 'mi-fitness_center', 'mi-directions_run',
+  'mi-sports_esports', 'mi-movie', 'mi-music_note', 'mi-headphones', 'mi-tv', 'mi-smartphone',
+  'mi-book', 'mi-school', 'mi-laptop', 'mi-desktop_windows', 'mi-keyboard', 'mi-mouse',
+  'mi-build', 'mi-handyman', 'mi-format_paint', 'mi-content_cut', 'mi-photo_camera', 'mi-mic',
+  'mi-bolt', 'mi-local_fire_department', 'mi-water_drop', 'mi-air', 'mi-ac_unit', 'mi-wb_sunny', 'mi-nightlight_round',
+  'mi-star', 'mi-diamond', 'mi-emoji_events', 'mi-military_tech', 'mi-skull', 'mi-psychic_bridge', 'mi-rocket_launch',
+  'mi-pets', 'mi-eco', 'mi-park', 'mi-work', 'mi-vpn_key', 'mi-notifications', 'mi-settings'
 ];
 
 const DEFAULT_CATS = {
-  receita: ['bi-cash-coin Salário', 'bi-graph-up Investimentos', 'bi-gift Presentes', 'bi-send-check Freelance', 'bi-stars Outros'],
-  despesa: ['bi-house-heart Moradia', 'bi-cup-straw Alimentação', 'bi-car-front Transporte', 'bi-heart-pulse Saúde', 'bi-controller Lazer', 'bi-book-half Educação', 'bi-phone-vibrate Assinaturas', 'bi-bag-heart Compras', 'bi-tools Manutenção', 'bi-credit-card-2-back Crédito', 'bi-lightning-charge-fill Contas Fixas', 'bi-three-dots Outros']
+  receita: ['mi-paid Salário', 'mi-show_chart Investimentos', 'mi-card_giftcard Presentes', 'mi-rocket_launch Freelance', 'mi-auto_awesome Outros'],
+  despesa: ['mi-cottage Moradia', 'mi-restaurant Alimentação', 'mi-commute Transporte', 'mi-health_and_safety Saúde', 'mi-videogame_asset Lazer', 'mi-menu_book Educação', 'mi-phonelink_setup Assinaturas', 'mi-local_mall Compras', 'mi-construction Manutenção', 'mi-credit_score Crédito', 'mi-electric_bolt Contas Fixas', 'mi-more_horiz Outros']
 };
-let selectedEmoji = 'bi-cash-stack';
+let selectedEmoji = 'mi-payments';
 
 const catEmoji    = c => {
-  if (!c) return 'bi-circle';
+  if (!c) return 'mi-circle';
   const parts = c.trim().split(' ');
   if (parts.length > 2 && parts[0].startsWith('fa-')) return parts.slice(0,2).join(' ');
   if (parts.length > 1) return parts[0];
-  return 'bi-circle';
+  return 'mi-circle';
 };
 
 const catNome     = c => {
   if (!c) return '';
   const parts = c.trim().split(' ');
-  if (parts[0].startsWith('bi-') || parts[0].startsWith('fa-') || parts[0].startsWith('ph-')) {
+  if (parts[0].startsWith('bi-') || parts[0].startsWith('fa-') || parts[0].startsWith('ph-') || parts[0].startsWith('mi-')) {
      if (parts[0].startsWith('fa-')) return parts.slice(2).join(' ');
      return parts.slice(1).join(' ');
   }
@@ -897,6 +898,10 @@ const catNome     = c => {
 
 function renderIcon(iconName) {
   if (!iconName) return '';
+  if (iconName.startsWith('mi-')) {
+    const icon = iconName.replace('mi-', '');
+    return `<i class="material-icons-round" style="font-size:24px; vertical-align:middle; width:24px; text-align:center">${icon}</i>`;
+  }
   if (iconName.startsWith('bi-')) {
     return `<i class="bi ${iconName}" style="font-size:20px; width:24px; text-align:center; display:inline-block"></i>`;
   }
