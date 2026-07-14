@@ -3,64 +3,80 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
-    <title>Zapia Finance Executive v17</title>
+    <title>Zapia Finance Executive v18</title>
     <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css' rel='stylesheet'>
     <style>
         :root {
             --bg: #000000; --card: #121212; --primary: #ffffff; --accent: #2563eb;
-            --text: #ffffff; --muted: #888888; --up: #00e676; --down: #ff5252; --warn: #ffab00;
-            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff; --muted: #a0a0a0; --up: #00e676; --down: #ff5252; --warn: #ffab00;
+            --border: rgba(255, 255, 255, 0.15);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 100px; max-width: 500px; margin: 0 auto; min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 110px; max-width: 500px; margin: 0 auto; min-height: 100vh; }
+        
         header { padding: 24px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         header h1 { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+        
         .tab-content { display: none; padding: 20px; animation: androidFade 0.2s ease-out; }
         .tab-content.active { display: block; }
         @keyframes androidFade { from { opacity: 0; } to { opacity: 1; } }
+
         .summary-val { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 24px; }
         .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 24px; }
         .grid-item { background: var(--bg); padding: 16px; }
+        
         .input-field { background: var(--card); border-radius: 12px; margin-bottom: 12px; padding: 12px 16px; border: 1px solid var(--border); }
         .input-field label { display: block; font-size: 0.65rem; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
         input, select { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 1rem; font-weight: 500; }
-        .btn-exec { flex: 1; padding: 16px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; }
+
+        .btn-exec { flex: 1; padding: 16px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
         .btn-primary { background: var(--primary); color: #000; }
         .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
-        .transaction { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
-        .trans-info { flex: 1; }
-        .trans-actions { display: flex; gap: 18px; margin-left: 10px; }
-        .trans-actions i { color: var(--muted); font-size: 1.1rem; padding: 5px; }
-        .android-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; border-top: 1px solid var(--border); display: flex; height: 70px; z-index: 2000; }
+
+        /* LISTA REESTRUTURADA PARA VISIBILIDADE */
+        .list-header { font-size: 0.7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin: 32px 0 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .transaction-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 12px; }
+        .trans-main { display: flex; justify-content: space-between; align-items: flex-start; }
+        .trans-info { display: flex; flex-direction: column; gap: 4px; }
+        .trans-name { font-size: 1rem; font-weight: 700; }
+        .trans-meta { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; font-weight: 600; }
+        .trans-val { font-size: 1.1rem; font-weight: 800; }
+        
+        .trans-actions-row { display: flex; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px; }
+        .btn-action { flex: 1; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--primary); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .btn-action i { font-size: 1rem; }
+        .btn-delete { color: var(--down); }
+
+        .android-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; border-top: 1px solid var(--border); display: flex; height: 75px; z-index: 2000; padding-bottom: env(safe-area-inset-bottom); }
         .nav-link { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); }
         .nav-link.active { color: var(--primary); }
         .nav-link span { font-size: 0.6rem; font-weight: 600; margin-top: 4px; }
-        #editModeBadge { background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.6rem; font-weight: 800; display: none; margin-bottom: 10px; text-transform: uppercase; }
+
+        #editModeBadgeL, #editModeBadgeP { background: var(--accent); color: white; padding: 6px 16px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; display: none; margin-bottom: 16px; text-transform: uppercase; width: 100%; text-align: center; }
     </style>
 </head>
 <body>
 
 <header>
     <h1>Zapia Executivo</h1>
-    <div style='display:flex; gap:16px; color:var(--muted)'>
+    <div style='display:flex; gap:20px; color:var(--muted)'>
         <i class='lucide-download' onclick='exportar()'></i>
         <i class='lucide-rotate-ccw' onclick='resetAll()'></i>
     </div>
 </header>
 
-<!-- LANÇAR -->
 <div id='view-lancar' class='tab-content active'>
     <div id='editModeBadgeL'>Modo Edição Ativo</div>
     <div class='summary-val' id='lSaldo'>R$ 0,00</div>
     <div class='summary-grid'>
-        <div class='grid-item'><span style='font-size:0.65rem; color:var(--muted)'>RECEITAS</span><div id='lRec' style='color:var(--up); font-weight:700'>R$ 0,00</div></div>
-        <div class='grid-item'><span style='font-size:0.65rem; color:var(--muted)'>DESPESAS</span><div id='lDesp' style='color:var(--down); font-weight:700'>R$ 0,00</div></div>
+        <div class='grid-item'><span style='font-size:0.6rem; color:var(--muted); font-weight:700'>GANHOS</span><div id='lRec' style='color:var(--up); font-weight:800; font-size:1.1rem'>R$ 0,00</div></div>
+        <div class='grid-item'><span style='font-size:0.6rem; color:var(--muted); font-weight:700'>GASTOS</span><div id='lDesp' style='color:var(--down); font-weight:800; font-size:1.1rem'>R$ 0,00</div></div>
     </div>
 
-    <div class='input-field'><label>Descrição</label><input type='text' id='fDesc'></div>
+    <div class='input-field'><label>Descrição</label><input type='text' id='fDesc' placeholder='O que foi?'></div>
     <div style='display:flex; gap:12px'>
-        <div class='input-field' style='flex:1'><label>Valor</label><input type='number' id='fVal'></div>
+        <div class='input-field' style='flex:1'><label>Valor</label><input type='number' id='fVal' placeholder='0.00'></div>
         <div class='input-field' style='flex:1'><label>Categoria</label>
             <select id='fCat'>
                 <option value='Corporativo'>Corporativo</option>
@@ -78,38 +94,35 @@
     </div>
     <div id='editLancarBtns' style='display:none; gap:12px'>
         <button class='btn-exec btn-secondary' onclick='cancelEdit()'>Cancelar</button>
-        <button class='btn-exec btn-primary' onclick='saveUpdate()'>Salvar Edição</button>
+        <button class='btn-exec btn-primary' onclick='saveUpdate()'>Salvar Alteração</button>
     </div>
 
-    <div id='lList' style='margin-top:30px'></div>
+    <h2 class='list-header'>Transações Recentes</h2>
+    <div id='lList'></div>
 </div>
 
-<!-- CONTAS -->
 <div id='view-contas' class='tab-content'>
-    <div id='editModeBadgeP' style='background:var(--warn); color:black; padding:4px 12px; border-radius:20px; font-size:0.6rem; font-weight:800; display:none; margin-bottom:10px; text-transform:uppercase'>Modo Edição Ativo</div>
+    <div id='editModeBadgeP'>Modo Edição Ativo</div>
     <div class='summary-val' style='color:var(--warn)' id='pTotal'>R$ 0,00</div>
-    <div class='input-field'><label>Nome da Obrigação</label><input type='text' id='pDesc'></div>
-    <div class='input-field'><label>Valor</label><input type='number' id='pVal'></div>
+    <div class='input-field'><label>Nome da Conta</label><input type='text' id='pDesc' placeholder='Ex: Aluguel'></div>
+    <div class='input-field'><label>Valor</label><input type='number' id='pVal' placeholder='0.00'></div>
     
-    <button id='btnNewPend' class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Agendar</button>
+    <button id='btnNewPend' class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Agendar Conta</button>
     <div id='editPendBtns' style='display:none; gap:12px'>
         <button class='btn-exec btn-secondary' onclick='cancelEdit()'>Cancelar</button>
-        <button class='btn-exec btn-primary' onclick='saveUpdate()'>Salvar Edição</button>
+        <button class='btn-exec btn-primary' onclick='saveUpdate()'>Salvar Alteração</button>
     </div>
     
-    <div id='pList' style='margin-top:30px'></div>
+    <h2 class='list-header'>Contas a Pagar</h2>
+    <div id='pList'></div>
 </div>
 
+<!-- OUTRAS ABAS (Skeletal para manter v18 leve) -->
 <div id='view-analise' class='tab-content'><div id='cList'></div></div>
-<div id='view-ia' class='tab-content'><p id='iaMsg'></p></div>
+<div id='view-ia' class='tab-content' style='text-align:center; padding-top:40px'><p id='iaMsg'></p></div>
 <div id='view-anual' class='tab-content'><div id='aList'></div></div>
-<div id='view-metas' class='tab-content'>
-    <div class='input-field'><label>Meta</label><input type='text' id='mNome'></div>
-    <div class='input-field'><label>Valor</label><input type='number' id='mAlvo'></div>
-    <button class='btn-exec btn-primary' style='width:100%' onclick='addGoal()'>Fixar</button>
-    <div id='mList' style='margin-top:20px'></div>
-</div>
-<div id='view-simular' class='tab-content'><div class='summary-val' id='simVal'>R$ 0,00</div></div>
+<div id='view-metas' class='tab-content'><div class='input-field'><label>Meta</label><input type='text' id='mNome'></div><div class='input-field'><label>Alvo</label><input type='number' id='mAlvo'></div><button class='btn-exec btn-primary' style='width:100%' onclick='addGoal()'>Fixar</button><div id='mList' style='margin-top:20px'></div></div>
+<div id='view-simular' class='tab-content' style='text-align:center'><span style='color:var(--muted); font-size:0.7rem'>SALDO LÍQUIDO SIMULADO</span><div class='summary-val' id='simVal'>R$ 0,00</div></div>
 
 <nav class='android-nav'>
     <div class='nav-link active' onclick='switchTab("lancar")'><i class='lucide-layout-grid'></i><span>Início</span></div>
@@ -122,7 +135,7 @@
 </nav>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('zapia_exec_v17')) || { items: [], goals: [] };
+    let db = JSON.parse(localStorage.getItem('zapia_exec_v18')) || { items: [], goals: [] };
     let editingId = null;
 
     function switchTab(t) {
@@ -148,33 +161,38 @@
         save();
     }
 
-    // FUNÇÃO DE EDIÇÃO REVISADA
     function editItem(id) {
         editingId = id;
         const item = db.items.find(x => x.id === id);
         if(!item) return;
 
         if(item.tipo === 'pend') {
+            switchTabNoClear('contas');
             document.getElementById('pDesc').value = item.desc;
             document.getElementById('pVal').value = item.val;
             document.getElementById('btnNewPend').style.display = 'none';
             document.getElementById('editPendBtns').style.display = 'flex';
-            document.getElementById('editModeBadgeP').style.display = 'inline-block';
+            document.getElementById('editModeBadgeP').style.display = 'block';
         } else {
+            switchTabNoClear('lancar');
             document.getElementById('fDesc').value = item.desc;
             document.getElementById('fVal').value = item.val;
             document.getElementById('fCat').value = item.cat;
             document.getElementById('formLancarBtns').style.display = 'none';
             document.getElementById('editLancarBtns').style.display = 'flex';
-            document.getElementById('editModeBadgeL').style.display = 'inline-block';
+            document.getElementById('editModeBadgeL').style.display = 'block';
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchTabNoClear(t) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('view-' + t).classList.add('active');
     }
 
     function saveUpdate() {
         const index = db.items.findIndex(x => x.id === editingId);
         if(index === -1) return;
-
         const item = db.items[index];
         if(item.tipo === 'pend') {
             item.desc = document.getElementById('pDesc').value;
@@ -201,40 +219,44 @@
     }
 
     function deleteItem(id) {
-        if(confirm('Excluir lançamento?')) {
+        if(confirm('Excluir permanentemente?')) {
             db.items = db.items.filter(x => x.id !== id);
             save();
         }
     }
 
-    function save() { localStorage.setItem('zapia_exec_v17', JSON.stringify(db)); render(); }
-    function exportar() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); const a = document.createElement('a'); a.href = dataStr; a.download = "zapia.json"; a.click(); }
-    function resetAll() { if(confirm('Apagar tudo?')) { db = {items:[], goals:[]}; save(); } }
+    function save() { localStorage.setItem('zapia_exec_v18', JSON.stringify(db)); render(); }
+    function exportar() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); const a = document.createElement('a'); a.href = dataStr; a.download = "zapia_backup.json"; a.click(); }
+    function resetAll() { if(confirm('Apagar todos os dados?')) { db = {items:[], goals:[]}; save(); } }
 
     function render() {
         let rec = 0, desp = 0, pnd = 0;
         const lList = document.getElementById('lList'); lList.innerHTML = '';
         const pList = document.getElementById('pList'); pList.innerHTML = '';
-        const cList = document.getElementById('cList'); cList.innerHTML = '';
-        const cats = {};
-
+        
         db.items.forEach(i => {
             if(i.tipo === 'rec') rec += i.val;
-            else if(i.tipo === 'desp') { desp += i.val; cats[i.cat] = (cats[i.cat] || 0) + i.val; }
+            else if(i.tipo === 'desp') desp += i.val;
             else if(i.tipo === 'pend') pnd += i.val;
 
             const color = i.tipo === 'rec' ? 'var(--up)' : (i.tipo === 'pend' ? 'var(--warn)' : 'var(--down)');
             
             const html = `
-                <div class='transaction'>
-                    <div class='trans-info'>
-                        <span style='font-size:0.95rem; font-weight:600; display:block'>${i.desc}</span>
-                        <span style='font-size:0.75rem; color:var(--muted)'>${i.cat} • ${new Date(i.date).toLocaleDateString('pt-BR')}</span>
+                <div class='transaction-card'>
+                    <div class='trans-main'>
+                        <div class='trans-info'>
+                            <span class='trans-name'>${i.desc}</span>
+                            <span class='trans-meta'>${i.cat} • ${new Date(i.date).toLocaleDateString('pt-BR')}</span>
+                        </div>
+                        <div class='trans-val' style='color:${color}'>R$ ${i.val.toLocaleString('pt-BR')}</div>
                     </div>
-                    <div style='font-weight:700; text-align:right; color:${color}'>R$ ${i.val.toLocaleString('pt-BR')}</div>
-                    <div class='trans-actions'>
-                        <i class='lucide-edit-3' onclick='editItem(${i.id})'></i>
-                        <i class='lucide-trash-2' onclick='deleteItem(${i.id})'></i>
+                    <div class='trans-actions-row'>
+                        <button class='btn-action' onclick='editItem(${i.id})'>
+                            <i class='lucide-edit-3'></i> EDITAR
+                        </button>
+                        <button class='btn-action btn-delete' onclick='deleteItem(${i.id})'>
+                            <i class='lucide-trash-2'></i> EXCLUIR
+                        </button>
                     </div>
                 </div>`;
             if(i.tipo === 'pend') pList.innerHTML += html; else lList.innerHTML += html;
