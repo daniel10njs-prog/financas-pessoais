@@ -12,11 +12,22 @@
   --verde: #22c55e; --vermelho: #ef4444; --amarelo: #f59e0b; --azul: #3b82f6;
   --bg: #0f172a; --card: #1e293b; --card2: #253047; --border: #334155; --text: #f1f5f9; --muted: #94a3b8;
 }
+body.light-mode {
+  --bg: #f8fafc; --card: #ffffff; --card2: #f1f5f9; --border: #e2e8f0; --text: #0f172a; --muted: #64748b;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding-bottom: 90px; min-height: 100vh; overflow-x: hidden; }
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding-bottom: 90px; min-height: 100vh; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
 header { padding: 18px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 100; }
 header h1 { font-size: 1.1rem; font-weight: 700; }
-.sync-btn { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); padding: 5px 8px; font-size: .7rem; cursor: pointer; }
+
+.menu-container { position: relative; }
+.dots-btn { background: none; border: none; color: var(--text); font-size: 1.2rem; cursor: pointer; padding: 5px; }
+.dropdown-menu { display: none; position: absolute; top: 100%; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 12px; min-width: 180px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); z-index: 2000; overflow: hidden; }
+.dropdown-menu.show { display: block; }
+.dropdown-item { padding: 12px 16px; font-size: 0.85rem; display: flex; align-items: center; gap: 10px; cursor: pointer; border-bottom: 1px solid var(--border); color: var(--text); }
+.dropdown-item:last-child { border-bottom: none; }
+.dropdown-item:hover { background: var(--card2); }
+
 .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--card); border-top: 1px solid var(--border); display: flex; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); overflow-x: auto; }
 .bottom-nav button { flex: 1; min-width: 65px; padding: 12px 0; background: none; border: none; color: var(--muted); font-size: .6rem; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .bottom-nav button.active { color: var(--azul); }
@@ -51,11 +62,11 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .btn-pay-direct { background: var(--verde); color: white; border: none; border-radius: 6px; padding: 4px 8px; font-size: 0.6rem; font-weight: 800; cursor: pointer; }
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
 .modal-overlay.show { display: flex; }
-.modal { background: var(--card); border-radius: 20px; padding: 20px; width: 100%; max-width: 380px; border: 1px solid var(--border); }
+.modal { background: var(--card); border-radius: 20px; padding: 20px; width: 100%; max-width: 380px; border: 1px solid var(--border); overflow-y: auto; max-height: 90vh; }
 .modal h2 { margin-bottom: 18px; font-size: 1rem; text-align: center; }
 .form-group { margin-bottom: 14px; }
 .form-group label { display: block; font-size: .65rem; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; }
-.form-group input, .form-group select { width: 100%; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; color: #fff; font-size: .9rem; outline: none; }
+.form-group input, .form-group select { width: 100%; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; color: var(--text); font-size: .9rem; outline: none; }
 .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
 .btn-save { flex: 1; padding: 12px; border-radius: 8px; border: none; background: var(--azul); color: #fff; font-weight: 700; cursor: pointer; }
 .btn-cancel { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: none; color: var(--muted); font-weight: 600; cursor: pointer; }
@@ -71,7 +82,18 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </style>
 </head>
 <body>
-<header><h1>💰 Finanças</h1><button class="sync-btn" onclick="exportCSV()">📊 CSV</button></header>
+<header>
+  <h1>💰 Finanças</h1>
+  <div class="menu-container">
+    <button class="dots-btn" onclick="toggleMenu()"><i class="fas fa-ellipsis-v"></i></button>
+    <div class="dropdown-menu" id="dropdownMenu">
+      <div class="dropdown-item" onclick="toggleTheme()"><i class="fas fa-circle-half-stroke"></i> Tema Claro/Escuro</div>
+      <div class="dropdown-item" onclick="exportBackup()"><i class="fas fa-file-export"></i> Salvar Backup (JSON)</div>
+      <div class="dropdown-item" onclick="importBackup()"><i class="fas fa-file-import"></i> Restaurar Backup</div>
+      <div class="dropdown-item" onclick="openIconManager()"><i class="fas fa-icons"></i> Gerenciar Ícones</div>
+    </div>
+  </div>
+</header>
 
 <section id="sec-lancamentos" class="content-section active">
   <div class="cards">
@@ -147,14 +169,67 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 <div class="modal-overlay" id="modalMeta"><div class="modal"><h2>Nova Meta</h2><div class="form-group"><label>Nome da Meta</label><input id="metaNome" type="text"></div><div class="form-group"><label>Valor Pretendido (R$)</label><input id="metaPretendido" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeMetaModal()">Cancelar</button><button class="btn-save" onclick="saveMeta()">Criar</button></div></div></div>
 <div class="modal-overlay" id="modalAddMeta"><div class="modal"><h2>Adicionar à Meta</h2><input type="hidden" id="addMetaId"><div class="form-group"><label>Valor a Guardar (R$)</label><input id="valAddMeta" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeAddMetaModal()">Cancelar</button><button class="btn-save" onclick="confirmAddMeta()">Adicionar</button></div></div></div>
 <div class="modal-overlay" id="modalSimRec"><div class="modal"><h2>Recebimento Previsto</h2><div class="form-group"><label>Descrição (Ex: Salário dia 20)</label><input id="simRecDesc" type="text"></div><div class="form-group"><label>Valor (R$)</label><input id="simRecVal" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeSimRecModal()">Cancelar</button><button class="btn-save" onclick="saveSimRec()">Adicionar</button></div></div></div>
+<div class="modal-overlay" id="modalIcon"><div class="modal"><h2>Gerenciar Ícones</h2><div id="iconList" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px;"></div><div class="modal-actions"><button class="btn-save" style="width:100%" onclick="closeIconManager()">Concluir</button></div></div></div>
 
 <script>
-let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { items: [], pendencias: [], metas: [], previstos: [] };
+let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { items: [], pendencias: [], metas: [], previstos: [], icons: { 'Salário': '💰', 'Pix Recebido': '💸', 'Ajuste': '⚙️', 'Alimentação': '🍽️', 'Transporte': '🚗', 'Moradia': '🏠', 'Lazer': '🎡', 'Saúde': '🏥', 'Educação': '📚', 'Assinaturas': '📺', 'Outros': '📦' }, theme: 'dark' };
 let simChecks = {}; 
-const icons = { 'Salário': '💰', 'Pix Recebido': '💸', 'Ajuste': '⚙️', 'Alimentação': '🍽️', 'Transporte': '🚗', 'Moradia': '🏠', 'Lazer': '🎡', 'Saúde': '🏥', 'Educação': '📚', 'Assinaturas': '📺', 'Outros': '📦' };
 const categorias = { 'receita': ['Salário', 'Pix Recebido', 'Ajuste'], 'despesa': ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'], 'pendencia': ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros'] };
 
 function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
+
+function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('show'); }
+window.onclick = function(event) { if (!event.target.closest('.menu-container')) { document.getElementById('dropdownMenu').classList.remove('show'); } };
+
+function toggleTheme() {
+    db.theme = db.theme === 'dark' ? 'light' : 'dark';
+    applyTheme();
+    save();
+}
+function applyTheme() {
+    if(db.theme === 'light') { document.body.classList.add('light-mode'); document.querySelector('meta[name="theme-color"]').setAttribute("content", "#f8fafc"); }
+    else { document.body.classList.remove('light-mode'); document.querySelector('meta[name="theme-color"]').setAttribute("content", "#0f172a"); }
+}
+
+function exportBackup() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "backup_financas.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+}
+
+function importBackup() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsText(file,'UTF-8');
+        reader.onload = readerEvent => {
+            const content = readerEvent.target.result;
+            try {
+                db = JSON.parse(content);
+                save();
+                location.reload();
+            } catch(e) { alert("Arquivo de backup inválido!"); }
+        }
+    }
+    input.click();
+}
+
+function openIconManager() {
+    const il = document.getElementById('iconList'); il.innerHTML = '';
+    Object.keys(db.icons).forEach(cat => {
+        il.innerHTML += `<div class="form-group" style="display:flex; align-items:center; gap:10px;"><label style="flex:1; margin:0;">${cat}</label><input type="text" style="width:60px; text-align:center;" value="${db.icons[cat]}" oninput="updateIcon('${cat}', this.value)"></div>`;
+    });
+    document.getElementById('modalIcon').classList.add('show');
+}
+function closeIconManager() { document.getElementById('modalIcon').classList.remove('show'); }
+function updateIcon(cat, val) { db.icons[cat] = val; localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
+
 function setTab(t) {
   document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
@@ -219,24 +294,20 @@ function renderSim() {
   let totalPrev = 0;
   if(db.previstos) db.previstos.forEach(p => totalPrev += p.val);
   document.getElementById('simTotalRec').innerText = 'R$ ' + totalPrev.toLocaleString('pt-BR');
-  
   let totalSimPend = 0;
   db.pendencias.forEach(p => { if(simChecks[p.id] !== false) totalSimPend += p.val; });
-  
   const rest = totalPrev - totalSimPend;
   const el = document.getElementById('simRestante');
   el.innerText = 'R$ ' + rest.toLocaleString('pt-BR');
   el.style.color = rest >= 0 ? 'var(--verde)' : 'var(--vermelho)';
-  
   const slRec = document.getElementById('simRecList'); slRec.innerHTML = '';
   if(db.previstos) db.previstos.forEach(p => {
     slRec.innerHTML += `<div class="sim-item"><div><b>${p.desc}</b><br><small style="color:var(--verde)">+ R$ ${p.val.toFixed(2)}</small></div><button class="sim-btn-del" onclick="deleteItem(${p.id}, 'previsto', event)"><i class="fas fa-trash"></i></button></div>`;
   });
-
   const sl = document.getElementById('simList'); sl.innerHTML = '';
   db.pendencias.forEach(p => {
     const isChecked = simChecks[p.id] !== false;
-    sl.innerHTML += `<div class="item" onclick="toggleSim(${p.id})"><div class="item-info"><div class="item-icon">${icons[p.sub]||'⏳'}</div><div class="item-text"><b>${p.desc}</b><span>${p.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${p.val.toFixed(2)}</b><input type="checkbox" class="sim-check" ${isChecked?'checked':''}></div></div>`;
+    sl.innerHTML += `<div class="item" onclick="toggleSim(${p.id})"><div class="item-info"><div class="item-icon">${db.icons[p.sub]||'⏳'}</div><div class="item-text"><b>${p.desc}</b><span>${p.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${p.val.toFixed(2)}</b><input type="checkbox" class="sim-check" ${isChecked?'checked':''}></div></div>`;
   });
 }
 function toggleSim(id) { simChecks[id] = simChecks[id] === false ? true : false; renderSim(); }
@@ -261,9 +332,9 @@ function render() {
   document.getElementById('saldoReal').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
   document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
   const l = document.getElementById('list'); l.innerHTML = '';
-  db.items.slice().reverse().forEach(i => { l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon">${icons[i.sub]||'📦'}</div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
+  db.items.slice().reverse().forEach(i => { l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon">${db.icons[i.sub]||'📦'}</div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
   const lp = document.getElementById('listPend'); lp.innerHTML = '';
-  db.pendencias.forEach(i => { lp.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon">${icons[i.sub]||'⏳'}</div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
+  db.pendencias.forEach(i => { lp.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon">${db.icons[i.sub]||'⏳'}</div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
   const ml = document.getElementById('metasList'); ml.innerHTML = '';
   db.metas.forEach(m => {
     const perc = Math.min((m.acumulado / m.pretendido) * 100, 100).toFixed(1);
@@ -286,14 +357,14 @@ function confirmAddMeta() {
 function initChart() {
   const ctx = document.getElementById('myChart').getContext('2d'); if(chartInstance) chartInstance.destroy();
   const totals = {}; db.items.filter(i=>i.tipo==='despesa').forEach(i => totals[i.sub] = (totals[i.sub]||0) + i.val);
-  chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(totals), datasets: [{ data: Object.values(totals), backgroundColor: ['#ef4444', '#3b82f6', '#f59e0b', '#22c55e', '#8b5cf6', '#ec4899'] }] }, options: { plugins: { legend: { position: 'bottom', labels: { color: '#f1f5f9', font: {size: 10} } } } } });
+  chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(totals), datasets: [{ data: Object.values(totals), backgroundColor: ['#ef4444', '#3b82f6', '#f59e0b', '#22c55e', '#8b5cf6', '#ec4899'] }] }, options: { plugins: { legend: { position: 'bottom', labels: { color: db.theme === 'dark' ? '#f1f5f9' : '#0f172a', font: {size: 10} } } } } });
 }
 let chartInstance = null;
 function exportCSV() {
   let csv = 'Data,Tipo,Descricao,Categoria,Valor\n'; db.items.forEach(i => { csv += `${new Date(i.data).toLocaleDateString()},${i.tipo},${i.desc},${i.sub},${i.val}\n`; });
   const blob = new Blob([csv], { type: 'text/csv' }); const url = window.URL.createObjectURL(blob); const a = document.createElement('a'); a.setAttribute('hidden', ''); a.setAttribute('href', url); a.setAttribute('download', 'financas.csv'); document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
-window.onload = render;
+window.onload = () => { applyTheme(); render(); };
 </script>
 </body>
 </html>
