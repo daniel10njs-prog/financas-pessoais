@@ -19,10 +19,10 @@ header { padding: 18px 16px 10px; display: flex; align-items: center; justify-co
 header h1 { font-size: 1.2rem; font-weight: 700; }
 .sync-btn { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); padding: 5px 8px; font-size: .75rem; cursor: pointer; }
 
-/* Navegação Inferior (Novo padrão Mobile) */
+/* Navegação Inferior */
 .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--card); border-top: 1px solid var(--border); display: flex; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
-.bottom-nav button { flex: 1; padding: 14px 0; background: none; border: none; color: var(--muted); font-size: .7rem; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.bottom-nav button i { font-size: 1.2rem; font-style: normal; }
+.bottom-nav button { flex: 1; padding: 14px 0; background: none; border: none; color: var(--muted); font-size: .65rem; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.bottom-nav button i { font-size: 1.1rem; font-style: normal; }
 .bottom-nav button.active { color: var(--azul); }
 
 /* Conteúdo */
@@ -44,15 +44,19 @@ header h1 { font-size: 1.2rem; font-weight: 700; }
 .btn-action { flex: 1; padding: 16px; border-radius: 14px; border: none; color: #fff; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
 .btn-action.plus { background: var(--verde); }
 .btn-action.minus { background: var(--vermelho); }
+.btn-action.pend { background: var(--amarelo); }
 
 .list { display: flex; flex-direction: column; gap: 8px; }
-.item { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.item { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; cursor: pointer; position: relative; }
 .item-info { display: flex; align-items: center; gap: 12px; }
 .item-icon { font-size: 1.4rem; background: var(--card2); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
 .item-text b { font-size: .95rem; }
 .item-text div { font-size: .7rem; color: var(--muted); }
 .item-val { font-weight: 700; }
-.item-val.receita { color: var(--verde); } .item-val.despesa { color: var(--vermelho); }
+.item-val.receita { color: var(--verde); } .item-val.despesa { color: var(--vermelho); } .item-val.pendencia { color: var(--amarelo); }
+
+/* Badge de clique para converter pendência */
+.pay-hint { font-size: 0.6rem; color: var(--amarelo); margin-top: 2px; }
 
 /* Modais */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
@@ -66,6 +70,7 @@ header h1 { font-size: 1.2rem; font-weight: 700; }
 .btn-save { padding: 14px; border-radius: 10px; border: none; background: var(--azul); color: #fff; font-weight: 700; cursor: pointer; }
 .btn-cancel { padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: none; color: var(--muted); font-weight: 600; cursor: pointer; }
 .btn-delete { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--vermelho); background: rgba(239, 68, 68, 0.1); color: var(--vermelho); font-weight: 600; cursor: pointer; }
+.btn-pay { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--verde); color: #fff; font-weight: 700; cursor: pointer; margin-top: 5px; }
 
 /* Widgets de Metas e Reservas */
 .widget { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
@@ -95,13 +100,23 @@ header h1 { font-size: 1.2rem; font-weight: 700; }
     <button class="btn-action minus" onclick="openModal('despesa')">－ Despesa</button>
   </div>
 
-  <input id="searchInput" type="text" placeholder="🔍 Buscar lançamento..." onkeyup="render()" style="width:100%; background:var(--card2); border:1px solid var(--border); border-radius:10px; color:#fff; padding:12px; margin-bottom:16px;">
-  
   <div class="list" id="list"></div>
 </section>
 
-<!-- SEÇÃO PLANEJAMENTO (NOVA) -->
-<section id="sec-planejamento" class="content-section">
+<!-- SEÇÃO PENDÊNCIAS (EXCLUSIVA) -->
+<section id="sec-pendencias" class="content-section">
+  <div class="widget" style="background: rgba(245, 158, 11, 0.05); border-color: var(--amarelo);">
+    <div class="widget-title" style="color: var(--amarelo);">Total Pendente</div>
+    <div id="totalPendValue" style="font-size:1.5rem; font-weight:800; color: var(--amarelo);">R$ 0,00</div>
+  </div>
+
+  <button class="btn-action pend" style="width:100%; margin-bottom:16px;" onclick="openModal('pendencia')">＋ Nova Pendência</button>
+
+  <div class="list" id="listPend"></div>
+</section>
+
+<!-- SEÇÃO RESERVA -->
+<section id="sec-reserva" class="content-section">
   <div class="widget">
     <div class="widget-title">🎯 Reserva de Emergência</div>
     <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -110,11 +125,6 @@ header h1 { font-size: 1.2rem; font-weight: 700; }
     </div>
     <div class="progress-bar"><div class="progress-fill" id="reservaProgress"></div></div>
     <div style="font-size:.7rem; color:var(--muted)">Foco: Crescimento progressivo</div>
-  </div>
-
-  <div class="widget">
-    <div class="widget-title">📅 Pendências do Mês</div>
-    <div class="list" id="listPend"></div>
   </div>
 </section>
 
@@ -129,20 +139,23 @@ header h1 { font-size: 1.2rem; font-weight: 700; }
 <!-- NAVEGAÇÃO INFERIOR -->
 <nav class="bottom-nav">
   <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><i>📝</i>Lançamentos</button>
-  <button id="nav-planejamento" onclick="setTab('planejamento')"><i>🎯</i>Planejar</button>
+  <button id="nav-pendencias" onclick="setTab('pendencias')"><i>⏳</i>Pendências</button>
+  <button id="nav-reserva" onclick="setTab('reserva')"><i>🎯</i>Reserva</button>
   <button id="nav-analise" onclick="setTab('analise')"><i>📈</i>Análise</button>
 </nav>
 
 <!-- MODAIS -->
 <div class="modal-overlay" id="modalEntry">
   <div class="modal">
-    <h2 id="modalTitle">Novo Lançamento</h2>
+    <h2 id="modalTitle">Lançamento</h2>
     <input type="hidden" id="editId">
+    <input type="hidden" id="editType">
     <div class="form-group"><label>Descrição</label><input id="desc" type="text"></div>
     <div class="form-group"><label>Valor (R$)</label><input id="val" type="number" step="0.01"></div>
     <div class="form-group"><label>Tipo / Categoria</label><select id="tipoSub"></select></div>
     <div class="modal-actions">
       <div style="display:flex; gap:10px;"><button class="btn-cancel" onclick="closeModal()" style="flex:1">Voltar</button><button class="btn-save" onclick="saveEntry()" style="flex:1">Salvar</button></div>
+      <button id="btnPay" class="btn-pay" style="display:none;" onclick="payPendency()">Marcar como Pago</button>
       <button id="btnDelete" class="btn-delete" style="display:none;" onclick="deleteEntry()">Excluir</button>
     </div>
   </div>
@@ -162,8 +175,12 @@ header h1 { font-size: 1.2rem; font-weight: 700; }
 <script>
 let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { items: [], pendencias: [], reserva: 0 };
 let chartInstance = null;
-const icons = { 'Salário': '💰', 'Pix Recebido': '💸', 'Ajuste': '⚙️', 'Alimentação': '🍽️', 'Transporte': '🚗', 'Moradia': '🏠', 'Lazer': '🎡', 'Saúde': '🏥', 'Outros': '📦' };
-const categorias = { 'receita': ['Salário', 'Pix Recebido', 'Ajuste'], 'despesa': ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'] };
+const icons = { 'Salário': '💰', 'Pix Recebido': '💸', 'Ajuste': '⚙️', 'Alimentação': '🍽️', 'Transporte': '🚗', 'Moradia': '🏠', 'Lazer': '🎡', 'Saúde': '🏥', 'Educação': '📚', 'Assinaturas': '📺', 'Outros': '📦' };
+const categorias = { 
+  'receita': ['Salário', 'Pix Recebido', 'Ajuste'], 
+  'despesa': ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'],
+  'pendencia': ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros']
+};
 
 function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
 
@@ -178,17 +195,23 @@ function setTab(tab) {
 
 function openModal(mode, id = null) {
   const select = document.getElementById('tipoSub');
-  select.innerHTML = ''; categorias[mode].forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
+  select.innerHTML = ''; categorias[mode === 'pendencia' ? 'pendencia' : (mode === 'receita' ? 'receita' : 'despesa')].forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
+  
+  document.getElementById('editType').value = mode;
+  document.getElementById('btnPay').style.display = 'none';
+
   if(id) {
-    const item = db.items.find(x => x.id === id);
+    const list = mode === 'pendencia' ? db.pendencias : db.items;
+    const item = list.find(x => x.id === id);
     document.getElementById('modalTitle').innerText = 'Editar';
     document.getElementById('editId').value = id;
     document.getElementById('desc').value = item.desc;
     document.getElementById('val').value = item.val;
     document.getElementById('tipoSub').value = item.sub;
     document.getElementById('btnDelete').style.display = 'block';
+    if(mode === 'pendencia') document.getElementById('btnPay').style.display = 'block';
   } else {
-    document.getElementById('modalTitle').innerText = mode === 'receita' ? 'Nova Receita' : 'Nova Despesa';
+    document.getElementById('modalTitle').innerText = mode === 'receita' ? 'Nova Receita' : (mode === 'despesa' ? 'Nova Despesa' : 'Nova Pendência');
     document.getElementById('editId').value = '';
     document.getElementById('desc').value = ''; document.getElementById('val').value = '';
     document.getElementById('btnDelete').style.display = 'none';
@@ -198,13 +221,33 @@ function openModal(mode, id = null) {
 function closeModal() { document.getElementById('modalEntry').classList.remove('show'); }
 
 function saveEntry() {
-  const d = document.getElementById('desc').value, v = parseFloat(document.getElementById('val').value), s = document.getElementById('tipoSub').value, id = document.getElementById('editId').value;
+  const d = document.getElementById('desc').value, v = parseFloat(document.getElementById('val').value), s = document.getElementById('tipoSub').value, id = document.getElementById('editId').value, type = document.getElementById('editType').value;
   if(!d || !v) return;
-  if(id) { const idx = db.items.findIndex(x => x.id == id); db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s }; }
-  else db.items.push({ id: Date.now(), desc: d, val: v, tipo: d.includes('Receita')||categorias.receita.includes(s)?'receita':'despesa', sub: s, data: new Date().toISOString() });
+  
+  if(type === 'pendencia') {
+    if(id) { const idx = db.pendencias.findIndex(x => x.id == id); db.pendencias[idx] = { ...db.pendencias[idx], desc: d, val: v, sub: s }; }
+    else db.pendencias.push({ id: Date.now(), desc: d, val: v, sub: s });
+  } else {
+    if(id) { const idx = db.items.findIndex(x => x.id == id); db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s }; }
+    else db.items.push({ id: Date.now(), desc: d, val: v, tipo: type, sub: s, data: new Date().toISOString() });
+  }
   save(); closeModal();
 }
-function deleteEntry() { db.items = db.items.filter(x => x.id != document.getElementById('editId').value); save(); closeModal(); }
+
+function deleteEntry() {
+  const id = document.getElementById('editId').value, type = document.getElementById('editType').value;
+  if(type === 'pendencia') db.pendencias = db.pendencias.filter(x => x.id != id);
+  else db.items = db.items.filter(x => x.id != id);
+  save(); closeModal();
+}
+
+function payPendency() {
+  const id = document.getElementById('editId').value;
+  const p = db.pendencias.find(x => x.id == id);
+  db.items.push({ id: Date.now(), desc: p.desc, val: p.val, tipo: 'despesa', sub: p.sub, data: new Date().toISOString() });
+  db.pendencias = db.pendencias.filter(x => x.id != id);
+  save(); closeModal();
+}
 
 function openReservaModal() { document.getElementById('modalReserva').classList.add('show'); }
 function closeReservaModal() { document.getElementById('modalReserva').classList.remove('show'); }
@@ -218,21 +261,27 @@ function initChart() {
 }
 
 function render() {
-  const s = document.getElementById('searchInput').value.toLowerCase();
-  const filtered = db.items.filter(i => i.desc.toLowerCase().includes(s));
-  let r=0, d=0; filtered.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val);
+  let r=0, d=0, p=0;
+  db.items.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val);
+  db.pendencias.forEach(i => p+=i.val);
   
   document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR');
   document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR');
   document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
-  document.getElementById('saldoReal').innerText = 'R$ '+(r-d-(db.pendencias||[]).reduce((a,b)=>a+b.val,0)).toLocaleString('pt-BR');
+  document.getElementById('saldoReal').innerText = 'R$ '+(r-d-p).toLocaleString('pt-BR');
+  document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
   
   document.getElementById('reservaValue').innerText = 'R$ '+(db.reserva||0).toLocaleString('pt-BR');
   document.getElementById('reservaProgress').style.width = Math.min((db.reserva/5000)*100, 100) + '%';
 
   const l = document.getElementById('list'); l.innerHTML = '';
-  filtered.slice().reverse().forEach(i => {
+  db.items.slice().reverse().forEach(i => {
     l.innerHTML += `<div class="item" onclick="openModal('${i.tipo}', ${i.id})"><div class="item-info"><div class="item-icon">${icons[i.sub]||'📦'}</div><div class="item-text"><b>${i.desc}</b><div>${i.sub}</div></div></div><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b></div>`;
+  });
+
+  const lp = document.getElementById('listPend'); lp.innerHTML = '';
+  db.pendencias.forEach(i => {
+    lp.innerHTML += `<div class="item" onclick="openModal('pendencia', ${i.id})"><div class="item-info"><div class="item-icon">${icons[i.sub]||'⏳'}</div><div class="item-text"><b>${i.desc}</b><div class="pay-hint">Pagar Agora</div></div></div><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b></div>`;
   });
 }
 window.onload = render;
