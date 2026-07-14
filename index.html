@@ -3,7 +3,7 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
-    <title>Zapia Finance Executive v15</title>
+    <title>Zapia Finance Executive v16</title>
     <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css' rel='stylesheet'>
     <style>
@@ -60,12 +60,14 @@
         .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
 
         .list-header { font-size: 0.7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin: 32px 0 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        .transaction { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+        .transaction { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); position: relative; }
         .trans-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
         .trans-info { flex: 1; }
         .trans-name { font-size: 0.95rem; font-weight: 600; display: block; }
         .trans-meta { font-size: 0.75rem; color: var(--muted); }
         .trans-val { font-weight: 700; font-size: 1rem; text-align: right; }
+        .trans-actions { display: flex; gap: 12px; margin-left: 10px; }
+        .trans-actions i { color: var(--muted); font-size: 1rem; cursor: pointer; }
 
         .android-nav { 
             position: fixed; bottom: 0; left: 0; width: 100%; 
@@ -96,20 +98,13 @@
     </div>
 </header>
 
-<!-- 1. DASHBOARD / LANÇAR -->
 <div id='view-lancar' class='tab-content active'>
     <div class='executive-summary'>
         <span class='summary-label'>Saldo Disponível</span>
         <div class='summary-val' id='lSaldo'>R$ 0,00</div>
         <div class='summary-grid'>
-            <div class='grid-item'>
-                <span class='summary-label' style='color:var(--up)'>Receitas</span>
-                <div class='grid-val' id='lRec'>R$ 0,00</div>
-            </div>
-            <div class='grid-item'>
-                <span class='summary-label' style='color:var(--down)'>Despesas</span>
-                <div class='grid-val' id='lDesp'>R$ 0,00</div>
-            </div>
+            <div class='grid-item'><span class='summary-label' style='color:var(--up)'>Receitas</span><div class='grid-val' id='lRec'>R$ 0,00</div></div>
+            <div class='grid-item'><span class='summary-label' style='color:var(--down)'>Despesas</span><div class='grid-val' id='lDesp'>R$ 0,00</div></div>
         </div>
     </div>
 
@@ -127,16 +122,19 @@
         </div>
     </div>
     
-    <div class='action-row'>
+    <div class='action-row' id='formLancarBtns'>
         <button class='btn-exec btn-secondary' onclick='add("desp")'>Lançar Gasto</button>
         <button class='btn-exec btn-primary' onclick='add("rec")'>Lançar Ganho</button>
+    </div>
+    <div class='action-row' id='editLancarBtns' style='display:none'>
+        <button class='btn-exec btn-secondary' onclick='cancelEdit()'>Cancelar</button>
+        <button class='btn-exec btn-primary' onclick='saveUpdate()'>Salvar Alteração</button>
     </div>
 
     <h2 class='list-header'>Histórico de Transações</h2>
     <div id='lList'></div>
 </div>
 
-<!-- 2. PENDENTES -->
 <div id='view-contas' class='tab-content'>
     <div class='executive-summary'>
         <span class='summary-label'>Obrigações Pendentes</span>
@@ -144,49 +142,29 @@
     </div>
     <div class='input-field'><label>Nome da Conta</label><input type='text' id='pDesc' placeholder='Fornecedor ou Boleto'></div>
     <div class='input-field'><label>Valor</label><input type='number' id='pVal' placeholder='0,00'></div>
-    <button class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Agendar Obrigação</button>
+    
+    <div id='formPendBtns'>
+        <button class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Agendar Obrigação</button>
+    </div>
+    <div class='action-row' id='editPendBtns' style='display:none'>
+        <button class='btn-exec btn-secondary' onclick='cancelEdit()'>Cancelar</button>
+        <button class='btn-exec btn-primary' onclick='saveUpdate()'>Salvar Alteração</button>
+    </div>
     
     <h2 class='list-header'>Lista de Pendências</h2>
     <div id='pList'></div>
 </div>
 
-<!-- 3. ANÁLISE -->
-<div id='view-analise' class='tab-content'>
-    <h2 class='list-header'>Análise de Gastos</h2>
-    <div id='cList'></div>
-</div>
-
-<!-- 4. ZAPIA IA -->
-<div id='view-ia' class='tab-content'>
-    <div style='text-align:center; padding:60px 0'>
-        <i class='lucide-shield-check' style='font-size:3rem; color:var(--accent); margin-bottom:24px'></i>
-        <h2 style='font-size:1.4rem; margin-bottom:12px'>Relatório Executivo</h2>
-        <p id='iaMsg' style='color:var(--muted); line-height:1.6; font-size:0.95rem'></p>
-    </div>
-</div>
-
-<!-- 5. ANUAL -->
-<div id='view-anual' class='tab-content'>
-    <h2 class='list-header'>Revisão Fiscal Anual</h2>
-    <div id='aList'></div>
-</div>
-
-<!-- 6. METAS -->
+<div id='view-analise' class='tab-content'><h2 class='list-header'>Análise de Gastos</h2><div id='cList'></div></div>
+<div id='view-ia' class='tab-content'><div style='text-align:center; padding:60px 0'><i class='lucide-shield-check' style='font-size:3rem; color:var(--accent); margin-bottom:24px'></i><h2 style='font-size:1.4rem; margin-bottom:12px'>Relatório Executivo</h2><p id='iaMsg' style='color:var(--muted); line-height:1.6; font-size:0.95rem'></p></div></div>
+<div id='view-anual' class='tab-content'><h2 class='list-header'>Revisão Fiscal Anual</h2><div id='aList'></div></div>
 <div id='view-metas' class='tab-content'>
     <div class='input-field'><label>Objetivo</label><input type='text' id='mNome' placeholder='Ex: Reserva de Emergência'></div>
     <div class='input-field'><label>Valor Alvo</label><input type='number' id='mAlvo' placeholder='0,00'></div>
     <button class='btn-exec btn-primary' style='width:100%; margin-bottom:32px' onclick='addGoal()'>Fixar Objetivo</button>
     <div id='mList'></div>
 </div>
-
-<!-- 7. SIMULAR -->
-<div id='view-simular' class='tab-content'>
-    <div class='executive-summary' style='text-align:center'>
-        <span class='summary-label'>Saldo Líquido Pós-Obrigações</span>
-        <div class='summary-val' id='simVal'>R$ 0,00</div>
-        <p style='font-size:0.8rem; color:var(--muted); padding: 0 20px'>Simulação baseada na liquidação imediata de todas as obrigações pendentes.</p>
-    </div>
-</div>
+<div id='view-simular' class='tab-content'><div class='executive-summary' style='text-align:center'><span class='summary-label'>Saldo Líquido Pós-Obrigações</span><div class='summary-val' id='simVal'>R$ 0,00</div><p style='font-size:0.8rem; color:var(--muted); padding: 0 20px'>Simulação baseada na liquidação imediata de todas as obrigações pendentes.</p></div></div>
 
 <nav class='android-nav'>
     <div class='nav-link active' onclick='switchTab("lancar")'><i class='lucide-layout-grid'></i><span>Início</span></div>
@@ -199,13 +177,15 @@
 </nav>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('zapia_exec_v15')) || { items: [], goals: [] };
+    let db = JSON.parse(localStorage.getItem('zapia_exec_v16')) || { items: [], goals: [] };
+    let editingId = null;
 
     function switchTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + t).classList.add('active');
         event.currentTarget.classList.add('active');
+        cancelEdit();
         render();
     }
 
@@ -213,7 +193,7 @@
         const d = document.getElementById('fDesc').value, v = parseFloat(document.getElementById('fVal').value), c = document.getElementById('fCat').value;
         if(!d || isNaN(v)) return;
         db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: tipo, cat: c, date: new Date().toISOString() });
-        document.getElementById('fDesc').value = ''; document.getElementById('fVal').value = '';
+        clearForms();
         save();
     }
 
@@ -221,8 +201,66 @@
         const d = document.getElementById('pDesc').value, v = parseFloat(document.getElementById('pVal').value);
         if(!d || isNaN(v)) return;
         db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: 'pend', cat: 'Obrigação', date: new Date().toISOString() });
-        document.getElementById('pDesc').value = ''; document.getElementById('pVal').value = '';
+        clearForms();
         save();
+    }
+
+    function editItem(id) {
+        editingId = id;
+        const item = db.items.find(x => x.id === id);
+        if(!item) return;
+
+        if(item.tipo === 'pend') {
+            document.getElementById('pDesc').value = item.desc;
+            document.getElementById('pVal').value = item.val;
+            document.getElementById('formPendBtns').style.display = 'none';
+            document.getElementById('editPendBtns').style.display = 'flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            document.getElementById('fDesc').value = item.desc;
+            document.getElementById('fVal').value = item.val;
+            document.getElementById('fCat').value = item.cat;
+            document.getElementById('formLancarBtns').style.display = 'none';
+            document.getElementById('editLancarBtns').style.display = 'flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    function saveUpdate() {
+        const item = db.items.find(x => x.id === editingId);
+        if(!item) return;
+
+        if(item.tipo === 'pend') {
+            item.desc = document.getElementById('pDesc').value;
+            item.val = parseFloat(document.getElementById('pVal').value);
+        } else {
+            item.desc = document.getElementById('fDesc').value;
+            item.val = parseFloat(document.getElementById('fVal').value);
+            item.cat = document.getElementById('fCat').value;
+        }
+        cancelEdit();
+        save();
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        clearForms();
+        document.getElementById('formLancarBtns').style.display = 'flex';
+        document.getElementById('editLancarBtns').style.display = 'none';
+        document.getElementById('formPendBtns').style.display = 'block';
+        document.getElementById('editPendBtns').style.display = 'none';
+    }
+
+    function clearForms() {
+        document.getElementById('fDesc').value = ''; document.getElementById('fVal').value = '';
+        document.getElementById('pDesc').value = ''; document.getElementById('pVal').value = '';
+    }
+
+    function deleteItem(id) {
+        if(confirm('Excluir este lançamento?')) {
+            db.items = db.items.filter(x => x.id !== id);
+            save();
+        }
     }
 
     function addGoal() {
@@ -233,16 +271,11 @@
         save();
     }
 
-    function save() { localStorage.setItem('zapia_exec_v15', JSON.stringify(db)); render(); }
-    function resetAll() { if(confirm('Deseja resetar todos os dados de fábrica?')) { db = {items:[], goals:[]}; save(); } }
+    function save() { localStorage.setItem('zapia_exec_v16', JSON.stringify(db)); render(); }
+    function resetAll() { if(confirm('Resetar dados?')) { db = {items:[], goals:[]}; save(); } }
     function exportar() {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "zapia_finance_backup.json");
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
+        const a = document.createElement('a'); a.href = dataStr; a.download = "zapia_backup.json"; a.click();
     }
 
     function render() {
@@ -250,7 +283,6 @@
         const lList = document.getElementById('lList'); lList.innerHTML = '';
         const pList = document.getElementById('pList'); pList.innerHTML = '';
         const cList = document.getElementById('cList'); cList.innerHTML = '';
-        const aList = document.getElementById('aList'); aList.innerHTML = '';
         const mList = document.getElementById('mList'); mList.innerHTML = '';
         const cats = {};
 
@@ -270,6 +302,10 @@
                         <span class='trans-meta'>${i.cat} • ${new Date(i.date).toLocaleDateString('pt-BR')}</span>
                     </div>
                     <div class='trans-val' style='color:${color}'>R$ ${i.val.toLocaleString('pt-BR')}</div>
+                    <div class='trans-actions'>
+                        <i class='lucide-edit-3' onclick='editItem(${i.id})'></i>
+                        <i class='lucide-trash-2' onclick='deleteItem(${i.id})'></i>
+                    </div>
                 </div>`;
 
             if(i.tipo === 'pend') pList.innerHTML += html; else lList.innerHTML += html;
@@ -291,8 +327,7 @@
             mList.innerHTML += `<div class='progress-box'><strong>${g.nome}</strong><div class='bar-bg'><div class='bar-fill' style='width:${perc}%'></div></div><div style='font-size:0.7rem'>${perc.toFixed(1)}% completo</div></div>`;
         });
 
-        document.getElementById('iaMsg').innerText = bal >= pnd ? `Status fiscal: Estável. Sua liquidez atual de R$ ${bal.toLocaleString('pt-BR')} cobre integralmente todas as obrigações projetadas.` : `Atenção: Suas obrigações projetadas excedem sua liquidez atual em R$ ${(pnd-bal).toLocaleString('pt-BR')}.`;
-        
+        document.getElementById('iaMsg').innerText = bal >= pnd ? `Status fiscal: Estável. Sua liquidez atual cobre as obrigações.` : `Atenção: Déficit de liquidez detectado.`;
         document.getElementById('simVal').innerText = 'R$ ' + (bal - pnd).toLocaleString('pt-BR');
         document.getElementById('simVal').style.color = (bal - pnd) < 0 ? 'var(--down)' : 'var(--up)';
     }
