@@ -245,7 +245,16 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
     </div>
 </div>
 
-<div class="modal-overlay" id="modalMeta"><div class="modal"><h2>Nova Meta</h2><div class="form-group"><label>Nome</label><input id="metaNome" type="text"></div><div class="form-group"><label>Valor Pretendido (R$)</label><input id="metaPretendido" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeMetaModal()">Cancelar</button><button class="btn-save" onclick="saveMeta()">Criar</button></div></div></div>
+<div class="modal-overlay" id="modalMeta">
+    <div class="modal">
+        <h2 id="metaTitleHeader">Nova Meta</h2>
+        <input type="hidden" id="editMetaId">
+        <div class="form-group"><label>Nome</label><input id="metaNome" type="text"></div>
+        <div class="form-group"><label>Valor Pretendido (R$)</label><input id="metaPretendido" type="number" step="0.01"></div>
+        <div class="form-group" id="metaAcumuladoGroup" style="display:none;"><label>Valor Já Acumulado (R$)</label><input id="metaAcumulado" type="number" step="0.01"></div>
+        <div class="modal-actions"><button class="btn-cancel" onclick="closeMetaModal()">Cancelar</button><button class="btn-save" onclick="saveMeta()">Salvar</button></div>
+    </div>
+</div>
 <div class="modal-overlay" id="modalAddMeta"><div class="modal"><h2>Adicionar à Meta</h2><input type="hidden" id="addMetaId"><div class="form-group"><label>Valor (R$)</label><input id="valAddMeta" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeAddMetaModal()">Cancelar</button><button class="btn-save" onclick="confirmAddMeta()">Adicionar</button></div></div></div>
 <div class="modal-overlay" id="modalSimRec"><div class="modal"><h2>Recebimento Previsto</h2><div class="form-group"><label>Descrição</label><input id="simRecDesc" type="text"></div><div class="form-group"><label>Valor (R$)</label><input id="simRecVal" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeSimRecModal()">Cancelar</button><button class="btn-save" onclick="saveSimRec()">Adicionar</button></div></div></div>
 
@@ -473,14 +482,43 @@ function render() {
   const ml = document.getElementById('metasList'); ml.innerHTML = '';
   db.metas.forEach(m => {
     const perc = Math.min((m.acumulado / m.pretendido) * 100, 100).toFixed(1);
-    ml.innerHTML += `<div class="widget"><div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;"><div><b style="font-size:.9rem; color:var(--azul);">${m.nome}</b><div style="font-size:.7rem; color:var(--muted);">Meta: R$ ${m.pretendido.toLocaleString('pt-BR')}</div></div><div style="text-align:right;"><b style="font-size:1rem;">R$ ${m.acumulado.toLocaleString('pt-BR')}</b><div style="font-size:.7rem; color:var(--verde);">${perc} %</div></div></div><div class="progress-bar"><div class="progress-fill" style="width:${perc}%;"></div></div><div style="display:flex; gap:10px; margin-top:15px;"><button class="sync-btn" style="flex:1;" onclick="openAddMeta(${m.id})">ADICIONAR</button><button class="icon-btn delete" onclick="deleteItem(${m.id}, 'meta', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
+    ml.innerHTML += `<div class="widget"><div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;"><div><b style="font-size:.9rem; color:var(--azul);">${m.nome}</b><div style="font-size:.7rem; color:var(--muted);">Meta: R$ ${m.pretendido.toLocaleString('pt-BR')}</div></div><div style="text-align:right;"><b style="font-size:1rem;">R$ ${m.acumulado.toLocaleString('pt-BR')}</b><div style="font-size:.7rem; color:var(--verde);">${perc} %</div></div></div><div class="progress-bar"><div class="progress-fill" style="width:${perc}%;"></div></div><div style="display:flex; gap:10px; margin-top:15px;"><button class="sync-btn" style="flex:1;" onclick="openAddMeta(${m.id})">ADICIONAR</button><button class="icon-btn edit" onclick="openMetaModal(${m.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${m.id}, 'meta', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
   });
   renderComp(); renderSim();
 }
 
-function openMetaModal() { document.getElementById('modalMeta').classList.add('show'); }
+function openMetaModal(id = null) {
+  document.getElementById('editMetaId').value = id || '';
+  if(id) {
+    const m = db.metas.find(x => x.id == id);
+    if(m) {
+      document.getElementById('metaTitleHeader').innerText = 'Editar Meta';
+      document.getElementById('metaNome').value = m.nome;
+      document.getElementById('metaPretendido').value = m.pretendido;
+      document.getElementById('metaAcumulado').value = m.acumulado;
+      document.getElementById('metaAcumuladoGroup').style.display = 'block';
+    }
+  } else {
+    document.getElementById('metaTitleHeader').innerText = 'Nova Meta';
+    document.getElementById('metaNome').value = '';
+    document.getElementById('metaPretendido').value = '';
+    document.getElementById('metaAcumuladoGroup').style.display = 'none';
+  }
+  document.getElementById('modalMeta').classList.add('show');
+}
 function closeMetaModal() { document.getElementById('modalMeta').classList.remove('show'); }
-function saveMeta() { const n = document.getElementById('metaNome').value, p = parseFloat(document.getElementById('metaPretendido').value); if(!n || isNaN(p)) return; db.metas.push({ id: Date.now(), nome: n.toUpperCase(), pretendido: p, acumulado: 0 }); save(); closeMetaModal(); }
+function saveMeta() {
+  const id = document.getElementById('editMetaId').value, n = document.getElementById('metaNome').value.toUpperCase(), p = parseFloat(document.getElementById('metaPretendido').value), a = parseFloat(document.getElementById('metaAcumulado').value) || 0;
+  if(!n || isNaN(p)) return;
+  if(id) {
+    const idx = db.metas.findIndex(x => x.id == id);
+    if(idx !== -1) db.metas[idx] = { ...db.metas[idx], nome: n, pretendido: p, acumulado: a };
+  } else {
+    db.metas.push({ id: Date.now(), nome: n, pretendido: p, acumulado: 0 });
+  }
+  save(); closeMetaModal();
+}
+
 function openAddMeta(id) { document.getElementById('addMetaId').value = id; document.getElementById('modalAddMeta').classList.add('show'); }
 function closeAddMetaModal() { document.getElementById('modalAddMeta').classList.remove('show'); }
 function confirmAddMeta() { const id = document.getElementById('addMetaId').value, v = parseFloat(document.getElementById('valAddMeta').value); if(isNaN(v)) return; const idx = db.metas.findIndex(x => x.id == id); if(idx!==-1) db.metas[idx].acumulado += v; save(); closeAddMetaModal(); }
