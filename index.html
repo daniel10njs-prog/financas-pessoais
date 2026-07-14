@@ -62,6 +62,18 @@ header h1 { font-size: 1.25rem; font-weight: 900; letter-spacing: -0.5px; }
   display: flex; flex-direction: column; align-items: center; 
   gap: 4px; font-size: 9px; font-weight: 700; cursor: pointer; 
   transition: 0.3s;
+  position: relative;
+}
+.nav-badge {
+  position: absolute; top: 2px; right: 8px;
+  background: var(--vermelho); color: white;
+  font-size: 0.65rem; font-weight: 900;
+  min-width: 16px; height: 16px;
+  border-radius: 10px; display: none;
+  align-items: center; justify-content: center;
+  border: 2px solid var(--card);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  z-index: 10;
 }
 .bottom-nav button.active { color: var(--azul); }
 .bottom-nav button i { font-size: 1.4rem; transition: 0.3s; }
@@ -229,7 +241,7 @@ header h1 { font-size: 1.25rem; font-weight: 900; letter-spacing: -0.5px; }
 
 <section id="sec-pendencias" class="content-section">
   <div class="widget" style="background: rgba(245, 158, 11, 0.05); border-color: var(--amarelo); text-align:center;">
-    <div class="widget-title" style="color: var(--amarelo);">Total Pendente</div>
+    <div class="widget-title" style="color: var(--amarelo);">Pendências Ativas <span id="pend-count-title" style="opacity:0.7"></span></div>
     <div id="totalPendValue" style="font-size:1.4rem; font-weight:800; color: var(--amarelo);">R$ 0,00</div>
   </div>
   <button class="btn-action pend" style="width:100%; margin-bottom:14px;" onclick="openModal('pendencia')">＋ Nova Pendência</button>
@@ -291,7 +303,10 @@ header h1 { font-size: 1.25rem; font-weight: 900; letter-spacing: -0.5px; }
 
 <nav class="bottom-nav">
   <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><i class="fas fa-list-ul"></i>Lançar</button>
-  <button id="nav-pendencias" onclick="setTab('pendencias')"><i class="fas fa-clock"></i>Pendente</button>
+  <button id="nav-pendencias" onclick="setTab('pendencias')">
+    <i class="fas fa-clock"></i>Pendente
+    <span class="nav-badge" id="pend-badge">0</span>
+  </button>
   <button id="nav-comparativo" onclick="setTab('comparativo')"><i class="fas fa-history"></i>Mensal</button>
   <button id="nav-simular" onclick="setTab('simular')"><i class="fas fa-calculator"></i>Simular</button>
   <button id="nav-metas" onclick="setTab('metas')"><i class="fas fa-bullseye"></i>Metas</button>
