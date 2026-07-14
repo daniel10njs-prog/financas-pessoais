@@ -10,525 +10,720 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
 :root {
-  --verde: #22c55e; --vermelho: #ef4444; --amarelo: #f59e0b; --azul: #3b82f6;
-  --bg: #0f172a; --card: #1e293b; --card2: #253047; --border: #334155; --text: #f1f5f9; --muted: #94a3b8;
+  --verde: #22c55e;
+  --vermelho: #ef4444;
+  --azul-fundo: #0f172a;
+  --azul-card: #1e293b;
+  --azul-claro: #38bdf8;
+  --texto: #f8fafc;
+  --texto-secundario: #94a3b8;
+  --borda: #334155;
+  --safe-area-top: env(safe-area-inset-top);
+  --safe-area-bottom: env(safe-area-inset-bottom);
 }
-body.light-mode {
-  --bg: #f8fafc; --card: #ffffff; --card2: #f1f5f9; --border: #e2e8f0; --text: #0f172a; --muted: #64748b;
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', Roboto, sans-serif; }
+
+body { background: var(--azul-fundo); color: var(--texto); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+/* Header e Navegação */
+header { padding: calc(var(--safe-area-top) + 15px) 20px 15px; background: var(--azul-card); border-bottom: 2px solid var(--borda); text-align: center; }
+h1 { font-size: 1.2rem; letter-spacing: 1px; color: var(--azul-claro); text-transform: uppercase; }
+
+.main-content { flex: 1; overflow-y: auto; padding: 20px 20px 100px; }
+
+nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--azul-card); border-top: 2px solid var(--borda);
+  display: flex; justify-content: space-around;
+  padding: 10px 5px calc(var(--safe-area-bottom) + 10px); z-index: 100;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding-bottom: 90px; min-height: 100vh; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
-header { padding: 18px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 100; }
-header h1 { font-size: 1.1rem; font-weight: 700; }
+.nav-item { display: flex; flex-direction: column; align-items: center; color: var(--texto-secundario); font-size: 0.7rem; cursor: pointer; flex: 1; }
+.nav-item.active { color: var(--azul-claro); }
+.nav-item span.material-icons-round { font-size: 24px; margin-bottom: 4px; }
 
-.menu-container { position: relative; }
-.dots-btn { background: none; border: none; color: var(--text); font-size: 1.2rem; cursor: pointer; padding: 5px; }
-.dropdown-menu { display: none; position: absolute; top: 100%; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 12px; min-width: 180px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); z-index: 2000; overflow: hidden; }
-.dropdown-menu.show { display: block; }
-.dropdown-item { padding: 12px 16px; font-size: 0.85rem; display: flex; align-items: center; gap: 10px; cursor: pointer; border-bottom: 1px solid var(--border); color: var(--text); }
-.dropdown-item:last-child { border-bottom: none; }
-.dropdown-item:hover { background: var(--card2); }
+/* Cards e Listas */
+.card { background: var(--azul-card); padding: 20px; border-radius: 12px; border: 2px solid var(--borda); margin-bottom: 20px; }
+.card-title { font-size: 0.9rem; color: var(--texto-secundario); margin-bottom: 10px; text-transform: uppercase; }
+.card-value { font-size: 1.8rem; font-weight: bold; }
 
-.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--card); border-top: 1px solid var(--border); display: flex; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); overflow-x: auto; }
-.bottom-nav button { flex: 1; min-width: 65px; padding: 12px 0; background: none; border: none; color: var(--muted); font-size: .6rem; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.bottom-nav button.active { color: var(--azul); }
-.content-section { display: none; padding: 14px 12px; }
-.content-section.active { display: block; }
+.item-lista {
+  background: var(--azul-card); padding: 15px; border-radius: 10px; border: 2px solid var(--borda);
+  margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;
+}
+.item-info { display: flex; align-items: center; gap: 12px; }
+.item-icon {
+  width: 40px; height: 40px; border-radius: 8px; background: var(--borda);
+  display: flex; align-items: center; justify-content: center; color: var(--azul-claro);
+}
+.item-detalhes h4 { font-size: 0.95rem; margin-bottom: 2px; }
+.item-detalhes p { font-size: 0.75rem; color: var(--texto-secundario); }
+.item-obs { font-size: 0.7rem; color: var(--azul-claro); font-style: italic; margin-top: 2px; }
+.item-valor { font-weight: bold; font-size: 0.95rem; text-align: right; }
 
-.cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-.card { background: var(--card); border-radius: 12px; padding: 12px 10px; border: 1px solid var(--border); text-align: center; }
-.card .label { font-size: .6rem; text-transform: uppercase; color: var(--muted); }
-.card .value { font-size: .9rem; font-weight: 700; }
-.card.rec .value { color: var(--verde); } .card.desp .value { color: var(--vermelho); } .card.saldo .value { color: var(--azul); }
+/* Controles de Filtro e Busca */
+.search-box {
+    display: flex; gap: 10px; margin-bottom: 15px;
+}
+.input-search {
+    flex: 1; background: var(--azul-fundo); border: 2px solid var(--borda);
+    color: var(--texto); padding: 10px 15px; border-radius: 8px; outline: none;
+}
+.filter-select {
+    background: var(--azul-fundo); border: 2px solid var(--borda);
+    color: var(--texto); padding: 10px; border-radius: 8px; outline: none; font-size: 0.8rem;
+}
 
-.real-card { background: rgba(59, 130, 246, 0.1); border: 1px dashed var(--azul); margin-bottom: 16px; padding: 12px; border-radius: 12px; text-align: center; }
-.real-card .label { font-size: .7rem; color: var(--azul); font-weight: 700; }
-.real-card .value { font-size: 1.1rem; font-weight: 800; }
+/* Modais */
+.modal {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px;
+}
+.modal-content {
+  background: var(--azul-card); width: 100%; max-width: 400px; border-radius: 16px;
+  border: 2px solid var(--borda); padding: 25px; max-height: 90vh; overflow-y: auto;
+}
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-header h2 { font-size: 1.1rem; }
 
-.action-buttons { display: flex; gap: 10px; margin-bottom: 16px; }
-.btn-action { flex: 1; padding: 14px; border-radius: 12px; border: none; color: #fff; font-size: .9rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-action.plus { background: var(--verde); }
-.btn-action.minus { background: var(--vermelho); }
-.btn-action.pend { background: var(--amarelo); }
+input, select, textarea {
+  width: 100%; background: var(--azul-fundo); border: 2px solid var(--borda);
+  color: var(--texto); padding: 12px; border-radius: 8px; margin-bottom: 15px; outline: none; font-size: 1rem;
+}
+label { display: block; font-size: 0.8rem; color: var(--texto-secundario); margin-bottom: 5px; text-transform: uppercase; }
 
-.list { display: flex; flex-direction: column; gap: 10px; }
-.item { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-.item-info { display: flex; align-items: center; gap: 12px; flex: 1; }
-.item-icon { font-size: 1.2rem; background: var(--card2); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; color: var(--azul); }
-.item-text b { font-size: .85rem; display: block; }
-.item-text span { font-size: .65rem; color: var(--muted); }
-.item-obs { font-size: 0.65rem; color: var(--azul); font-style: italic; margin-top: 2px; }
-.item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-.item-val { font-weight: 700; font-size: 0.9rem; }
-.item-val.receita { color: var(--verde); } .item-val.despesa { color: var(--vermelho); } .item-val.pendencia { color: var(--amarelo); }
+.btn {
+  width: 100%; padding: 14px; border-radius: 8px; border: none; font-weight: bold;
+  font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-primary { background: var(--azul-claro); color: var(--azul-fundo); }
+.btn-outline { background: transparent; border: 2px solid var(--borda); color: var(--texto); margin-top: 10px; }
+.btn-add {
+  position: fixed; bottom: 90px; right: 20px; width: 56px; height: 56px;
+  border-radius: 28px; background: var(--azul-claro); color: var(--azul-fundo);
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 90;
+}
 
-.item-actions { display: flex; gap: 8px; align-items: center; }
-.icon-btn { background: none; border: none; cursor: pointer; padding: 4px; font-size: 0.85rem; }
-.icon-btn.edit { color: var(--azul); }
-.icon-btn.delete { color: var(--vermelho); }
-.btn-pay-direct { background: var(--verde); color: white; border: none; border-radius: 6px; padding: 4px 8px; font-size: 0.6rem; font-weight: 800; cursor: pointer; }
+/* Ranking de Gastos */
+.ranking-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.ranking-bar-container { flex: 1; height: 8px; background: var(--borda); border-radius: 4px; overflow: hidden; }
+.ranking-bar { height: 100%; background: var(--azul-claro); border-radius: 4px; }
+.ranking-label { min-width: 80px; font-size: 0.8rem; color: var(--texto-secundario); }
+.ranking-val { min-width: 70px; text-align: right; font-size: 0.8rem; font-weight: bold; }
 
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
-.modal-overlay.show { display: flex; }
-.modal { background: var(--card); border-radius: 20px; padding: 20px; width: 100%; max-width: 380px; border: 1px solid var(--border); overflow-y: auto; max-height: 90vh; position: relative; }
-.modal h2 { margin-bottom: 18px; font-size: 1rem; text-align: center; }
+/* Grid de ícones */
+.icon-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 15px; }
+.icon-option {
+    padding: 10px; border: 2px solid var(--borda); border-radius: 8px; text-align: center; cursor: pointer;
+}
+.icon-option.selected { border-color: var(--azul-claro); background: rgba(56, 189, 248, 0.1); }
 
-.form-group { margin-bottom: 14px; }
-.form-group label { display: block; font-size: .65rem; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; color: var(--text); font-size: .9rem; outline: none; }
-.form-group textarea { resize: none; min-height: 60px; font-family: inherit; }
+/* Tabs interno de Análise */
+.tab-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+.tab-btn {
+    flex: 1; padding: 8px; background: var(--azul-fundo); border: 2px solid var(--borda);
+    color: var(--texto-secundario); border-radius: 8px; font-size: 0.8rem; cursor: pointer;
+}
+.tab-btn.active { border-color: var(--azul-claro); color: var(--azul-claro); }
 
-.modal-actions { display: flex; gap: 10px; margin-top: 18px; }
-.btn-save { flex: 1; padding: 12px; border-radius: 8px; border: none; background: var(--azul); color: #fff; font-weight: 700; cursor: pointer; }
-.btn-cancel { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: none; color: var(--muted); font-weight: 600; cursor: pointer; }
-
-/* ESTILO GERENCIADOR DE CATEGORIAS */
-.cat-manager-modal { max-width: 420px !important; padding: 0 !important; overflow: hidden !important; }
-.cat-header { background: var(--card2); padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
-.cat-header h2 { margin: 0; font-size: 1.1rem; }
-.cat-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--card); }
-.cat-tab { flex: 1; padding: 12px; text-align: center; font-size: 0.7rem; font-weight: 700; color: var(--muted); cursor: pointer; text-transform: uppercase; border-bottom: 2px solid transparent; }
-.cat-tab.active { color: var(--azul); border-bottom-color: var(--azul); background: rgba(59,130,246,0.05); }
-.cat-list-container { padding: 15px; max-height: 400px; overflow-y: auto; background: var(--bg); }
-.cat-item-row { display: flex; align-items: center; gap: 12px; background: var(--card); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 8px; }
-.cat-item-icon { width: 40px; height: 40px; background: var(--card2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid var(--border); color: var(--azul); }
-.cat-item-name { flex: 1; font-weight: 600; font-size: 0.9rem; }
-.cat-actions { display: flex; gap: 8px; }
-.cat-btn-add { margin: 15px; padding: 14px; background: var(--azul); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.9rem; }
-
-/* BIBLIOTECA DE ÍCONES (MATERIAL) */
-.icon-selector-btn { width: 100%; height: 60px; background: var(--card2); border: 1px solid var(--border); border-radius: 12px; font-size: 2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 10px; color: var(--azul); }
-.emoji-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; max-height: 250px; overflow-y: auto; padding: 15px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; margin-top: 10px; }
-.emoji-item { font-size: 1.6rem; padding: 12px; cursor: pointer; border-radius: 10px; text-align: center; color: var(--muted); display: flex; align-items: center; justify-content: center; }
-.emoji-item:hover { background: var(--card2); color: var(--azul); }
-.emoji-item.active { background: var(--azul); color: white; }
-
-.widget { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
-.widget-title { font-size: .7rem; font-weight: 700; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; }
-.progress-bar { height: 8px; background: var(--card2); border-radius: 4px; overflow: hidden; margin-top: 8px; }
-.progress-fill { height: 100%; background: var(--verde); width: 0%; transition: width 0.5s; }
-
-.comp-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 5px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: .75rem; align-items: center; }
-.comp-header { font-weight: 800; color: var(--muted); text-transform: uppercase; border-bottom: 2px solid var(--border); }
-
-.sim-check { width: 22px; height: 22px; cursor: pointer; }
-.sim-item { background: var(--card); border-radius: 12px; padding: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.sim-btn-del { color: var(--vermelho); background: none; border: none; font-size: 0.8rem; cursor: pointer; margin-left: 10px; }
-.sync-btn { background: none; border: 1px solid var(--verde); color: var(--verde); padding: 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+[hidden] { display: none !important; }
 </style>
 </head>
 <body>
+
 <header>
-  <h1>💰 Finanças</h1>
-  <div class="menu-container">
-    <button class="dots-btn" onclick="toggleMenu()"><i class="fas fa-ellipsis-v"></i></button>
-    <div class="dropdown-menu" id="dropdownMenu">
-      <div class="dropdown-item" onclick="toggleTheme()"><i class="fas fa-circle-half-stroke"></i> Tema Claro/Escuro</div>
-      <div class="dropdown-item" onclick="exportBackup()"><i class="fas fa-file-export"></i> Salvar Backup (JSON)</div>
-      <div class="dropdown-item" onclick="importBackup()"><i class="fas fa-file-import"></i> Restaurar Backup</div>
-      <div class="dropdown-item" onclick="openIconManager()"><i class="fas fa-tags"></i> Gerenciar Categorias</div>
-    </div>
-  </div>
+  <h1 id="app-title">Finanças Pro</h1>
 </header>
 
-<section id="sec-lancamentos" class="content-section active">
-  <div class="cards">
-    <div class="card rec"><div class="label">Receitas</div><div class="value" id="totalRec">R$ 0</div></div>
-    <div class="card desp"><div class="label">Despesas</div><div class="value" id="totalDesp">R$ 0</div></div>
-    <div class="card saldo"><div class="label">Saldo</div><div class="value" id="saldo">R$ 0</div></div>
-  </div>
-  <div class="real-card"><div class="label">Líquido Real</div><div class="value" id="saldoReal">R$ 0,00</div></div>
-  <div class="action-buttons">
-    <button class="btn-action plus" onclick="openModal('receita')">＋ Receita</button>
-    <button class="btn-action minus" onclick="openModal('despesa')">－ Despesa</button>
-  </div>
-  <div class="list" id="list"></div>
-</section>
+<div class="main-content" id="content"></div>
 
-<section id="sec-pendencias" class="content-section">
-  <div class="widget" style="background: rgba(245, 158, 11, 0.05); border-color: var(--amarelo); text-align:center;">
-    <div class="widget-title" style="color: var(--amarelo);">Total Pendente</div>
-    <div id="totalPendValue" style="font-size:1.4rem; font-weight:800; color: var(--amarelo);">R$ 0,00</div>
-  </div>
-  <button class="btn-action pend" style="width:100%; margin-bottom:14px;" onclick="openModal('pendencia')">＋ Nova Pendência</button>
-  <div class="list" id="listPend"></div>
-</section>
-
-<section id="sec-comparativo" class="content-section">
-  <div class="widget">
-    <div class="widget-title">Histórico Mensal</div>
-    <div class="comp-row comp-header">
-      <div>Mês</div><div>Rec</div><div>Desp</div><div>Real</div>
-    </div>
-    <div id="compList"></div>
-  </div>
-</section>
-
-<section id="sec-simular" class="content-section">
-  <div class="widget" style="border-color: var(--verde);">
-    <div class="widget-title" style="color: var(--verde);">Simulação de Caixa</div>
-    <button class="btn-action plus" style="width:100%; margin-bottom:14px; padding:10px; font-size:.8rem;" onclick="openSimRecModal()">＋ Lançar Recebimento Previsto</button>
-    <div style="background: var(--card2); padding: 10px; border-radius: 10px; margin-bottom: 10px;">
-        <div style="font-size: .6rem; color: var(--muted); text-transform: uppercase;">Total Previsto</div>
-        <div id="simTotalRec" style="font-size: 1.2rem; font-weight: 800; color: var(--verde);">R$ 0,00</div>
-    </div>
-    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg); padding:10px; border-radius:10px; border: 1px solid var(--border);">
-      <span style="font-size:.75rem; font-weight:700;">SALDO RESTANTE:</span>
-      <b id="simRestante" style="font-size:1.3rem; color:var(--verde);">R$ 0,00</b>
-    </div>
-  </div>
-  <div id="simRecList" style="margin-bottom: 20px;"></div>
-  <div id="simList" class="list"></div>
-</section>
-
-<section id="sec-metas" class="content-section">
-  <button class="btn-action plus" style="width:100%; margin-bottom:14px;" onclick="openMetaModal()">＋ Criar Meta</button>
-  <div id="metasList" class="list"></div>
-</section>
-
-<section id="sec-analise" class="content-section">
-  <div class="widget" style="text-align:center;"><canvas id="myChart" style="max-height:280px;"></canvas></div>
-</section>
-
-<nav class="bottom-nav">
-  <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><i class="fas fa-list-ul"></i>Lançamentos</button>
-  <button id="nav-pendencias" onclick="setTab('pendencias')"><i class="fas fa-clock"></i>Pendências</button>
-  <button id="nav-comparativo" onclick="setTab('comparativo')"><i class="fas fa-history"></i>Mensal</button>
-  <button id="nav-simular" onclick="setTab('simular')"><i class="fas fa-calculator"></i>Simular</button>
-  <button id="nav-metas" onclick="setTab('metas')"><i class="fas fa-bullseye"></i>Metas</button>
-  <button id="nav-analise" onclick="setTab('analise')"><i class="fas fa-chart-pie"></i>Análise</button>
+<!-- Navegação -->
+<nav>
+  <div class="nav-item active" onclick="navegar('home')"><span class="material-icons-round">home</span>Início</div>
+  <div class="nav-item" onclick="navegar('lancamentos')"><span class="material-icons-round">list_alt</span>Lançamentos</div>
+  <div class="nav-item" onclick="navegar('pendencias')"><span class="material-icons-round">pending_actions</span>Pendências</div>
+  <div class="nav-item" onclick="navegar('metas')"><span class="material-icons-round">flag</span>Metas</div>
+  <div class="nav-item" onclick="navegar('analise')"><span class="material-icons-round">insights</span>Análise</div>
 </nav>
 
-<!-- MODAIS -->
-<div class="modal-overlay" id="modalEntry">
-  <div class="modal">
-    <h2 id="modalTitle">Lançamento</h2>
-    <input type="hidden" id="editId">
-    <input type="hidden" id="editType">
-    <div class="form-group"><label>Data do Lançamento</label><input id="entryDate" type="date"></div>
-    <div class="form-group"><label>Descrição</label><input id="desc" type="text"></div>
-    <div class="form-group"><label>Valor (R$)</label><input id="val" type="number" step="0.01"></div>
-    <div class="form-group"><label>Categoria</label><select id="tipoSub"></select></div>
-    <div class="form-group"><label>Observação (Opcional)</label><textarea id="obs" placeholder="Algum detalhe extra?"></textarea></div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-save" onclick="saveEntry()">Salvar</button></div>
+<!-- Botão Add flutuante (muda de função conforme a aba) -->
+<div id="float-btn" class="btn-add" onclick="abrirModalCadastro()"><span class="material-icons-round">add</span></div>
+
+<!-- Modal Lançamento (Receita/Despesa/Pendência) -->
+<div id="modal-lancamento" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modal-title">Novo Lançamento</h2>
+      <span class="material-icons-round" style="cursor:pointer" onclick="fecharModal('modal-lancamento')">close</span>
+    </div>
+    <input type="hidden" id="edit-id">
+    <input type="hidden" id="tipo-lancamento">
+    
+    <label>Descrição</label>
+    <input type="text" id="desc" placeholder="Ex: Salário, Aluguel...">
+    
+    <label>Valor (R$)</label>
+    <input type="number" id="valor" step="0.01" placeholder="0,00">
+
+    <label>Data</label>
+    <input type="date" id="data-lancamento">
+    
+    <label>Categoria</label>
+    <select id="cat-select"></select>
+
+    <label>Observação</label>
+    <textarea id="obs" rows="2" placeholder="Opcional..."></textarea>
+    
+    <button class="btn btn-primary" onclick="salvarLancamento()">SALVAR</button>
+    <button id="btn-excluir" class="btn btn-outline" style="color:var(--vermelho); border-color:var(--vermelho); display:none;" onclick="excluirLancamento()">EXCLUIR</button>
   </div>
 </div>
 
-<div class="modal-overlay" id="modalIcon">
-  <div class="modal cat-manager-modal">
-    <div class="cat-header"><h2>Gerenciar Categorias</h2></div>
-    <div class="cat-tabs">
-        <div class="cat-tab active" id="tab-cat-receita" onclick="setCatTab('receita')">Receitas</div>
-        <div class="cat-tab" id="tab-cat-despesa" onclick="setCatTab('despesa')">Despesas</div>
-        <div class="cat-tab" id="tab-cat-pendencia" onclick="setCatTab('pendencia')">Pendências</div>
+<!-- Modal Meta -->
+<div id="modal-meta" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="meta-modal-title">Nova Meta</h2>
+      <span class="material-icons-round" onclick="fecharModal('modal-meta')">close</span>
     </div>
-    <div class="cat-list-container" id="catListContent"></div>
-    <button class="cat-btn-add" onclick="openAddCatForm()"><i class="fas fa-plus-circle"></i> ADICIONAR CATEGORIA</button>
-    <div class="modal-actions" style="padding:0 15px 15px;"><button class="btn-cancel" style="width:100%" onclick="closeIconManager()">Fechar</button></div>
+    <input type="hidden" id="meta-edit-id">
+    <label>Nome da Meta</label>
+    <input type="text" id="meta-nome" placeholder="Ex: Reserva, Viagem...">
+    <label>Valor Objetivo (R$)</label>
+    <input type="number" id="meta-valor" step="0.01">
+    
+    <div id="edit-meta-fields" style="display:none">
+        <label>Valor já Acumulado (R$)</label>
+        <input type="number" id="meta-acumulado" step="0.01">
+    </div>
+
+    <button class="btn btn-primary" onclick="salvarMeta()">SALVAR META</button>
   </div>
 </div>
 
-<div class="modal-overlay" id="modalAddEditCat">
-    <div class="modal">
-        <h2 id="catModalTitle">Categoria</h2>
-        <input type="hidden" id="catOldName">
-        <div class="form-group"><label>Ícone Selecionado</label>
-            <div id="selectedIconDisplay" class="icon-selector-btn" onclick="toggleEmojiGrid()"><span class="material-icons-round">help_outline</span></div>
-            <input type="hidden" id="catInputIcon" value="help_outline">
-            <div id="emojiGrid" class="emoji-grid" style="display:none;"></div>
-        </div>
-        <div class="form-group"><label>Nome da Categoria</label><input type="text" id="catInputName" placeholder="Ex: Internet"></div>
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="closeAddEditCat()">Cancelar</button>
-            <button class="btn-save" onclick="saveCategory()">Salvar</button>
-        </div>
+<!-- Modal Aporte Meta -->
+<div id="modal-aporte" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Novo Aporte</h2>
+      <span class="material-icons-round" onclick="fecharModal('modal-aporte')">close</span>
     </div>
+    <input type="hidden" id="aporte-meta-id">
+    <label>Valor do Aporte (R$)</label>
+    <input type="number" id="aporte-valor" step="0.01">
+    <p style="font-size:0.7rem; color:var(--texto-secundario); margin-bottom:15px;">* Este valor será deduzido do seu Saldo Real.</p>
+    <button class="btn btn-primary" onclick="confirmarAporte()">CONFIRMAR APORTE</button>
+  </div>
 </div>
 
-<div class="modal-overlay" id="modalMeta">
-    <div class="modal">
-        <h2 id="metaTitleHeader">Nova Meta</h2>
-        <input type="hidden" id="editMetaId">
-        <div class="form-group"><label>Nome</label><input id="metaNome" type="text"></div>
-        <div class="form-group"><label>Valor Pretendido (R$)</label><input id="metaPretendido" type="number" step="0.01"></div>
-        <div class="form-group" id="metaAcumuladoGroup" style="display:none;"><label>Valor Já Acumulado (R$)</label><input id="metaAcumulado" type="number" step="0.01"></div>
-        <div class="modal-actions"><button class="btn-cancel" onclick="closeMetaModal()">Cancelar</button><button class="btn-save" onclick="saveMeta()">Salvar</button></div>
+<!-- Modal Gerenciar Categorias -->
+<div id="modal-categorias" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Categorias</h2>
+      <span class="material-icons-round" onclick="fecharModal('modal-categorias')">close</span>
     </div>
+    <div id="lista-cats-config" style="margin-bottom:20px;"></div>
+    <hr style="border:1px solid var(--borda); margin-bottom:20px;">
+    <h3 style="font-size:0.9rem; margin-bottom:10px;">Nova Categoria</h3>
+    <input type="text" id="nova-cat-nome" placeholder="Nome da categoria">
+    <label>Selecione um Ícone</label>
+    <div class="icon-grid" id="icon-picker"></div>
+    <button class="btn btn-primary" onclick="adicionarCategoria()">ADICIONAR</button>
+  </div>
 </div>
-<div class="modal-overlay" id="modalAddMeta"><div class="modal"><h2>Adicionar à Meta</h2><input type="hidden" id="addMetaId"><div class="form-group"><label>Valor (R$)</label><input id="valAddMeta" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeAddMetaModal()">Cancelar</button><button class="btn-save" onclick="confirmAddMeta()">Adicionar</button></div></div></div>
-<div class="modal-overlay" id="modalSimRec"><div class="modal"><h2>Recebimento Previsto</h2><div class="form-group"><label>Descrição</label><input id="simRecDesc" type="text"></div><div class="form-group"><label>Valor (R$)</label><input id="simRecVal" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeSimRecModal()">Cancelar</button><button class="btn-save" onclick="saveSimRec()">Adicionar</button></div></div></div>
 
 <script>
-// Inicialização Robusta do Banco de Dados
-let db;
-try {
-    const raw = localStorage.getItem('zapia_financas_db');
-    db = raw ? JSON.parse(raw) : null;
-    if(!db || !db.categories) throw "new";
-} catch(e) {
-    db = { 
-        items: [], pendencias: [], metas: [], previstos: [], 
-        icons: { 'Salário': 'payments', 'Pix Recebido': 'account_balance_wallet', 'Ajuste': 'settings', 'Alimentação': 'restaurant', 'Transporte': 'directions_car', 'Moradia': 'home', 'Lazer': 'celebration', 'Saúde': 'medical_services', 'Educação': 'school', 'Assinaturas': 'subscriptions', 'Outros': 'inventory_2', 'Empréstimo': 'handshake', 'Cartão': 'credit_card' }, 
-        categories: {
-            receita: ['Salário', 'Pix Recebido', 'Ajuste', 'Empréstimo'],
-            despesa: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros', 'Cartão'],
-            pendencia: ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros', 'Cartão']
-        },
-        theme: 'dark' 
-    };
-}
+let currentTab = 'home';
+let db = JSON.parse(localStorage.getItem('financas_db_v55')) || {
+  saldoReal: 0,
+  lancamentos: [],
+  pendencias: [],
+  metas: [],
+  categorias: [
+    { id: 1, nome: 'Salário', icone: 'payments', tipo: 'receita' },
+    { id: 2, nome: 'Alimentação', icone: 'restaurant', tipo: 'despesa' },
+    { id: 3, nome: 'Moradia', icone: 'home', tipo: 'despesa' },
+    { id: 4, nome: 'Transporte', icone: 'directions_car', tipo: 'despesa' },
+    { id: 5, nome: 'Cartão', icone: 'credit_card', tipo: 'despesa' },
+    { id: 6, nome: 'Empréstimo', icone: 'handshake', tipo: 'receita' }
+  ]
+};
 
 const materialIcons = [
-    'payments','account_balance_wallet','savings','paid','trending_up','restaurant','shopping_cart','local_mall','home','bolt','water_drop','language','directions_car','local_gas_station','directions_bike','flight','celebration','sports_esports','movie','subscriptions','headset','school','edit','medical_services','medication','fitness_center','medical_information','baby_changing_station','toys','checkroom','shopping_bag','face','smartphone','computer','inventory_2','settings','build','cleaning_services','calendar_month','label','help_outline','work','security','pets','local_shipping','handshake','credit_card','account_balance','request_quote','price_check'
+    'payments', 'restaurant', 'home', 'directions_car', 'shopping_cart', 
+    'medical_services', 'school', 'bolt', 'water_drop', 'wifi',
+    'credit_card', 'handshake', 'account_balance', 'request_quote', 'fitness_center',
+    'commute', 'local_gas_station', 'entertainment', 'redeem', 'savings'
 ];
 
-let simChecks = {}; let chartInstance = null; let currentCatTab = 'receita';
+let selectedIcon = 'payments';
+let searchFilter = '';
+let catFilter = 'todos';
 
-function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
-function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('show'); }
-window.onclick = function(e) { if (!e.target.closest('.menu-container')) { document.getElementById('dropdownMenu').classList.remove('show'); } };
-
-function toggleTheme() { db.theme = db.theme === 'dark' ? 'light' : 'dark'; applyTheme(); save(); }
-function applyTheme() {
-    if(db.theme === 'light') { document.body.classList.add('light-mode'); document.querySelector('meta[name="theme-color"]').setAttribute("content", "#f8fafc"); }
-    else { document.body.classList.remove('light-mode'); document.querySelector('meta[name="theme-color"]').setAttribute("content", "#0f172a"); }
+function save() {
+  localStorage.setItem('financas_db_v55', JSON.stringify(db));
+  render();
 }
 
-function exportBackup() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-    const downloadAnchorNode = document.createElement('a'); downloadAnchorNode.setAttribute("href", dataStr); downloadAnchorNode.setAttribute("download", "backup_financas.json"); document.body.appendChild(downloadAnchorNode); downloadAnchorNode.click(); downloadAnchorNode.remove();
-}
-function importBackup() {
-    const input = document.createElement('input'); input.type = 'file';
-    input.onchange = e => {
-        const file = e.target.files[0]; const reader = new FileReader(); reader.readAsText(file,'UTF-8');
-        reader.onload = rEvent => { try { db = JSON.parse(rEvent.target.result); save(); location.reload(); } catch(e) { alert("Erro no backup!"); } }
-    }
-    input.click();
+function formatarMoeda(valor) {
+  return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-function openIconManager() { document.getElementById('modalIcon').classList.add('show'); document.getElementById('dropdownMenu').classList.remove('show'); setCatTab(currentCatTab); }
-function closeIconManager() { document.getElementById('modalIcon').classList.remove('show'); }
-
-function setCatTab(tab) {
-    currentCatTab = tab; document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-cat-' + tab).classList.add('active');
-    const content = document.getElementById('catListContent'); content.innerHTML = '';
-    const list = db.categories[tab] || [];
-    list.forEach(catName => {
-        content.innerHTML += `<div class="cat-item-row"><div class="cat-item-icon"><span class="material-icons-round">${db.icons[catName] || 'help_outline'}</span></div><div class="cat-item-name">${catName}</div><div class="cat-actions"><button class="icon-btn edit" onclick="editCatForm('${catName}')"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="removeCategory('${catName}')"><i class="fas fa-trash-alt"></i></button></div></div>`;
-    });
+function formatarData(dataISO) {
+    if(!dataISO) return "";
+    const [ano, mes, dia] = dataISO.split('-');
+    return `${dia}/${mes}/${ano}`;
 }
 
-function toggleEmojiGrid() {
-    const grid = document.getElementById('emojiGrid');
-    if(grid.style.display === 'none') {
-        grid.innerHTML = '';
-        materialIcons.forEach(icon => { grid.innerHTML += `<div class="emoji-item" onclick="selectEmoji('${icon}')"><span class="material-icons-round">${icon}</span></div>`; });
-        grid.style.display = 'grid';
-    } else { grid.style.display = 'none'; }
-}
-function selectEmoji(icon) {
-    document.getElementById('catInputIcon').value = icon;
-    document.getElementById('selectedIconDisplay').innerHTML = `<span class="material-icons-round">${icon}</span>`;
-    document.getElementById('emojiGrid').style.display = 'none';
-}
-
-function openAddCatForm() {
-    document.getElementById('catModalTitle').innerText = 'Nova Categoria'; document.getElementById('catOldName').value = '';
-    document.getElementById('catInputName').value = ''; selectEmoji('help_outline');
-    document.getElementById('modalAddEditCat').classList.add('show');
-}
-function editCatForm(name) {
-    document.getElementById('catModalTitle').innerText = 'Editar Categoria'; document.getElementById('catOldName').value = name;
-    document.getElementById('catInputName').value = name; selectEmoji(db.icons[name] || 'help_outline');
-    document.getElementById('modalAddEditCat').classList.add('show');
-}
-function closeAddEditCat() { document.getElementById('modalAddEditCat').classList.remove('show'); }
-
-function saveCategory() {
-    const name = document.getElementById('catInputName').value.trim(), icon = document.getElementById('catInputIcon').value, oldName = document.getElementById('catOldName').value;
-    if(!name) return;
-    if(oldName) {
-        if(oldName !== name) {
-            delete db.icons[oldName]; 
-            db.categories[currentCatTab] = db.categories[currentCatTab].map(c => c === oldName ? name : c);
-            db.items.forEach(i => { if(i.sub === oldName) i.sub = name; }); 
-            db.pendencias.forEach(p => { if(p.sub === oldName) p.sub = name; });
-        }
-    } else { 
-        if(!db.categories[currentCatTab].includes(name)) db.categories[currentCatTab].push(name); 
-    }
-    db.icons[name] = icon; 
-    save(); closeAddEditCat(); setCatTab(currentCatTab);
-}
-
-function removeCategory(name) { if(!confirm(`Excluir "${name}"?`)) return; delete db.icons[name]; ['receita','despesa','pendencia'].forEach(t => db.categories[t] = db.categories[t].filter(c => c !== name)); save(); setCatTab(currentCatTab); }
-
-function setTab(t) {
-  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('sec-'+t).classList.add('active'); document.getElementById('nav-'+t).classList.add('active');
-  if(t==='analise') initChart(); render();
-}
-
-function openModal(mode, id = null) {
-  const select = document.getElementById('tipoSub'); select.innerHTML = '';
-  const cats = db.categories[mode] || []; cats.forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
-  document.getElementById('editType').value = mode;
-  document.getElementById('editId').value = id || '';
+function navegar(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  const idx = {home:0, lancamentos:1, pendencias:2, metas:3, analise:4}[tab];
+  document.querySelectorAll('.nav-item')[idx].classList.add('active');
   
-  if(id) {
-    const list = mode === 'pendencia' ? db.pendencias : db.items; 
-    const item = list.find(x => x.id == id);
-    if(item) {
-        document.getElementById('modalTitle').innerText = 'Editar'; 
-        document.getElementById('desc').value = item.desc; 
-        document.getElementById('val').value = item.val; 
-        document.getElementById('tipoSub').value = item.sub;
-        document.getElementById('entryDate').value = item.data ? item.data.split('T')[0] : new Date().toISOString().split('T')[0];
-        document.getElementById('obs').value = item.obs || '';
+  // Controle do botão flutuante
+  const fBtn = document.getElementById('float-btn');
+  if(tab === 'analise') fBtn.style.display = 'none';
+  else fBtn.style.display = 'flex';
+  
+  render();
+}
+
+function abrirModal(id) { document.getElementById(id).style.display = 'flex'; }
+function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
+
+function abrirModalCadastro() {
+  if(currentTab === 'home' || currentTab === 'lancamentos') {
+    document.getElementById('modal-title').innerText = "Novo Lançamento";
+    document.getElementById('edit-id').value = "";
+    document.getElementById('desc').value = "";
+    document.getElementById('valor').value = "";
+    document.getElementById('obs').value = "";
+    document.getElementById('data-lancamento').value = new Date().toISOString().split('T')[0];
+    document.getElementById('btn-excluir').style.display = 'none';
+    carregarCategoriasSelect();
+    abrirModal('modal-lancamento');
+  } else if(currentTab === 'pendencias') {
+    document.getElementById('modal-title').innerText = "Nova Pendência";
+    document.getElementById('tipo-lancamento').value = 'pendencia';
+    document.getElementById('edit-id').value = "";
+    document.getElementById('desc').value = "";
+    document.getElementById('valor').value = "";
+    document.getElementById('obs').value = "";
+    document.getElementById('data-lancamento').value = new Date().toISOString().split('T')[0];
+    document.getElementById('btn-excluir').style.display = 'none';
+    carregarCategoriasSelect();
+    abrirModal('modal-lancamento');
+  } else if(currentTab === 'metas') {
+    document.getElementById('meta-modal-title').innerText = "Nova Meta";
+    document.getElementById('meta-edit-id').value = "";
+    document.getElementById('meta-nome').value = "";
+    document.getElementById('meta-valor').value = "";
+    document.getElementById('edit-meta-fields').style.display = 'none';
+    abrirModal('modal-meta');
+  }
+}
+
+function carregarCategoriasSelect() {
+  const select = document.getElementById('cat-select');
+  select.innerHTML = db.categorias.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+}
+
+function salvarLancamento() {
+  const id = document.getElementById('edit-id').value;
+  const desc = document.getElementById('desc').value;
+  const valor = parseFloat(document.getElementById('valor').value);
+  const catId = parseInt(document.getElementById('cat-select').value);
+  const obs = document.getElementById('obs').value;
+  const data = document.getElementById('data-lancamento').value;
+  const categoria = db.categorias.find(c => c.id === catId);
+  
+  if(!desc || isNaN(valor)) return alert("Preencha os campos!");
+
+  if(currentTab === 'pendencias' || document.getElementById('tipo-lancamento').value === 'pendencia') {
+    if(id) {
+      const idx = db.pendencias.findIndex(p => p.id == id);
+      db.pendencias[idx] = {...db.pendencias[idx], descricao: desc, valor, categoria, obs, data};
+    } else {
+      db.pendencias.push({id: Date.now(), descricao: desc, valor, categoria, obs, data});
     }
-  } else { 
-    document.getElementById('modalTitle').innerText = mode==='receita'?'Nova Receita':(mode==='despesa'?'Nova Despesa':'Nova Pendência'); 
-    document.getElementById('desc').value = ''; 
-    document.getElementById('val').value = ''; 
-    document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
-    document.getElementById('obs').value = '';
-  }
-  document.getElementById('modalEntry').classList.add('show');
-}
-function closeModal() { document.getElementById('modalEntry').classList.remove('show'); }
-
-function saveEntry() {
-  const d = document.getElementById('desc').value, v = parseFloat(document.getElementById('val').value), s = document.getElementById('tipoSub').value, id = document.getElementById('editId').value, type = document.getElementById('editType').value, dt = document.getElementById('entryDate').value, o = document.getElementById('obs').value;
-  if(!d || isNaN(v)) return;
-  const isoDate = dt ? new Date(dt + 'T12:00:00').toISOString() : new Date().toISOString();
-  if(type === 'pendencia') {
-    if(id) { const idx = db.pendencias.findIndex(x => x.id == id); if(idx!==-1) db.pendencias[idx] = { ...db.pendencias[idx], desc: d, val: v, sub: s, data: isoDate, obs: o }; }
-    else db.pendencias.push({ id: Date.now(), desc: d, val: v, sub: s, data: isoDate, obs: o });
   } else {
-    if(id) { const idx = db.items.findIndex(x => x.id == id); if(idx!==-1) db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s, data: isoDate, obs: o }; }
-    else db.items.push({ id: Date.now(), desc: d, val: v, tipo: type, sub: s, data: isoDate, obs: o });
+    const tipo = categoria.tipo;
+    if(id) {
+      const idx = db.lancamentos.findIndex(l => l.id == id);
+      const antigo = db.lancamentos[idx];
+      // Estorna antigo
+      if(antigo.categoria.tipo === 'receita') db.saldoReal -= antigo.valor;
+      else db.saldoReal += antigo.valor;
+      // Aplica novo
+      db.lancamentos[idx] = {...antigo, descricao: desc, valor, categoria, obs, data};
+      if(tipo === 'receita') db.saldoReal += valor;
+      else db.saldoReal -= valor;
+    } else {
+      db.lancamentos.push({id: Date.now(), descricao: desc, valor, categoria, obs, data});
+      if(tipo === 'receita') db.saldoReal += valor;
+      else db.saldoReal -= valor;
+    }
   }
-  save(); closeModal();
-}
-
-function deleteItem(id, type, event) {
-  if(event) event.stopPropagation();
-  if(type === 'pendencia') db.pendencias = db.pendencias.filter(x => x.id != id);
-  else if(type === 'meta') db.metas = db.metas.filter(x => x.id != id);
-  else if(type === 'previsto') db.previstos = db.previstos.filter(x => x.id != id);
-  else db.items = db.items.filter(x => x.id != id);
+  
+  fecharModal('modal-lancamento');
   save();
 }
 
-function directPay(id, event) {
-  event.stopPropagation(); const p = db.pendencias.find(x => x.id == id);
-  if(p) { db.items.push({ id: Date.now(), desc: p.desc, val: p.val, tipo: 'despesa', sub: p.sub, data: new Date().toISOString(), obs: p.obs || '' }); db.pendencias = db.pendencias.filter(x => x.id != id); save(); }
+function editarLancamento(id, tipo) {
+  const item = (tipo === 'pendencia') ? db.pendencias.find(p => p.id == id) : db.lancamentos.find(l => l.id == id);
+  document.getElementById('modal-title').innerText = "Editar Lançamento";
+  document.getElementById('edit-id').value = item.id;
+  document.getElementById('tipo-lancamento').value = tipo;
+  document.getElementById('desc').value = item.descricao;
+  document.getElementById('valor').value = item.valor;
+  document.getElementById('obs').value = item.obs || "";
+  document.getElementById('data-lancamento').value = item.data || new Date().toISOString().split('T')[0];
+  document.getElementById('btn-excluir').style.display = 'block';
+  carregarCategoriasSelect();
+  document.getElementById('cat-select').value = item.categoria.id;
+  abrirModal('modal-lancamento');
 }
 
-function openSimRecModal() { document.getElementById('modalSimRec').classList.add('show'); }
-function closeSimRecModal() { document.getElementById('modalSimRec').classList.remove('show'); }
-function saveSimRec() {
-    const d = document.getElementById('simRecDesc').value, v = parseFloat(document.getElementById('simRecVal').value);
-    if(!d || isNaN(v)) return; db.previstos.push({ id: Date.now(), desc: d, val: v }); save(); closeSimRecModal();
+function excluirLancamento() {
+  const id = document.getElementById('edit-id').value;
+  const tipo = document.getElementById('tipo-lancamento').value;
+  
+  if(tipo === 'pendencia') {
+    db.pendencias = db.pendencias.filter(p => p.id != id);
+  } else {
+    const item = db.lancamentos.find(l => l.id == id);
+    if(item.categoria.tipo === 'receita') db.saldoReal -= item.valor;
+    else db.saldoReal += item.valor;
+    db.lancamentos = db.lancamentos.filter(l => l.id != id);
+  }
+  fecharModal('modal-lancamento');
+  save();
 }
 
-function renderSim() {
-  let totalPrev = 0; db.previstos.forEach(p => totalPrev += p.val);
-  document.getElementById('simTotalRec').innerText = 'R$ ' + totalPrev.toLocaleString('pt-BR');
-  let totalSimPend = 0; db.pendencias.forEach(p => { if(simChecks[p.id] !== false) totalSimPend += p.val; });
-  const rest = totalPrev - totalSimPend; const el = document.getElementById('simRestante'); el.innerText = 'R$ ' + rest.toLocaleString('pt-BR');
-  el.style.color = rest >= 0 ? 'var(--verde)' : 'var(--vermelho)';
-  const slRec = document.getElementById('simRecList'); slRec.innerHTML = '';
-  db.previstos.forEach(p => { slRec.innerHTML += `<div class="sim-item"><div><b>${p.desc}</b><br><small style="color:var(--verde)">+ R$ ${p.val.toFixed(2)}</small></div><button class="sim-btn-del" onclick="deleteItem(${p.id}, 'previsto', event)"><i class="fas fa-trash"></i></button></div>`; });
-  const sl = document.getElementById('simList'); sl.innerHTML = '';
-  db.pendencias.forEach(p => {
-    const isChecked = simChecks[p.id] !== false;
-    sl.innerHTML += `<div class="item" onclick="toggleSim(${p.id})"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[p.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${p.desc}</b><span>${p.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${p.val.toFixed(2)}</b><input type="checkbox" class="sim-check" ${isChecked?'checked':''}></div></div>`;
-  });
+function baixarPendencia(id) {
+  const p = db.pendencias.find(item => item.id == id);
+  db.saldoReal -= p.valor;
+  db.lancamentos.push({...p, id: Date.now()});
+  db.pendencias = db.pendencias.filter(item => item.id != id);
+  save();
 }
-function toggleSim(id) { simChecks[id] = simChecks[id] === false ? true : false; renderSim(); }
 
-function renderComp() {
-  const months = {}; db.items.forEach(i => {
-    const m = new Date(i.data).toLocaleDateString('pt-BR', {month:'short', year:'2-digit'}).toUpperCase();
-    if(!months[m]) months[m] = {r:0, d:0}; if(i.tipo==='receita') months[m].r += i.val; else months[m].d += i.val;
+function salvarMeta() {
+  const id = document.getElementById('meta-edit-id').value;
+  const nome = document.getElementById('meta-nome').value;
+  const objetivo = parseFloat(document.getElementById('meta-valor').value);
+  
+  if(!nome || isNaN(objetivo)) return;
+
+  if(id) {
+    const idx = db.metas.findIndex(m => m.id == id);
+    const acumulado = parseFloat(document.getElementById('meta-acumulado').value) || 0;
+    db.metas[idx] = {...db.metas[idx], nome, objetivo, acumulado};
+  } else {
+    db.metas.push({id: Date.now(), nome, objetivo, acumulado: 0});
+  }
+  fecharModal('modal-meta');
+  save();
+}
+
+function editarMeta(id) {
+    const meta = db.metas.find(m => m.id == id);
+    document.getElementById('meta-modal-title').innerText = "Editar Meta";
+    document.getElementById('meta-edit-id').value = meta.id;
+    document.getElementById('meta-nome').value = meta.nome;
+    document.getElementById('meta-valor').value = meta.objetivo;
+    document.getElementById('meta-acumulado').value = meta.acumulado;
+    document.getElementById('edit-meta-fields').style.display = 'block';
+    abrirModal('modal-meta');
+}
+
+function excluirMeta(id) {
+  if(confirm("Excluir esta meta?")) {
+    db.metas = db.metas.filter(m => m.id != id);
+    save();
+  }
+}
+
+function aporteMeta(id) {
+  document.getElementById('aporte-meta-id').value = id;
+  document.getElementById('aporte-valor').value = "";
+  abrirModal('modal-aporte');
+}
+
+function confirmarAporte() {
+  const id = document.getElementById('aporte-meta-id').value;
+  const valor = parseFloat(document.getElementById('aporte-valor').value);
+  if(isNaN(valor) || valor <= 0) return;
+  if(valor > db.saldoReal) return alert("Saldo insuficiente!");
+
+  const meta = db.metas.find(m => m.id == id);
+  meta.acumulado += valor;
+  db.saldoReal -= valor;
+  
+  // Registra como despesa de aporte
+  db.lancamentos.push({
+    id: Date.now(),
+    descricao: `Aporte: ${meta.nome}`,
+    valor: valor,
+    data: new Date().toISOString().split('T')[0],
+    categoria: {id: 99, nome: 'Metas', icone: 'flag', tipo: 'despesa'}
   });
-  const cl = document.getElementById('compList'); cl.innerHTML = '';
-  Object.keys(months).reverse().forEach(m => {
-    const r = months[m].r, d = months[m].d, real = r - d;
-    cl.innerHTML += `<div class="comp-row"><div>${m}</div><div style="color:var(--verde)">${r.toFixed(0)}</div><div style="color:var(--vermelho)">${d.toFixed(0)}</div><div style="font-weight:700; color:${real>=0?'var(--azul)':'var(--vermelho)'}">${real.toFixed(0)}</div></div>`;
-  });
+
+  fecharModal('modal-aporte');
+  save();
+}
+
+function initIconPicker() {
+    const picker = document.getElementById('icon-picker');
+    picker.innerHTML = materialIcons.map(icon => `
+        <div class="icon-option ${icon === selectedIcon ? 'selected' : ''}" onclick="selectIcon('${icon}')">
+            <span class="material-icons-round">${icon}</span>
+        </div>
+    `).join('');
+}
+
+function selectIcon(icon) {
+    selectedIcon = icon;
+    initIconPicker();
+}
+
+function adicionarCategoria() {
+    const nome = document.getElementById('nova-cat-nome').value;
+    if(!nome) return;
+    db.categorias.push({id: Date.now(), nome, icone: selectedIcon, tipo: 'despesa'});
+    document.getElementById('nova-cat-nome').value = "";
+    save();
+    renderConfigCategorias();
+}
+
+function removerCategoria(id) {
+    db.categorias = db.categorias.filter(c => c.id !== id);
+    save();
+    renderConfigCategorias();
+}
+
+function renderConfigCategorias() {
+    const lista = document.getElementById('lista-cats-config');
+    lista.innerHTML = db.categorias.map(c => `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:var(--azul-fundo); padding:10px; border-radius:8px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span class="material-icons-round" style="color:var(--azul-claro)">${c.icone}</span>
+                <span>${c.nome}</span>
+            </div>
+            <span class="material-icons-round" style="color:var(--vermelho); cursor:pointer;" onclick="removerCategoria(${c.id})">delete</span>
+        </div>
+    `).join('');
+}
+
+// Lógica de Filtros
+function updateSearch(val) {
+    searchFilter = val.toLowerCase();
+    render();
+}
+
+function updateCatFilter(val) {
+    catFilter = val;
+    render();
 }
 
 function render() {
-  let r=0, d=0, p=0; db.items.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val); db.pendencias.forEach(i => p+=i.val);
-  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); document.getElementById('saldoReal').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
-  document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
-  const l = document.getElementById('list'); l.innerHTML = '';
-  const sortedItems = [...db.items].sort((a,b) => new Date(b.data) - new Date(a.data));
-  sortedItems.forEach(i => { 
-    const dateFormatted = new Date(i.data).toLocaleDateString('pt-BR');
-    const obsHtml = i.obs ? `<div class="item-obs">${i.obs}</div>` : '';
-    l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'inventory_2'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub} • ${dateFormatted}</span>${obsHtml}</div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
-  });
-  const lp = document.getElementById('listPend'); lp.innerHTML = '';
-  db.pendencias.forEach(i => { 
-    const obsHtml = i.obs ? `<div class="item-obs">${i.obs}</div>` : '';
-    lp.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span>${obsHtml}</div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
-  });
-  const ml = document.getElementById('metasList'); ml.innerHTML = '';
-  db.metas.forEach(m => {
-    const perc = Math.min((m.acumulado / m.pretendido) * 100, 100).toFixed(1);
-    ml.innerHTML += `<div class="widget"><div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;"><div><b style="font-size:.9rem; color:var(--azul);">${m.nome}</b><div style="font-size:.7rem; color:var(--muted);">Meta: R$ ${m.pretendido.toLocaleString('pt-BR')}</div></div><div style="text-align:right;"><b style="font-size:1rem;">R$ ${m.acumulado.toLocaleString('pt-BR')}</b><div style="font-size:.7rem; color:var(--verde);">${perc} %</div></div></div><div class="progress-bar"><div class="progress-fill" style="width:${perc}%;"></div></div><div style="display:flex; gap:10px; margin-top:15px;"><button class="sync-btn" style="flex:1;" onclick="openAddMeta(${m.id})">ADICIONAR</button><button class="icon-btn edit" onclick="openMetaModal(${m.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${m.id}, 'meta', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
-  });
-  renderComp(); renderSim();
-}
+  const content = document.getElementById('content');
+  
+  if(currentTab === 'home') {
+    const passivos = db.pendencias.reduce((acc, p) => acc + p.valor, 0);
+    content.innerHTML = `
+      <div class="card">
+        <div class="card-title">Saldo Real</div>
+        <div class="card-value" style="color:var(--verde)">${formatarMoeda(db.saldoReal)}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Total Passivos (Pendências)</div>
+        <div class="card-value" style="color:var(--vermelho)">${formatarMoeda(passivos)}</div>
+      </div>
+      <button class="btn btn-outline" onclick="abrirModal('modal-categorias'); renderConfigCategorias(); initIconPicker();">
+        <span class="material-icons-round">category</span> GERENCIAR CATEGORIAS
+      </button>
+    `;
+  }
 
-function openMetaModal(id = null) {
-  document.getElementById('editMetaId').value = id || '';
-  if(id) {
-    const m = db.metas.find(x => x.id == id);
-    if(m) {
-      document.getElementById('metaTitleHeader').innerText = 'Editar Meta';
-      document.getElementById('metaNome').value = m.nome;
-      document.getElementById('metaPretendido').value = m.pretendido;
-      document.getElementById('metaAcumulado').value = m.acumulado;
-      document.getElementById('metaAcumuladoGroup').style.display = 'block';
+  if(currentTab === 'lancamentos') {
+    let list = [...db.lancamentos].sort((a,b) => new Date(b.data) - new Date(a.data));
+    
+    // Aplica filtros
+    if(searchFilter) {
+        list = list.filter(l => l.descricao.toLowerCase().includes(searchFilter));
     }
-  } else {
-    document.getElementById('metaTitleHeader').innerText = 'Nova Meta';
-    document.getElementById('metaNome').value = '';
-    document.getElementById('metaPretendido').value = '';
-    document.getElementById('metaAcumuladoGroup').style.display = 'none';
+    if(catFilter !== 'todos') {
+        list = list.filter(l => l.categoria.id == catFilter);
+    }
+
+    content.innerHTML = `
+      <div class="search-box">
+        <input type="text" class="input-search" placeholder="Buscar..." oninput="updateSearch(this.value)" value="${searchFilter}">
+        <select class="filter-select" onchange="updateCatFilter(this.value)">
+            <option value="todos">Todas</option>
+            ${db.categorias.map(c => `<option value="${c.id}" ${catFilter == c.id ? 'selected' : ''}>${c.nome}</option>`).join('')}
+        </select>
+      </div>
+      <div id="lista-lancamentos">
+        ${list.length ? list.map(l => `
+          <div class="item-lista" onclick="editarLancamento(${l.id}, 'lancamento')">
+            <div class="item-info">
+              <div class="item-icon"><span class="material-icons-round">${l.categoria.icone}</span></div>
+              <div class="item-detalhes">
+                <h4>${l.descricao}</h4>
+                <p>${l.categoria.nome} • ${formatarData(l.data)}</p>
+                ${l.obs ? `<p class="item-obs">${l.obs}</p>` : ''}
+              </div>
+            </div>
+            <div class="item-valor" style="color:${l.categoria.tipo === 'receita' ? 'var(--verde)' : 'var(--texto)'}">
+              ${l.categoria.tipo === 'receita' ? '+' : '-'} ${formatarMoeda(l.valor)}
+            </div>
+          </div>
+        `).join('') : '<p style="text-align:center; color:var(--texto-secundario); margin-top:20px;">Nenhum lançamento encontrado.</p>'}
+      </div>
+    `;
   }
-  document.getElementById('modalMeta').classList.add('show');
-}
-function closeMetaModal() { document.getElementById('modalMeta').classList.remove('show'); }
-function saveMeta() {
-  const id = document.getElementById('editMetaId').value, n = document.getElementById('metaNome').value.toUpperCase(), p = parseFloat(document.getElementById('metaPretendido').value), a = parseFloat(document.getElementById('metaAcumulado').value) || 0;
-  if(!n || isNaN(p)) return;
-  if(id) {
-    const idx = db.metas.findIndex(x => x.id == id);
-    if(idx !== -1) db.metas[idx] = { ...db.metas[idx], nome: n, pretendido: p, acumulado: a };
-  } else {
-    db.metas.push({ id: Date.now(), nome: n, pretendido: p, acumulado: 0 });
+
+  if(currentTab === 'pendencias') {
+    content.innerHTML = `
+      <div id="lista-pendencias">
+        ${db.pendencias.length ? db.pendencias.map(p => `
+          <div class="item-lista" style="border-left: 4px solid var(--vermelho);">
+            <div class="item-info" onclick="editarLancamento(${p.id}, 'pendencia')">
+              <div class="item-icon"><span class="material-icons-round">${p.categoria.icone}</span></div>
+              <div class="item-detalhes">
+                <h4>${p.descricao}</h4>
+                <p>${formatarData(p.data)}</p>
+                ${p.obs ? `<p class="item-obs">${p.obs}</p>` : ''}
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div class="item-valor">${formatarMoeda(p.valor)}</div>
+              <button onclick="baixarPendencia(${p.id})" style="background:var(--verde); border:none; border-radius:50%; width:32px; height:32px; color:var(--azul-fundo); display:flex; align-items:center; justify-content:center;">
+                <span class="material-icons-round" style="font-size:20px">check</span>
+              </button>
+            </div>
+          </div>
+        `).join('') : '<p style="text-align:center; color:var(--texto-secundario); margin-top:20px;">Tudo em dia!</p>'}
+      </div>
+    `;
   }
-  save(); closeMetaModal();
+
+  if(currentTab === 'metas') {
+    content.innerHTML = `
+      <div id="lista-metas">
+        ${db.metas.length ? db.metas.map(m => {
+          const perc = Math.min((m.acumulado / m.objetivo) * 100, 100);
+          return `
+            <div class="card" style="margin-bottom:15px;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <h4 style="color:var(--azul-claro)">${m.nome}</h4>
+                <div style="display:flex; gap:10px;">
+                   <span class="material-icons-round" style="color:var(--azul-claro); font-size:20px;" onclick="editarMeta(${m.id})">edit</span>
+                   <span class="material-icons-round" style="color:var(--vermelho); font-size:20px;" onclick="excluirMeta(${m.id})">delete</span>
+                </div>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px;">
+                <span>${formatarMoeda(m.acumulado)}</span>
+                <span style="color:var(--texto-secundario)">objetivo: ${formatarMoeda(m.objetivo)}</span>
+              </div>
+              <div style="width:100%; height:12px; background:var(--borda); border-radius:6px; overflow:hidden; margin-bottom:15px;">
+                <div style="width:${perc}%; height:100%; background:var(--verde);"></div>
+              </div>
+              <button class="btn btn-primary" style="padding:8px; font-size:0.8rem" onclick="aporteMeta(${m.id})">FAZER APORTE</button>
+            </div>
+          `;
+        }).join('') : '<p style="text-align:center; color:var(--texto-secundario); margin-top:20px;">Crie sua primeira meta!</p>'}
+      </div>
+    `;
+  }
+
+  if(currentTab === 'analise') {
+    content.innerHTML = `
+      <div class="tab-buttons">
+        <button id="btn-tab-pizza" class="tab-btn active" onclick="switchAnalise('pizza')">DISTRIBUIÇÃO</button>
+        <button id="btn-tab-ranking" class="tab-btn" onclick="switchAnalise('ranking')">RANKING GASTOS</button>
+      </div>
+      <div id="container-pizza" class="card">
+        <canvas id="chart-despesas"></canvas>
+      </div>
+      <div id="container-ranking" class="card" style="display:none">
+        <div class="card-title">Top 5 Maiores Gastos</div>
+        <div id="ranking-list"></div>
+      </div>
+    `;
+    setTimeout(() => {
+        renderPizza();
+        renderRanking();
+    }, 50);
+  }
 }
 
-function openAddMeta(id) { document.getElementById('addMetaId').value = id; document.getElementById('modalAddMeta').classList.add('show'); }
-function closeAddMetaModal() { document.getElementById('modalAddMeta').classList.remove('show'); }
-function confirmAddMeta() { const id = document.getElementById('addMetaId').value, v = parseFloat(document.getElementById('valAddMeta').value); if(isNaN(v)) return; const idx = db.metas.findIndex(x => x.id == id); if(idx!==-1) db.metas[idx].acumulado += v; save(); closeAddMetaModal(); }
-
-function initChart() {
-  const ctx = document.getElementById('myChart').getContext('2d'); if(chartInstance) chartInstance.destroy();
-  const totals = {}; db.items.filter(i=>i.tipo==='despesa').forEach(i => totals[i.sub] = (totals[i.sub]||0) + i.val);
-  chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(totals), datasets: [{ data: Object.values(totals), backgroundColor: ['#ef4444', '#3b82f6', '#f59e0b', '#22c55e', '#8b5cf6', '#ec4899'] }] }, options: { plugins: { legend: { position: 'bottom', labels: { color: db.theme === 'dark' ? '#f1f5f9' : '#0f172a', font: {size: 10} } } } } });
+function switchAnalise(tipo) {
+    document.getElementById('container-pizza').style.display = tipo === 'pizza' ? 'block' : 'none';
+    document.getElementById('container-ranking').style.display = tipo === 'ranking' ? 'block' : 'none';
+    document.getElementById('btn-tab-pizza').classList.toggle('active', tipo === 'pizza');
+    document.getElementById('btn-tab-ranking').classList.toggle('active', tipo === 'ranking');
 }
-window.onload = () => { applyTheme(); render(); };
+
+function renderPizza() {
+    const ctx = document.getElementById('chart-despesas');
+    if(!ctx) return;
+    const dados = {};
+    db.lancamentos.filter(l => l.categoria.tipo === 'despesa').forEach(l => {
+      dados[l.categoria.nome] = (dados[l.categoria.nome] || 0) + l.valor;
+    });
+
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(dados),
+        datasets: [{
+          data: Object.values(dados),
+          backgroundColor: ['#38bdf8', '#22c55e', '#fbbf24', '#ef4444', '#a855f7', '#f472b6'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        plugins: { legend: { position: 'bottom', labels: { color: '#f8fafc' } } }
+      }
+    });
+}
+
+function renderRanking() {
+    const listDiv = document.getElementById('ranking-list');
+    if(!listDiv) return;
+
+    const gastos = db.lancamentos
+        .filter(l => l.categoria.tipo === 'despesa')
+        .sort((a,b) => b.valor - a.valor)
+        .slice(0, 5);
+
+    if(!gastos.length) {
+        listDiv.innerHTML = '<p style="text-align:center; color:var(--texto-secundario)">Sem dados suficientes.</p>';
+        return;
+    }
+
+    const maxVal = gastos[0].valor;
+
+    listDiv.innerHTML = gastos.map(g => {
+        const perc = (g.valor / maxVal) * 100;
+        return `
+            <div class="ranking-item">
+                <div class="ranking-label">${g.descricao}</div>
+                <div class="ranking-bar-container">
+                    <div class="ranking-bar" style="width: ${perc}%"></div>
+                </div>
+                <div class="ranking-val">${formatarMoeda(g.valor)}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+navegar('home');
 </script>
 </body>
 </html>
