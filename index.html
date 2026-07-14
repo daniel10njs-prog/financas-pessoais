@@ -3,119 +3,96 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
-    <title>Zapia Finance v4.0</title>
-    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
+    <title>Zapia Finance v1.0</title>
+    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/icon?family=Material+Icons+Round' rel='stylesheet'>
-    <link href='https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css' rel='stylesheet'>
     <style>
-        :root { --primary: #6366f1; --bg: #f8fafc; --text: #1e293b; --muted: #64748b; --border: #e2e8f0; }
+        :root { --bg: #f1f5f9; --card: #ffffff; --primary: #2563eb; --text: #1e293b; --muted: #64748b; --up: #10b981; --down: #ef4444; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 120px; max-width: 500px; margin: 0 auto; }
-        header { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: white; }
-        .header-left h1 { font-size: 1.2rem; font-weight: 700; }
-        .header-left p { font-size: 0.8rem; color: var(--muted); }
-        .header-right { display: flex; gap: 8px; }
-        .btn-icon { padding: 8px; background: #f1f5f9; border-radius: 12px; border: none; color: var(--muted); }
-        .card-editor { margin: 15px; padding: 20px; background: white; border-radius: 24px; border: 2px solid var(--primary); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 25px; }
-        .icon-item { aspect-ratio: 1; background: #f1f5f9; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #333; font-size: 1.2rem; }
-        .icon-item.selected { background: var(--primary); color: white; }
-        .input-label { font-size: 0.65rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .row { display: flex; gap: 10px; }
-        .input-text { flex: 1; padding: 16px; background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; }
-        .select-type { padding: 0 15px; background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: var(--muted); }
-        .btn-save { width: 100%; margin-top: 20px; padding: 18px; background: white; border: 2px solid var(--primary); color: #111; font-weight: 700; border-radius: 14px; box-shadow: 0 4px 0 var(--primary); }
-        .pills-section { padding: 0 20px; margin-top: 20px; }
-        .pills-title { font-size: 0.65rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
-        .pills-container { display: flex; flex-wrap: wrap; gap: 10px; }
-        .pill { padding: 10px 15px; background: white; border-radius: 14px; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; }
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: white; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 5px 30px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--muted); text-decoration: none; position: relative; }
-        .nav-item i { font-size: 1.4rem; }
-        .nav-item span { font-size: 0.6rem; font-weight: 600; }
-        .nav-item.active { color: var(--primary); }
-        .nav-badge { position: absolute; top: -5px; right: -5px; background: var(--primary); color: white; font-size: 0.6rem; padding: 2px 5px; border-radius: 10px; border: 2px solid white; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 30px; max-width: 500px; margin: 0 auto; }
+        header { padding: 30px 20px; text-align: center; }
+        header h1 { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        .card-main { margin: 0 20px 20px; padding: 25px; background: var(--primary); color: white; border-radius: 24px; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2); }
+        .bal-label { font-size: 0.8rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+        .bal-val { font-size: 2.2rem; font-weight: 800; margin-top: 5px; }
+        .add-form { margin: 0 20px 25px; padding: 20px; background: white; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .add-form h2 { font-size: 1rem; margin-bottom: 15px; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 1rem; outline: none; }
+        .btn-add { width: 100%; padding: 14px; background: var(--primary); border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 1rem; }
+        .history { padding: 0 20px; }
+        .history h2 { font-size: 1rem; margin-bottom: 15px; color: var(--muted); }
+        .item { padding: 15px; background: white; border-radius: 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .item-info { flex: 1; }
+        .item-title { font-size: 0.95rem; font-weight: 600; }
+        .item-val { font-size: 1rem; font-weight: 700; }
+        .up { color: var(--up); }
+        .down { color: var(--down); }
     </style>
 </head>
 <body>
 <header>
-    <div class='header-left'><h1>Finanças</h1><p>Julho de 2026</p></div>
-    <div class='header-right'>
-        <button class='btn-icon'><span class='material-icons-round'>chevron_left</span></button>
-        <button class='btn-icon'><span class='material-icons-round'>chevron_right</span></button>
-        <button class='btn-icon'><span class='material-icons-round'>more_vert</span></button>
-    </div>
+    <h1>Zapia Finance</h1>
+    <p style='font-size: 0.8rem; color: var(--muted);'>Sua jornada financeira começa aqui</p>
 </header>
-<div class='card-editor'>
-    <div class='icon-grid'>
-        <div class='icon-item'><i class='lucide-briefcase-medical'></i></div>
-        <div class='icon-item'><i class='lucide-activity'></i></div>
-        <div class='icon-item'><i class='lucide-pill'></i></div>
-        <div class='icon-item'><i class='lucide-dumbbell'></i></div>
-        <div class='icon-item'><i class='lucide-run'></i></div>
-        <div class='icon-item'><i class='lucide-gamepad-2'></i></div>
-        <div class='icon-item'><i class='lucide-clapperboard'></i></div>
-        <div class='icon-item'><i class='lucide-music'></i></div>
-        <div class='icon-item'><i class='lucide-headphones'></i></div>
-        <div class='icon-item'><i class='lucide-tv'></i></div>
-        <div class='icon-item'><i class='lucide-smartphone'></i></div>
-        <div class='icon-item'><i class='lucide-book'></i></div>
-        <div class='icon-item'><i class='lucide-graduation-cap'></i></div>
-        <div class='icon-item'><i class='lucide-laptop'></i></div>
-        <div class='icon-item'><i class='lucide-monitor'></i></div>
-        <div class='icon-item'><i class='lucide-keyboard'></i></div>
-        <div class='icon-item'><i class='lucide-mouse'></i></div>
-        <div class='icon-item'><i class='lucide-wrench'></i></div>
-        <div class='icon-item'><i class='lucide-hammer'></i></div>
-        <div class='icon-item'><i class='lucide-paint-roller'></i></div>
-        <div class='icon-item'><i class='lucide-scissors'></i></div>
-        <div class='icon-item'><i class='lucide-camera'></i></div>
-        <div class='icon-item'><i class='lucide-mic'></i></div>
-        <div class='icon-item'><i class='lucide-zap'></i></div>
-        <div class='icon-item'><i class='lucide-flame'></i></div>
-        <div class='icon-item'><i class='lucide-droplets'></i></div>
-        <div class='icon-item'><i class='lucide-wind'></i></div>
-        <div class='icon-item'><i class='lucide-snowflake'></i></div>
-        <div class='icon-item'><i class='lucide-sun'></i></div>
-        <div class='icon-item'><i class='lucide-moon'></i></div>
-        <div class='icon-item'><i class='lucide-star'></i></div>
-        <div class='icon-item'><i class='lucide-gem'></i></div>
-        <div class='icon-item'><i class='lucide-trophy'></i></div>
-        <div class='icon-item'><i class='lucide-medal'></i></div>
-        <div class='icon-item selected' style='background: #6b73ff'></div>
-        <div class='icon-item'><i class='lucide-rocket'></i></div>
-        <div class='icon-item'><i class='lucide-paw-print'></i></div>
-        <div class='icon-item'><i class='lucide-leaf'></i></div>
-        <div class='icon-item'><i class='lucide-trees'></i></div>
-        <div class='icon-item'><i class='lucide-briefcase'></i></div>
-        <div class='icon-item'><i class='lucide-key'></i></div>
-        <div class='icon-item'><i class='lucide-bell'></i></div>
-        <div class='icon-item'><i class='lucide-settings'></i></div>
-    </div>
-    <div class='input-group'>
-        <span class='input-label'>Nome da Categoria</span>
-        <div class='row'>
-            <input type='text' class='input-text' placeholder='Ex: Viagem'>
-            <div class='select-type'><span>Gasto</span><span class='material-icons-round'>expand_more</span></div>
-        </div>
-    </div>
-    <button class='btn-save'>SALVAR CATEGORIA</button>
+<div class='card-main'>
+    <div class='bal-label'>Saldo Atual</div>
+    <div class='bal-val' id='balance'>R$ 0,00</div>
 </div>
-<div class='pills-section'>
-    <p class='pills-title'>Ganhos</p>
-    <div class='pills-container'>
-        <div class='pill'><i class='lucide-banknote'></i> Salário <span>×</span></div>
-        <div class='pill'><i class='lucide-dollar-sign'></i> Pix Recebido <span>×</span></div>
-    </div>
+<div class='add-form'>
+    <h2>Novo Lançamento</h2>
+    <input type='text' id='desc' placeholder='Ex: Aluguel, Salário, Mercado...'>
+    <input type='number' id='val' placeholder='Valor R$ (ex: 50.00)'>
+    <select id='tipo'>
+        <option value='despesa'>Gasto (Saída)</option>
+        <option value='receita'>Ganho (Entrada)</option>
+    </select>
+    <button class='btn-add' onclick='salvar()'>Salvar</button>
 </div>
-<nav class='bottom-nav'>
-    <a href='#' class='nav-item'><i class='lucide-list-todo'></i><span>Lançar</span></a>
-    <a href='#' class='nav-item active'><i class='lucide-clock'></i><span>Contas</span><div class='nav-badge'>11</div></a>
-    <a href='#' class='nav-item'><i class='lucide-pie-chart'></i><span>Gráficos</span></a>
-    <a href='#' class='nav-item'><i class='lucide-sparkles'></i><span>IA</span></a>
-    <a href='#' class='nav-item'><i class='lucide-calendar-days'></i><span>Anual</span></a>
-    <a href='#' class='nav-item'><i class='lucide-target'></i><span>Metas</span></a>
-    <a href='#' class='nav-item'><i class='lucide-scale'></i><span>Simular</span></a>
-</nav>
+<div class='history'>
+    <h2>Histórico Recente</h2>
+    <div id='lista'></div>
+</div>
+<script>
+    let db = JSON.parse(localStorage.getItem('zapia_fin_v1')) || [];
+    function salvar() {
+        const desc = document.getElementById('desc').value;
+        const val = parseFloat(document.getElementById('val').value);
+        const tipo = document.getElementById('tipo').value;
+        if(!desc || !val) return alert('Preencha os campos!');
+        const registro = { id: Date.now(), desc, val, tipo, data: new Date().toLocaleDateString('pt-BR') };
+        db.unshift(registro);
+        localStorage.setItem('zapia_fin_v1', JSON.stringify(db));
+        document.getElementById('desc').value = '';
+        document.getElementById('val').value = '';
+        render();
+    }
+    function render() {
+        const lista = document.getElementById('lista');
+        lista.innerHTML = '';
+        let total = 0;
+        db.forEach(item => {
+            if(item.tipo === 'receita') total += item.val; else total -= item.val;
+            lista.innerHTML += `
+                <div class='item'>
+                    <div class='icon' style='background: ${item.tipo === "receita" ? "#dcfce7" : "#fee2e2"}'>
+                        <span class='material-icons-round ${item.tipo === "receita" ? "up" : "down"}'>
+                            ${item.tipo === "receita" ? "add_circle" : "remove_circle"}
+                        </span>
+                    </div>
+                    <div class='item-info'>
+                        <div class='item-title'>${item.desc}</div>
+                        <div style='font-size: 0.7rem; color: var(--muted)'>${item.data}</div>
+                    </div>
+                    <div class='item-val ${item.tipo === "receita" ? "up" : "down"}'>
+                        ${item.tipo === "receita" ? "+" : "-"} R$ ${item.val.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('balance').innerText = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+    }
+    render();
+</script>
 </body>
 </html>
