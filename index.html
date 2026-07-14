@@ -430,8 +430,8 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 
 #pendBadge { 
   position: absolute; 
-  top: 4px; 
-  right: 4px; 
+  top: -6px; 
+  right: -8px; 
   background: var(--verm); 
   color: white; 
   font-size: 10px; 
@@ -644,9 +644,12 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
   <button class="bnav-btn active" id="bnav-lancamentos" onclick="setPage('lancamentos')">
     <span class="icon"><i class="material-icons-round">edit_note</i></span>Lançar
   </button>
-  <button class="bnav-btn" id="bnav-pendencias" onclick="setPage('pendencias')" style="position:relative">
-    <span class="icon"><i class="material-icons-round">schedule</i></span>Contas
-    <div id="pendBadge" style="display:none">0</div>
+  <button class="bnav-btn" id="bnav-pendencias" onclick="setPage('pendencias')">
+    <div style="position:relative; display:inline-block">
+      <span class="icon"><i class="material-icons-round">schedule</i></span>
+      <div id="pendBadge" style="display:none">0</div>
+    </div>
+    Contas
   </button>
   <button class="bnav-btn" id="bnav-graficos" onclick="setPage('graficos')">
     <span class="icon"><i class="material-icons-round">pie_chart</i></span>Gráficos
