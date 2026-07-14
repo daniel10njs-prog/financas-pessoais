@@ -337,45 +337,62 @@ header .date {
 </div>
 
 <script>
-// Scanner de Emergência de Nível 3
+// Scanner de Emergência de Nível 4 + Ferramenta de Depuração
 function loadData() {
-  console.log("Scanner Nível 3 Iniciado...");
+  console.log("Scanner Nível 4...");
   
-  // Tenta as chaves conhecidas primeiro em ordem de probabilidade
-  const knownKeys = ['zapia_fin_v4', 'zapia_fin_v4.2', 'zapia_fin_v4.0', 'zapia_fin_v3', 'zapia_fin_v2', 'zapia_fin', 'financas_pessoais'];
+  // Lista de chaves que o Zapia já usou em versões passadas (segundo meu registro histórico)
+  const legacyKeys = ['zapia_fin_v4', 'zapia_fin_v4.2', 'zapia_fin_v4.0', 'zapia_fin_v3', 'zapia_fin_v2', 'zapia_fin', 'financas_pessoais', 'transactions'];
   
-  for (let key of knownKeys) {
+  let found = [];
+
+  // Tenta as chaves conhecidas
+  for (let key of legacyKeys) {
     const d = localStorage.getItem(key);
     if (d) {
       try {
         const p = JSON.parse(d);
         if (Array.isArray(p) && p.length > 0) {
-          console.log("Achou em chave conhecida:", key);
+          console.log("Achou dados na chave:", key);
+          found = p;
           localStorage.setItem('zapia_fin_v4', d);
-          return p;
+          break;
         }
       } catch(e) {}
     }
   }
 
-  // Se não achou, varre TUDO mesmo
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i);
-    const d = localStorage.getItem(k);
-    try {
-      const p = JSON.parse(d);
-      if (Array.isArray(p) && p.length > 0) {
-        // Verifica se o primeiro item tem cara de transação
-        if (p[0].desc || p[0].val || p[0].tipo) {
-           console.log("Achou por estrutura na chave:", k);
-           localStorage.setItem('zapia_fin_v4', d);
-           return p;
+  // Se não achou, faz a varredura bruta em TUDO o que existir no navegador
+  if (found.length === 0) {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      const d = localStorage.getItem(k);
+      try {
+        const p = JSON.parse(d);
+        if (Array.isArray(p) && p.length > 0) {
+          // Verifica se tem estrutura de transação
+          if (p[0].desc || p[0].val) {
+             console.log("Achou por estrutura na chave desconhecida:", k);
+             found = p;
+             localStorage.setItem('zapia_fin_v4', d);
+             break;
+          }
         }
-      }
-    } catch(e) {}
+      } catch(e) {}
+    }
+  }
+
+  // Adiciona um botão de depuração se estiver vazio para ajudar o Daniel a ver o que está acontecendo
+  if (found.length === 0) {
+     setTimeout(() => {
+        const debugInfo = document.createElement('div');
+        debugInfo.style = "padding: 20px; font-size: 10px; color: #94a3b8; text-align: center;";
+        debugInfo.innerHTML = `Nenhuma chave encontrada entre as ${localStorage.length} existentes.`;
+        document.body.appendChild(debugInfo);
+     }, 2000);
   }
   
-  return [];
+  return found;
 }
 
 let transactions = loadData();
