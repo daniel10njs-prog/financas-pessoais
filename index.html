@@ -91,6 +91,20 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .sim-item { background: var(--card); border-radius: 12px; padding: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .sim-btn-del { color: var(--vermelho); background: none; border: none; font-size: 0.8rem; cursor: pointer; margin-left: 10px; }
 .sync-btn { background: none; border: 1px solid var(--verde); color: var(--verde); padding: 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+
+/* ESTILO GERENCIADOR DE CATEGORIAS FIEL À IMAGEM */
+.cat-manager-modal { max-width: 420px !important; padding: 0 !important; overflow: hidden !important; }
+.cat-header { background: var(--card2); padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
+.cat-header h2 { margin: 0; font-size: 1.1rem; }
+.cat-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--card); }
+.cat-tab { flex: 1; padding: 12px; text-align: center; font-size: 0.7rem; font-weight: 700; color: var(--muted); cursor: pointer; text-transform: uppercase; border-bottom: 2px solid transparent; }
+.cat-tab.active { color: var(--azul); border-bottom-color: var(--azul); background: rgba(59,130,246,0.05); }
+.cat-list-container { padding: 15px; max-height: 400px; overflow-y: auto; background: var(--bg); }
+.cat-item-row { display: flex; align-items: center; gap: 12px; background: var(--card); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 8px; }
+.cat-item-icon { width: 40px; height: 40px; background: var(--card2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid var(--border); }
+.cat-item-name { flex: 1; font-weight: 600; font-size: 0.9rem; }
+.cat-actions { display: flex; gap: 8px; }
+.cat-btn-add { margin: 15px; padding: 14px; background: var(--azul); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.9rem; }
 </style>
 </head>
 <body>
@@ -102,7 +116,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
       <div class="dropdown-item" onclick="toggleTheme()"><i class="fas fa-circle-half-stroke"></i> Tema Claro/Escuro</div>
       <div class="dropdown-item" onclick="exportBackup()"><i class="fas fa-file-export"></i> Salvar Backup (JSON)</div>
       <div class="dropdown-item" onclick="importBackup()"><i class="fas fa-file-import"></i> Restaurar Backup</div>
-      <div class="dropdown-item" onclick="openIconManager()"><i class="fas fa-icons"></i> Gerenciar Categorias</div>
+      <div class="dropdown-item" onclick="openIconManager()"><i class="fas fa-tags"></i> Gerenciar Categorias</div>
     </div>
   </div>
 </header>
@@ -217,25 +231,41 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
   </div>
 </div>
 
+<!-- NOVO GERENCIADOR DE CATEGORIAS ESTILO IMAGEM -->
 <div class="modal-overlay" id="modalIcon">
-  <div class="modal">
-    <h2>Gerenciar Categorias</h2>
-    <div id="iconList" style="max-height: 350px; overflow-y: auto; margin-bottom: 20px;"></div>
-    <div style="border-top:1px solid var(--border); padding-top:15px;">
-        <p style="font-size:0.7rem; color:var(--muted); margin-bottom:10px; text-transform:uppercase;">Nova Categoria</p>
-        <div class="form-group"><input type="text" id="newCatName" placeholder="Nome (Ex: Presentes)"></div>
-        <div class="form-group"><input type="text" id="newCatIcon" placeholder="Emoji (Ex: 🎁)"></div>
-        <div class="form-group">
-            <select id="newCatType">
-                <option value="receita">Receita</option>
-                <option value="despesa">Despesa</option>
-                <option value="pendencia">Pendência</option>
-            </select>
-        </div>
-        <button class="btn-save" style="width:100%; background:var(--verde); margin-bottom:10px;" onclick="addCategory()">+ Adicionar Categoria</button>
+  <div class="modal cat-manager-modal">
+    <div class="cat-header">
+        <h2>Gerenciar Categorias</h2>
     </div>
-    <div class="modal-actions"><button class="btn-cancel" style="width:100%" onclick="closeIconManager()">Fechar</button></div>
+    <div class="cat-tabs">
+        <div class="cat-tab active" id="tab-cat-receita" onclick="setCatTab('receita')">Receitas</div>
+        <div class="cat-tab" id="tab-cat-despesa" onclick="setCatTab('despesa')">Despesas</div>
+        <div class="cat-tab" id="tab-cat-pendencia" onclick="setCatTab('pendencia')">Pendências</div>
+    </div>
+    <div class="cat-list-container" id="catListContent">
+        <!-- Itens injetados via JS -->
+    </div>
+    <button class="cat-btn-add" onclick="openAddCatForm()">
+        <i class="fas fa-plus-circle"></i> ADICIONAR CATEGORIA
+    </button>
+    <div class="modal-actions" style="padding:0 15px 15px;">
+        <button class="btn-cancel" style="width:100%" onclick="closeIconManager()">Fechar</button>
+    </div>
   </div>
+</div>
+
+<!-- MODAL PARA ADICIONAR/EDITAR CATEGORIA ESPECÍFICA -->
+<div class="modal-overlay" id="modalAddEditCat">
+    <div class="modal">
+        <h2 id="catModalTitle">Nova Categoria</h2>
+        <input type="hidden" id="catOldName">
+        <div class="form-group"><label>Nome da Categoria</label><input type="text" id="catInputName" placeholder="Ex: Internet"></div>
+        <div class="form-group"><label>Ícone (Emoji)</label><input type="text" id="catInputIcon" placeholder="Ex: 🌐" style="text-align:center; font-size:1.5rem;"></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeAddEditCat()">Cancelar</button>
+            <button class="btn-save" onclick="saveCategory()">Salvar</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -250,12 +280,12 @@ let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || {
     theme: 'dark' 
 };
 
-// Migração para garantir que novas propriedades existam
 if(!db.items) db.items = []; if(!db.pendencias) db.pendencias = []; if(!db.metas) db.metas = []; if(!db.previstos) db.previstos = []; if(!db.icons) db.icons = {};
 if(!db.categories) db.categories = { receita: ['Salário', 'Pix Recebido', 'Ajuste'], despesa: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'], pendencia: ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros'] };
 
 let simChecks = {}; 
 let chartInstance = null;
+let currentCatTab = 'receita';
 
 function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
 
@@ -302,32 +332,78 @@ function importBackup() {
 }
 
 function openIconManager() {
-    const il = document.getElementById('iconList'); il.innerHTML = '';
-    Object.keys(db.icons).forEach(cat => {
-        il.innerHTML += `
-            <div class="item" style="margin-bottom:8px; padding:8px;">
-                <div style="flex:1;"><b>${cat}</b></div>
-                <input type="text" style="width:50px; text-align:center; background:var(--card2); border:1px solid var(--border); color:var(--text); border-radius:6px; padding:4px;" value="${db.icons[cat]}" oninput="updateIcon('${cat}', this.value)">
-                <button class="icon-btn delete" style="margin-left:10px;" onclick="removeCategory('${cat}')"><i class="fas fa-times"></i></button>
-            </div>`;
-    });
     document.getElementById('modalIcon').classList.add('show');
     document.getElementById('dropdownMenu').classList.remove('show');
+    setCatTab(currentCatTab);
 }
 function closeIconManager() { document.getElementById('modalIcon').classList.remove('show'); }
-function updateIcon(cat, val) { db.icons[cat] = val; localStorage.setItem('zapia_financas_db', JSON.stringify(db)); }
 
-function addCategory() {
-    const name = document.getElementById('newCatName').value;
-    const icon = document.getElementById('newCatIcon').value;
-    const type = document.getElementById('newCatType').value;
+function setCatTab(tab) {
+    currentCatTab = tab;
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-cat-' + tab).classList.add('active');
+    
+    const content = document.getElementById('catListContent');
+    content.innerHTML = '';
+    
+    const list = db.categories[tab] || [];
+    list.forEach(catName => {
+        content.innerHTML += `
+            <div class="cat-item-row">
+                <div class="cat-item-icon">${db.icons[catName] || '❓'}</div>
+                <div class="cat-item-name">${catName}</div>
+                <div class="cat-actions">
+                    <button class="icon-btn edit" onclick="editCatForm('${catName}')"><i class="fas fa-pencil-alt"></i></button>
+                    <button class="icon-btn delete" onclick="removeCategory('${catName}')"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>`;
+    });
+}
+
+function openAddCatForm() {
+    document.getElementById('catModalTitle').innerText = 'Nova Categoria';
+    document.getElementById('catOldName').value = '';
+    document.getElementById('catInputName').value = '';
+    document.getElementById('catInputIcon').value = '';
+    document.getElementById('modalAddEditCat').classList.add('show');
+}
+
+function editCatForm(name) {
+    document.getElementById('catModalTitle').innerText = 'Editar Categoria';
+    document.getElementById('catOldName').value = name;
+    document.getElementById('catInputName').value = name;
+    document.getElementById('catInputIcon').value = db.icons[name] || '';
+    document.getElementById('modalAddEditCat').classList.add('show');
+}
+
+function closeAddEditCat() { document.getElementById('modalAddEditCat').classList.remove('show'); }
+
+function saveCategory() {
+    const name = document.getElementById('catInputName').value.trim();
+    const icon = document.getElementById('catInputIcon').value.trim();
+    const oldName = document.getElementById('catOldName').value;
+    
     if(!name || !icon) return;
+    
+    if(oldName) {
+        // Renomear categoria em todos os lugares
+        if(oldName !== name) {
+            delete db.icons[oldName];
+            db.categories[currentCatTab] = db.categories[currentCatTab].map(c => c === oldName ? name : c);
+            // Atualizar itens existentes
+            db.items.forEach(i => { if(i.sub === oldName) i.sub = name; });
+            db.pendencias.forEach(p => { if(p.sub === oldName) p.sub = name; });
+        }
+    } else {
+        if(!db.categories[currentCatTab].includes(name)) {
+            db.categories[currentCatTab].push(name);
+        }
+    }
+    
     db.icons[name] = icon;
-    if(!db.categories[type].includes(name)) db.categories[type].push(name);
-    document.getElementById('newCatName').value = '';
-    document.getElementById('newCatIcon').value = '';
     save();
-    openIconManager();
+    closeAddEditCat();
+    setCatTab(currentCatTab);
 }
 
 function removeCategory(name) {
@@ -337,7 +413,7 @@ function removeCategory(name) {
         db.categories[t] = db.categories[t].filter(c => c !== name);
     });
     save();
-    openIconManager();
+    setCatTab(currentCatTab);
 }
 
 function setTab(t) {
