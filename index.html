@@ -124,7 +124,8 @@ header h1 { font-size: 1.25rem; font-weight: 900; letter-spacing: -0.5px; }
 .icon-btn { background: none; border: none; cursor: pointer; padding: 4px; font-size: 0.85rem; }
 .icon-btn.edit { color: var(--azul); }
 .icon-btn.delete { color: var(--vermelho); }
-.btn-pay-direct { background: var(--verde); color: white; border: none; border-radius: 6px; padding: 4px 8px; font-size: 0.6rem; font-weight: 800; cursor: pointer; }
+.btn-pay-direct { background: var(--verde); color: white; border: none; border-radius: 8px; padding: 6px 12px; font-size: 0.75rem; font-weight: 800; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
+.btn-pay-direct:active { transform: scale(0.95); }
 
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
 .modal-overlay.show { display: flex; }
