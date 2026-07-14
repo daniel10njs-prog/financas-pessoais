@@ -3,211 +3,224 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
-    <title>Zapia Finance Ultimate v13</title>
-    <link href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
+    <title>Zapia Finance Executive v14</title>
+    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css' rel='stylesheet'>
     <style>
         :root {
-            --bg: #030712; --card: #111827; --primary: #3b82f6; --text: #f9fafb;
-            --muted: #9ca3af; --up: #10b981; --down: #ef4444; --warn: #f59e0b;
-            --glass: rgba(255, 255, 255, 0.03); --border: rgba(255, 255, 255, 0.08);
+            --bg: #000000; --card: #121212; --primary: #ffffff; --accent: #2563eb;
+            --text: #ffffff; --muted: #888888; --up: #00e676; --down: #ff5252; --warn: #ffab00;
+            --border: rgba(255, 255, 255, 0.08);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 120px; max-width: 500px; margin: 0 auto; min-height: 100vh; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* Glassmorphism Header */
-        header { padding: 50px 20px 20px; display: flex; justify-content: space-between; align-items: flex-start; position: sticky; top: 0; background: rgba(3,7,18,0.8); backdrop-filter: blur(10px); z-index: 100; }
-        header h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
-        header span { color: var(--primary); }
-        .header-btns { display: flex; gap: 10px; }
-        .btn-round { background: var(--card); border: 1px solid var(--border); color: white; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
-        .btn-round:active { transform: scale(0.9); }
+        /* Android Specific Styling */
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            padding-bottom: 90px; 
+            max-width: 500px; 
+            margin: 0 auto; 
+            min-height: 100vh; 
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        /* Executive Header */
+        header { 
+            padding: 24px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        header h1 { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+        .header-actions { display: flex; gap: 16px; color: var(--muted); }
 
         /* Navigation */
-        .tab-content { display: none; padding: 0 20px; animation: fadeIn 0.4s ease; }
+        .tab-content { display: none; padding: 20px; animation: androidFade 0.2s ease-out; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes androidFade { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Professional Dash */
-        .dash-card { background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 32px; padding: 30px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .dash-label { font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block; }
-        .dash-main-val { font-size: 2.4rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 25px; }
-        .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; }
+        /* Dashboard Executive */
+        .executive-summary { margin-bottom: 32px; }
+        .summary-label { font-size: 0.7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; display: block; }
+        .summary-val { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 24px; }
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+        .grid-item { background: var(--bg); padding: 16px; }
+        .grid-val { font-size: 1rem; font-weight: 700; margin-top: 4px; }
+
+        /* Forms - Material Design Inspired */
+        .input-field { background: var(--card); border-radius: 12px; margin-bottom: 12px; padding: 12px 16px; border: 1px solid var(--border); }
+        .input-field label { display: block; font-size: 0.65rem; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+        input, select { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 1rem; font-weight: 500; }
         
-        /* Modern Forms */
-        .card-inner { background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .input-box { background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 12px; display: flex; align-items: center; padding: 0 15px; }
-        .input-box i { color: var(--muted); margin-right: 12px; font-size: 1.1rem; }
-        input, select { flex: 1; padding: 15px 0; background: transparent; border: none; color: white; outline: none; font-size: 0.95rem; }
-        .btn-flex { display: flex; gap: 10px; }
-        .btn-p { flex: 1; padding: 16px; border-radius: 16px; border: none; font-weight: 800; font-size: 0.9rem; cursor: pointer; transition: 0.2s; color: white; }
-        .btn-p:active { transform: scale(0.96); }
+        .action-row { display: flex; gap: 12px; margin-top: 20px; }
+        .btn-exec { flex: 1; padding: 16px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; }
+        .btn-primary { background: var(--primary); color: #000; }
+        .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
 
-        /* List Styling */
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 15px; }
-        .section-header h2 { font-size: 0.8rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
-        
-        .item-row { background: var(--card); padding: 18px; border-radius: 20px; display: flex; align-items: center; gap: 15px; margin-bottom: 12px; border: 1px solid var(--border); }
-        .item-icon { width: 48px; height: 48px; background: var(--glass); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-        .item-info { flex: 1; }
-        .item-info .title { font-size: 0.95rem; font-weight: 700; display: block; }
-        .item-info .sub { font-size: 0.65rem; color: var(--muted); font-weight: 600; text-transform: uppercase; }
-        .item-val { text-align: right; font-weight: 800; font-size: 1rem; }
+        /* List Items */
+        .list-header { font-size: 0.7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin: 32px 0 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .transaction { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+        .trans-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .trans-info { flex: 1; }
+        .trans-name { font-size: 0.95rem; font-weight: 600; display: block; }
+        .trans-meta { font-size: 0.75rem; color: var(--muted); }
+        .trans-val { font-weight: 700; font-size: 1rem; text-align: right; }
 
-        /* Bottom Nav - Professional Layout */
-        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 94%; background: rgba(17, 24, 39, 0.95); backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid var(--border); display: flex; padding: 8px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--muted); cursor: pointer; transition: 0.2s; padding: 8px 0; border-radius: 16px; }
-        .nav-item.active { color: var(--primary); background: rgba(59, 130, 246, 0.1); }
-        .nav-item i { font-size: 1.2rem; }
-        .nav-item span { font-size: 0.45rem; font-weight: 800; text-transform: uppercase; }
+        /* Android Bottom Nav */
+        .android-nav { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: #000; border-top: 1px solid var(--border); 
+            display: flex; height: 70px; z-index: 2000;
+        }
+        .nav-link { 
+            flex: 1; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; gap: 4px; 
+            color: var(--muted); cursor: pointer;
+        }
+        .nav-link.active { color: var(--primary); }
+        .nav-link i { font-size: 1.4rem; }
+        .nav-link span { font-size: 0.6rem; font-weight: 600; }
 
-        /* Components: Charts & Progress */
-        .progress-container { margin-top: 10px; }
-        .progress-bar { height: 8px; background: var(--glass); border-radius: 10px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); transition: 1s cubic-bezier(0.1, 0, 0.2, 1); }
-        
-        .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
-        .empty-state i { font-size: 3rem; margin-bottom: 15px; display: block; opacity: 0.3; }
+        /* Progress Components */
+        .progress-box { background: var(--card); padding: 20px; border-radius: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
+        .bar-bg { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 12px 0; }
+        .bar-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: 0.6s ease; }
 
-        .cat-tag { font-size: 0.6rem; padding: 2px 8px; background: var(--glass); border-radius: 6px; color: var(--muted); margin-top: 4px; display: inline-block; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Zapia<span>.</span>Finance</h1>
-    <div class='header-btns'>
-        <button class='btn-round' onclick='exportData()'><i class='lucide-download'></i></button>
-        <button class='btn-round' onclick='resetAll()' style='color:var(--down)'><i class='lucide-rotate-ccw'></i></button>
+    <h1>Zapia Executive</h1>
+    <div class='header-actions'>
+        <i class='lucide-search' onclick='alert("Pesquisa em breve")'></i>
+        <i class='lucide-settings' onclick='resetAll()'></i>
     </div>
 </header>
 
-<!-- VIEW: LANÇAR -->
+<!-- 1. DASHBOARD / LANÇAR -->
 <div id='view-lancar' class='tab-content active'>
-    <div class='dash-card'>
-        <span class='dash-label'>Saldo Consolidado</span>
-        <div class='dash-main-val' id='lSaldo'>R$ 0,00</div>
-        <div class='dash-grid'>
-            <div><span class='dash-label'>Receitas</span><div style='color:var(--up); font-weight:800' id='lRec'>R$ 0,00</div></div>
-            <div style='text-align:right'><span class='dash-label'>Despesas</span><div style='color:var(--down); font-weight:800' id='lDesp'>R$ 0,00</div></div>
+    <div class='executive-summary'>
+        <span class='summary-label'>Available Balance</span>
+        <div class='summary-val' id='lSaldo'>R$ 0,00</div>
+        <div class='summary-grid'>
+            <div class='grid-item'>
+                <span class='summary-label' style='color:var(--up)'>Income</span>
+                <div class='grid-val' id='lRec'>R$ 0,00</div>
+            </div>
+            <div class='grid-item'>
+                <span class='summary-label' style='color:var(--down)'>Expenses</span>
+                <div class='grid-val' id='lDesp'>R$ 0,00</div>
+            </div>
         </div>
     </div>
 
-    <div class='card-inner'>
-        <div class='input-box'><i class='lucide-edit-3'></i><input type='text' id='fDesc' placeholder='O que você comprou ou recebeu?'></div>
-        <div style='display:flex; gap:10px'>
-            <div class='input-box' style='flex:1'><i class='lucide-dollar-sign'></i><input type='number' id='fVal' placeholder='Valor'></div>
-            <div class='input-box' style='flex:1'><i class='lucide-calendar'></i><input type='date' id='fDate'></div>
-        </div>
-        <div class='input-box'>
-            <i class='lucide-layers'></i>
+    <div class='input-field'><label>Description</label><input type='text' id='fDesc' placeholder='Merchant or Source'></div>
+    <div style='display:flex; gap:12px'>
+        <div class='input-field' style='flex:1'><label>Amount</label><input type='number' id='fVal' placeholder='0.00'></div>
+        <div class='input-field' style='flex:1'><label>Category</label>
             <select id='fCat'>
-                <option value='Essencial'>🏠 Essencial</option>
-                <option value='Alimentação'>🍕 Alimentação</option>
-                <option value='Transporte'>🚗 Transporte</option>
-                <option value='Lazer'>🍿 Lazer</option>
-                <option value='Saúde'>🏥 Saúde</option>
-                <option value='Investimento'>📈 Investimento</option>
-                <option value='Renda'>💰 Renda/Salário</option>
+                <option value='Corporate'>Corporate</option>
+                <option value='Lifestyle'>Lifestyle</option>
+                <option value='Healthcare'>Healthcare</option>
+                <option value='Fixed'>Fixed Cost</option>
             </select>
         </div>
-        <div class='btn-flex'>
-            <button class='btn-p' style='background:var(--up); color:black' onclick='add("rec")'>+ RECEITA</button>
-            <button class='btn-p' style='background:var(--down)' onclick='add("desp")'>- DESPESA</button>
-        </div>
+    </div>
+    
+    <div class='action-row'>
+        <button class='btn-exec btn-secondary' onclick='add("desp")'>Track Expense</button>
+        <button class='btn-exec btn-primary' onclick='add("rec")'>Record Income</button>
     </div>
 
-    <div class='section-header'><h2>Últimos Lançamentos</h2><i class='lucide-sliders-horizontal' style='font-size:0.8rem; color:var(--muted)'></i></div>
+    <h2 class='list-header'>Transaction History</h2>
     <div id='lList'></div>
 </div>
 
-<!-- VIEW: CONTAS (PENDENCIAS) -->
+<!-- 2. PENDING -->
 <div id='view-contas' class='tab-content'>
-    <div class='dash-card' style='background: linear-gradient(145deg, #451a03, #0f172a); border-color: var(--warn)'>
-        <span class='dash-label' style='color:var(--warn)'>Total a Pagar</span>
-        <div class='dash-main-val' id='pTotal' style='color:var(--warn)'>R$ 0,00</div>
+    <div class='executive-summary'>
+        <span class='summary-label'>Upcoming Liabilities</span>
+        <div class='summary-val' style='color:var(--warn)' id='pTotal'>R$ 0,00</div>
     </div>
-    <div class='card-inner' style='border-color: var(--warn)'>
-        <div class='input-box'><i class='lucide-clock'></i><input type='text' id='pDesc' placeholder='Nome da conta / Boleto'></div>
-        <div class='input-box'><i class='lucide-dollar-sign'></i><input type='number' id='pVal' placeholder='Valor R$'></div>
-        <button class='btn-p' style='background:var(--warn); color:black; width:100%' onclick='addPend()'>AGENDAR CONTA</button>
-    </div>
+    <div class='input-field'><label>Account Name</label><input type='text' id='pDesc' placeholder='Vendor or Bill'></div>
+    <div class='input-field'><label>Amount</label><input type='number' id='pVal' placeholder='0.00'></div>
+    <button class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Schedule Liability</button>
+    
+    <h2 class='list-header'>Pending Obligations</h2>
     <div id='pList'></div>
 </div>
 
-<!-- VIEW: GRÁFICOS -->
-<div id='view-graficos' class='tab-content'>
-    <div class='section-header'><h2>Análise por Categoria</h2></div>
+<!-- 3. ANALYTICS -->
+<div id='view-analise' class='tab-content'>
+    <h2 class='list-header'>Spending Analysis</h2>
     <div id='cList'></div>
 </div>
 
-<!-- VIEW: IA ANALYTICS -->
+<!-- 4. ZAPIA AI -->
 <div id='view-ia' class='tab-content'>
-    <div class='card-inner' style='text-align:center; padding:50px 20px'>
-        <div style='background:rgba(59, 130, 246, 0.1); width:80px; height:80px; border-radius:30px; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px'>
-            <i class='lucide-sparkles' style='font-size:2.5rem; color:var(--primary)'></i>
-        </div>
-        <h2 style='margin-bottom:10px'>Insight da Zapia</h2>
+    <div style='text-align:center; padding:60px 0'>
+        <i class='lucide-shield-check' style='font-size:3rem; color:var(--accent); margin-bottom:24px'></i>
+        <h2 style='font-size:1.4rem; margin-bottom:12px'>Executive Briefing</h2>
         <p id='iaMsg' style='color:var(--muted); line-height:1.6; font-size:0.95rem'></p>
     </div>
 </div>
 
-<!-- VIEW: ANUAL -->
+<!-- 5. ANUAL -->
 <div id='view-anual' class='tab-content'>
-    <div class='section-header'><h2>Histórico Mensal</h2></div>
+    <h2 class='list-header'>Annual Fiscal Review</h2>
     <div id='aList'></div>
 </div>
 
-<!-- VIEW: METAS -->
+<!-- 6. OBJECTIVES (METAS) -->
 <div id='view-metas' class='tab-content'>
-    <div class='card-inner'>
-        <span class='dash-label'>Configurar Novo Objetivo</span>
-        <div class='input-box'><i class='lucide-target'></i><input type='text' id='mNome' placeholder='Ex: Viagem de Férias'></div>
-        <div class='input-box'><i class='lucide-flag'></i><input type='number' id='mAlvo' placeholder='Quanto quer juntar?'></div>
-        <button class='btn-p' style='background:var(--primary); width:100%' onclick='addGoal()'>SALVAR META</button>
-    </div>
+    <div class='input-field'><label>Objective</label><input type='text' id='mNome' placeholder='Investment Goal'></div>
+    <div class='input-field'><label>Target Value</label><input type='number' id='mAlvo' placeholder='0.00'></div>
+    <button class='btn-exec btn-primary' style='width:100%; margin-bottom:32px' onclick='addGoal()'>Lock Objective</button>
     <div id='mList'></div>
 </div>
 
-<!-- VIEW: SIMULAR -->
+<!-- 7. SIMULATION -->
 <div id='view-simular' class='tab-content'>
-    <div class='dash-card' style='text-align:center'>
-        <span class='dash-label'>Cenário de Quitação Total</span>
-        <div class='dash-main-val' id='simVal'>R$ 0,00</div>
-        <p id='simMsg' style='font-size:0.8rem; color:var(--muted)'></p>
-    </div>
-    <div class='card-inner' style='background:rgba(255,255,255,0.02)'>
-        <div style='display:flex; justify-content:space-between; margin-bottom:10px'><span>Saldo em Conta</span><span id='sSaldo'>R$ 0</span></div>
-        <div style='display:flex; justify-content:space-between; color:var(--warn)'><span>Contas Pendentes</span><span id='sPend'>- R$ 0</span></div>
+    <div class='executive-summary' style='text-align:center'>
+        <span class='summary-label'>Post-Liability Liquid Balance</span>
+        <div class='summary-val' id='simVal'>R$ 0,00</div>
+        <p style='font-size:0.8rem; color:var(--muted)'>Simulation based on immediate settlement of all pending obligations.</p>
     </div>
 </div>
 
-<nav class='bottom-nav'>
-    <div class='nav-item active' onclick='switchTab("lancar")'><i class='lucide-plus-circle'></i><span>Lançar</span></div>
-    <div class='nav-item' onclick='switchTab("contas")'><i class='lucide-receipt'></i><span>Contas</span></div>
-    <div class='nav-item' onclick='switchTab("graficos")'><i class='lucide-pie-chart'></i><span>Análise</span></div>
-    <div class='nav-item' onclick='switchTab("ia")'><i class='lucide-zap'></i><span>Zapia</span></div>
-    <div class='nav-item' onclick='switchTab("anual")'><i class='lucide-calendar'></i><span>Anual</span></div>
-    <div class='nav-item' onclick='switchTab("metas")'><i class='lucide-target'></i><span>Metas</span></div>
-    <div class='nav-item' onclick='switchTab("simular")'><i class='lucide-bar-chart-3'></i><span>Simular</span></div>
+<nav class='android-nav'>
+    <div class='nav-link active' onclick='switchTab("lancar")'><i class='lucide-layout-grid'></i><span>Main</span></div>
+    <div class='nav-link' onclick='switchTab("contas")'><i class='lucide-layers'></i><span>Bills</span></div>
+    <div class='nav-link' onclick='switchTab("analise")'><i class='lucide-pie-chart'></i><span>Stats</span></div>
+    <div class='nav-link' onclick='switchTab("ia")'><i class='lucide-zap'></i><span>IA</span></div>
+    <div class='nav-link' onclick='switchTab("anual")'><i class='lucide-calendar'></i><span>Year</span></div>
+    <div class='nav-link' onclick='switchTab("metas")'><i class='lucide-target'></i><span>Goals</span></div>
+    <div class='nav-link' onclick='switchTab("simular")'><i class='lucide-scale'></i><span>Sim</span></div>
 </nav>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('zapia_ultimate_v13')) || { items: [], goals: [] };
-    document.getElementById('fDate').valueAsDate = new Date();
+    let db = JSON.parse(localStorage.getItem('zapia_exec_v14')) || { items: [], goals: [] };
 
     function switchTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + t).classList.add('active');
         event.currentTarget.classList.add('active');
         render();
     }
 
     function add(tipo) {
-        const d = document.getElementById('fDesc').value, v = parseFloat(document.getElementById('fVal').value), c = document.getElementById('fCat').value, dt = document.getElementById('fDate').value;
+        const d = document.getElementById('fDesc').value, v = parseFloat(document.getElementById('fVal').value), c = document.getElementById('fCat').value;
         if(!d || isNaN(v)) return;
-        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: tipo, cat: c, date: dt });
+        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: tipo, cat: c, date: new Date().toISOString() });
         document.getElementById('fDesc').value = ''; document.getElementById('fVal').value = '';
         save();
     }
@@ -215,7 +228,7 @@
     function addPend() {
         const d = document.getElementById('pDesc').value, v = parseFloat(document.getElementById('pVal').value);
         if(!d || isNaN(v)) return;
-        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: 'pend', cat: 'Boleto/Conta', date: new Date().toISOString().split('T')[0] });
+        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: 'pend', cat: 'Liability', date: new Date().toISOString() });
         document.getElementById('pDesc').value = ''; document.getElementById('pVal').value = '';
         save();
     }
@@ -228,11 +241,8 @@
         save();
     }
 
-    function pay(id) { const i = db.items.find(x => x.id === id); if(i) i.tipo = 'desp'; save(); }
-    function del(id) { if(confirm('Excluir este lançamento?')) { db.items = db.items.filter(x => x.id !== id); save(); } }
-    function resetAll() { if(confirm('AVISO: Isso apagará TODOS os seus dados permanentemente. Continuar?')) { db = {items:[], goals:[]}; save(); } }
-
-    function save() { localStorage.setItem('zapia_ultimate_v13', JSON.stringify(db)); render(); }
+    function save() { localStorage.setItem('zapia_exec_v14', JSON.stringify(db)); render(); }
+    function resetAll() { if(confirm('Factory Reset?')) { db = {items:[], goals:[]}; save(); } }
 
     function render() {
         let rec = 0, desp = 0, pnd = 0;
@@ -241,98 +251,53 @@
         const cList = document.getElementById('cList'); cList.innerHTML = '';
         const aList = document.getElementById('aList'); aList.innerHTML = '';
         const mList = document.getElementById('mList'); mList.innerHTML = '';
-
         const cats = {};
 
         db.items.forEach(i => {
             if(i.tipo === 'rec') rec += i.val;
-            else if(i.tipo === 'desp') {
-                desp += i.val;
-                cats[i.cat] = (cats[i.cat] || 0) + i.val;
-            }
+            else if(i.tipo === 'desp') { desp += i.val; cats[i.cat] = (cats[i.cat] || 0) + i.val; }
             else if(i.tipo === 'pend') pnd += i.val;
 
             const color = i.tipo === 'rec' ? 'var(--up)' : (i.tipo === 'pend' ? 'var(--warn)' : 'var(--down)');
-            const icon = i.tipo === 'rec' ? 'lucide-arrow-up-right' : (i.tipo === 'pend' ? 'lucide-clock' : 'lucide-arrow-down-left');
+            const icon = i.tipo === 'rec' ? 'lucide-plus' : 'lucide-minus';
             
             const html = `
-                <div class='item-row'>
-                    <div class='item-icon' style='color:${color}'><i class='${icon}'></i></div>
-                    <div class='item-info'>
-                        <span class='title'>${i.desc}</span>
-                        <span class='sub'>${new Date(i.date).toLocaleDateString('pt-BR')}</span><br>
-                        <span class='cat-tag'>${i.cat}</span>
+                <div class='transaction'>
+                    <div class='trans-icon' style='color:${color}'><i class='${icon}'></i></div>
+                    <div class='trans-info'>
+                        <span class='trans-name'>${i.desc}</span>
+                        <span class='trans-meta'>${i.cat} • ${new Date(i.date).toLocaleDateString()}</span>
                     </div>
-                    <div class='item-val'>
-                        <div style='color:${color}'>R$ ${i.val.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
-                        ${i.tipo==='pend'?`<button onclick='pay(${i.id})' style='background:var(--up); color:black; border:none; padding:4px 8px; border-radius:6px; font-size:0.6rem; font-weight:800; margin-top:5px; cursor:pointer'>BAIXAR</button>`:''}
-                        <i class='lucide-trash-2' style='font-size:0.8rem; color:var(--muted); margin-left:10px; cursor:pointer' onclick='del(${i.id})'></i>
-                    </div>
+                    <div class='trans-val' style='color:${color}'>R$ ${i.val.toLocaleString()}</div>
                 </div>`;
 
-            if(i.tipo === 'pend') pList.innerHTML += html;
-            else lList.innerHTML += html;
+            if(i.tipo === 'pend') pList.innerHTML += html; else lList.innerHTML += html;
         });
-
-        if(db.items.filter(x=>x.tipo!=='pend').length === 0) lList.innerHTML = '<div class='empty-state'><i class='lucide-coffee'></i>Nada por aqui hoje...</div>';
-        if(db.items.filter(x=>x.tipo==='pend').length === 0) pList.innerHTML = '<div class='empty-state'><i class='lucide-check-circle'></i>Todas as contas em dia!</div>';
 
         const bal = rec - desp;
-        document.getElementById('lSaldo').innerText = 'R$ ' + bal.toLocaleString('pt-BR');
-        document.getElementById('lRec').innerText = 'R$ ' + rec.toLocaleString('pt-BR');
-        document.getElementById('lDesp').innerText = 'R$ ' + desp.toLocaleString('pt-BR');
-        document.getElementById('pTotal').innerText = 'R$ ' + pnd.toLocaleString('pt-BR');
+        document.getElementById('lSaldo').innerText = 'R$ ' + bal.toLocaleString();
+        document.getElementById('lRec').innerText = 'R$ ' + rec.toLocaleString();
+        document.getElementById('lDesp').innerText = 'R$ ' + desp.toLocaleString();
+        document.getElementById('pTotal').innerText = 'R$ ' + pnd.toLocaleString();
 
-        // Charts Tab
+        // Analytics
         Object.keys(cats).forEach(c => {
-            const perc = (cats[c] / desp) * 100;
-            cList.innerHTML += `
-                <div class='card-inner'>
-                    <div style='display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.85rem'><span>${c}</span><span style='font-weight:800'>R$ ${cats[c].toLocaleString()}</span></div>
-                    <div class='progress-bar'><div class='progress-fill' style='width:${perc}%'></div></div>
-                </div>`;
-        });
-
-        // Annual View (Simple Grouping)
-        const months = {};
-        db.items.forEach(i => {
-            const mKey = i.date.substring(0, 7);
-            if(!months[mKey]) months[mKey] = {r:0, d:0};
-            if(i.tipo==='rec') months[mKey].r += i.val; else if(i.tipo==='desp') months[mKey].d += i.val;
-        });
-        Object.keys(months).sort().reverse().forEach(m => {
-            aList.innerHTML += `<div class='item-row'><div class='item-info'><span class='title'>${m}</span></div><div class='item-val'><div style='color:var(--up)'>+R$ ${months[m].r.toLocaleString()}</div><div style='color:var(--down)'>-R$ ${months[m].d.toLocaleString()}</div></div></div>`;
+            const perc = (cats[c] / (desp || 1)) * 100;
+            cList.innerHTML += `<div class='progress-box'><span>${c}</span><div class='bar-bg'><div class='bar-fill' style='width:${perc}%'></div></div><div style='font-size:0.75rem; text-align:right'>R$ ${cats[c].toLocaleString()}</div></div>`;
         });
 
         // Metas
         db.goals.forEach(g => {
             const perc = Math.min((bal > 0 ? (bal/g.alvo)*100 : 0), 100);
-            mList.innerHTML += `
-                <div class='card-inner'>
-                    <div style='display:flex; justify-content:space-between; margin-bottom:10px'><strong>${g.nome}</strong><span>${perc.toFixed(1)}%</span></div>
-                    <div class='progress-bar'><div class='progress-fill' style='width:${perc}%'></div></div>
-                    <div style='font-size:0.65rem; color:var(--muted); margin-top:8px'>Meta: R$ ${g.alvo.toLocaleString()} | Saldo Atual: R$ ${bal.toLocaleString()}</div>
-                </div>`;
+            mList.innerHTML += `<div class='progress-box'><strong>${g.nome}</strong><div class='bar-bg'><div class='bar-fill' style='width:${perc}%'></div></div><div style='font-size:0.7rem'>${perc.toFixed(1)}% complete</div></div>`;
         });
 
-        // IA and Simulation
-        document.getElementById('iaMsg').innerText = bal > pnd ? `Excelente, Daniel! Seu saldo atual de R$ ${bal.toLocaleString()} é suficiente para liquidar todas as suas pendências (R$ ${pnd.toLocaleString()}) e ainda manter uma reserva de R$ ${(bal-pnd).toLocaleString()}.` : `Atenção Daniel: Você tem R$ ${pnd.toLocaleString()} em contas futuras, mas seu saldo atual é de R$ ${bal.toLocaleString()}. Considere reduzir gastos na categoria ${Object.keys(cats).sort((a,b)=>cats[b]-cats[a])[0] || 'Geral'}.`;
+        // IA
+        document.getElementById('iaMsg').innerText = bal >= pnd ? `Fiscal status: Stable. Your current liquidity of R$ ${bal.toLocaleString()} fully covers all projected liabilities.` : `Action required: Projected liabilities exceed current liquidity by R$ ${(pnd-bal).toLocaleString()}.`;
         
-        document.getElementById('simVal').innerText = 'R$ ' + (bal - pnd).toLocaleString('pt-BR');
+        // Simular
+        document.getElementById('simVal').innerText = 'R$ ' + (bal - pnd).toLocaleString();
         document.getElementById('simVal').style.color = (bal - pnd) < 0 ? 'var(--down)' : 'var(--up)';
-        document.getElementById('simMsg').innerText = (bal - pnd) < 0 ? 'Você ficaria com saldo negativo após as contas.' : 'Este seria seu saldo real "limpo".';
-        document.getElementById('sSaldo').innerText = 'R$ ' + bal.toLocaleString();
-        document.getElementById('sPend').innerText = '- R$ ' + pnd.toLocaleString();
-    }
-
-    function exportData() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "zapia_finance_backup.json");
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
     }
 
     render();
