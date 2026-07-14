@@ -801,6 +801,17 @@ function renderComp() {
 }
 
 function render() {
+  // Badge de Notificacao
+  const badge = document.getElementById("pend-badge");
+  if(badge) {
+    const pCount = db.pendencias.length;
+    badge.innerText = pCount;
+    badge.style.display = pCount > 0 ? "flex" : "none";
+  }
+  // Contador no Titulo
+  const titleCount = document.getElementById("pend-count-title");
+  if(titleCount) titleCount.innerText = `(${db.pendencias.length})`;
+
   let r=0, d=0, p=0; db.items.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val); db.pendencias.forEach(i => p+=i.val);
   document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); document.getElementById('saldoReal').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
   document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
