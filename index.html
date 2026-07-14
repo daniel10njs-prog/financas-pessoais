@@ -165,7 +165,13 @@ label { display: block; font-size: 0.8rem; color: var(--texto-secundario); margi
 
 <script>
 let currentTab = 'home';
-let db = JSON.parse(localStorage.getItem('financas_db_v55')) || JSON.parse(localStorage.getItem('financas_db_v54')) || {
+// Tenta carregar de todas as chaves possíveis para não perder dados de versões anteriores
+let db = JSON.parse(localStorage.getItem('financas_db_v57')) || 
+         JSON.parse(localStorage.getItem('financas_db_v56')) || 
+         JSON.parse(localStorage.getItem('financas_db_v55')) || 
+         JSON.parse(localStorage.getItem('financas_db_v54')) || 
+         JSON.parse(localStorage.getItem('financas_db_v50')) || 
+         {
   saldoReal: 0, lancamentos: [], pendencias: [], metas: [],
   categorias: [
     { id: 1, nome: 'Salário', icone: 'payments', tipo: 'receita' },
@@ -180,7 +186,12 @@ let db = JSON.parse(localStorage.getItem('financas_db_v55')) || JSON.parse(local
 const materialIcons = ['payments', 'restaurant', 'home', 'directions_car', 'shopping_cart', 'medical_services', 'school', 'bolt', 'water_drop', 'wifi', 'credit_card', 'handshake', 'account_balance', 'request_quote', 'fitness_center', 'commute', 'local_gas_station', 'entertainment', 'redeem', 'savings'];
 let selectedIcon = 'payments';
 
-function save() { localStorage.setItem('financas_db_v55', JSON.stringify(db)); render(); }
+function save() { 
+  // Salva em múltiplas chaves por segurança durante a transição
+  localStorage.setItem('financas_db_v57', JSON.stringify(db));
+  localStorage.setItem('financas_db_v54', JSON.stringify(db)); 
+  render(); 
+}
 function formatarMoeda(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
 function formatarData(d) { if(!d) return ""; const [a, m, dia] = d.split('-'); return `${dia}/${m}/${a}`; }
 
