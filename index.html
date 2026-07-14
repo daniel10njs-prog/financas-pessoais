@@ -7,6 +7,7 @@
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <meta name="description" content="Controle suas receitas, despesas e pendências.">
 <meta name="theme-color" content="#0d1117">
 <meta name="mobile-web-app-capable" content="yes">
@@ -856,43 +857,49 @@ let filtro    = 'all';
 let tipoAtivo = 'despesa';
 
 const EMOJIS = [
-  'fa-solid fa-money-bill-1-wave', 'fa-solid fa-building-columns', 'fa-solid fa-credit-card', 'fa-solid fa-coins', 'fa-solid fa-wallet', 'fa-solid fa-chart-line', 'fa-solid fa-chart-pie', 'fa-solid fa-piggy-bank',
-  'fa-solid fa-house', 'fa-solid fa-building', 'fa-solid fa-shop', 'fa-solid fa-car', 'fa-solid fa-motorcycle', 'fa-solid fa-bus', 'fa-solid fa-plane', 'fa-solid fa-gas-pump',
-  'fa-solid fa-cart-shopping', 'fa-solid fa-bag-shopping', 'fa-solid fa-basket-shopping', 'fa-solid fa-gift', 'fa-solid fa-box', 'fa-solid fa-tag',
-  'fa-solid fa-pizza-slice', 'fa-solid fa-hamburger', 'fa-solid fa-mug-hot', 'fa-solid fa-beer-mug-empty', 'fa-solid fa-utensils', 'fa-solid fa-bowl-food',
-  'fa-solid fa-heart', 'fa-solid fa-medkit', 'fa-solid fa-stethoscope', 'fa-solid fa-pills', 'fa-solid fa-dumbbell', 'fa-solid fa-shoe-prints',
-  'fa-solid fa-gamepad', 'fa-solid fa-film', 'fa-solid fa-music', 'fa-solid fa-headphones', 'fa-solid fa-tv', 'fa-solid fa-mobile-screen-button',
-  'fa-solid fa-book', 'fa-solid fa-graduation-cap', 'fa-solid fa-laptop', 'fa-solid fa-desktop', 'fa-solid fa-keyboard', 'fa-solid fa-mouse',
-  'fa-solid fa-wrench', 'fa-solid fa-hammer', 'fa-solid fa-paintbrush', 'fa-solid fa-scissors', 'fa-solid fa-camera', 'fa-solid fa-microphone',
-  'fa-solid fa-bolt', 'fa-solid fa-fire', 'fa-solid fa-droplet', 'fa-solid fa-wind', 'fa-solid fa-snowflake', 'fa-solid fa-sun', 'fa-solid fa-moon',
-  'fa-solid fa-star', 'fa-solid fa-crown', 'fa-solid fa-trophy', 'fa-solid fa-medal', 'fa-solid fa-skull', 'fa-solid fa-ghost', 'fa-solid fa-user-astronaut',
-  'fa-solid fa-cat', 'fa-solid fa-dog', 'fa-solid fa-rabbit', 'fa-solid fa-dove', 'fa-solid fa-paw', 'fa-solid fa-leaf', 'fa-solid fa-tree', 'fa-solid fa-seedling'
+  'bi-cash-stack', 'bi-bank', 'bi-credit-card-2-front', 'bi-coin', 'bi-wallet2', 'bi-graph-up-arrow', 'bi-graph-down-arrow', 'bi-piggy-bank',
+  'bi-house-door', 'bi-buildings', 'bi-shop', 'bi-car-front', 'bi-bicycle', 'bi-bus-front', 'bi-airplane', 'bi-fuel-pump',
+  'bi-cart4', 'bi-bag-check', 'bi-basket', 'bi-gift', 'bi-box-seam', 'bi-tags',
+  'bi-cup-hot', 'bi-egg-fried', 'bi-cake2', 'bi-potted-plant', 'bi-utensils', 'bi-bowl-hot',
+  'bi-heart-pulse', 'bi-capsule', 'bi-hospital', 'bi-bandaid', 'bi-activity', 'bi-thermometer-half',
+  'bi-controller', 'bi-film', 'bi-music-note-beamed', 'bi-headphones', 'bi-tv', 'bi-smartphone',
+  'bi-book', 'bi-mortarboard', 'bi-laptop', 'bi-display', 'bi-keyboard', 'bi-mouse3',
+  'bi-wrench-adjustable', 'bi-hammer', 'bi-paint-bucket', 'bi-scissors', 'bi-camera', 'bi-mic',
+  'bi-lightning-charge', 'bi-fire', 'bi-droplet', 'bi-wind', 'bi-snow', 'bi-sun', 'bi-moon-stars',
+  'bi-star', 'bi-gem', 'bi-trophy', 'bi-award', 'bi-skull', 'bi-ghost', 'bi-rocket-takeoff',
+  'bi-cat', 'bi-dog', 'bi-bug', 'bi-tree', 'bi-flower1', 'bi-cloud-sun', 'bi-briefcase'
 ];
 
 const DEFAULT_CATS = {
-  receita: ['fa-solid fa-sack-dollar Salário', 'fa-solid fa-chart-line Investimentos', 'fa-solid fa-gift Presentes', 'fa-solid fa-rocket Freelance', 'fa-solid fa-wand-magic-sparkles Outros'],
-  despesa: ['fa-solid fa-house Moradia', 'fa-solid fa-utensils Alimentação', 'fa-solid fa-car Transporte', 'fa-solid fa-heart-pulse Saúde', 'fa-solid fa-gamepad Lazer', 'fa-solid fa-book-open Educação', 'fa-solid fa-mobile-screen Assinaturas', 'fa-solid fa-bag-shopping Compras', 'fa-solid fa-screwdriver-wrench Manutenção', 'fa-solid fa-credit-card Crédito', 'fa-solid fa-bolt-lightning Contas Fixas', 'fa-solid fa-ellipsis Outros']
+  receita: ['bi-cash-coin Salário', 'bi-graph-up Investimentos', 'bi-gift Presentes', 'bi-send-check Freelance', 'bi-stars Outros'],
+  despesa: ['bi-house-heart Moradia', 'bi-cup-straw Alimentação', 'bi-car-front Transporte', 'bi-heart-pulse Saúde', 'bi-controller Lazer', 'bi-book-half Educação', 'bi-phone-vibrate Assinaturas', 'bi-bag-heart Compras', 'bi-tools Manutenção', 'bi-credit-card-2-back Crédito', 'bi-lightning-charge-fill Contas Fixas', 'bi-three-dots Outros']
 };
-let selectedEmoji = 'fa-solid fa-money-bill-1-wave';
+let selectedEmoji = 'bi-cash-stack';
 
 const catEmoji    = c => {
-  if (!c) return 'fa-solid fa-circle';
+  if (!c) return 'bi-circle';
   const parts = c.trim().split(' ');
   if (parts.length > 2 && parts[0].startsWith('fa-')) return parts.slice(0,2).join(' ');
   if (parts.length > 1) return parts[0];
-  return 'fa-solid fa-circle';
+  return 'bi-circle';
 };
 
 const catNome     = c => {
   if (!c) return '';
   const parts = c.trim().split(' ');
-  if (parts[0].startsWith('fa-')) return parts.slice(2).join(' ');
+  if (parts[0].startsWith('bi-') || parts[0].startsWith('fa-') || parts[0].startsWith('ph-')) {
+     if (parts[0].startsWith('fa-')) return parts.slice(2).join(' ');
+     return parts.slice(1).join(' ');
+  }
   if (parts.length > 1) return parts.slice(1).join(' ');
   return c;
 };
 
 function renderIcon(iconName) {
   if (!iconName) return '';
+  if (iconName.startsWith('bi-')) {
+    return `<i class="bi ${iconName}" style="font-size:20px; width:24px; text-align:center; display:inline-block"></i>`;
+  }
   if (iconName.startsWith('fa-')) {
     return `<i class="${iconName}" style="font-size:20px; width:24px; text-align:center"></i>`;
   }
