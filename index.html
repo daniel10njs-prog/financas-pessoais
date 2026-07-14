@@ -34,17 +34,17 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
   width: 100%; max-width: 480px; 
   background: var(--card); border-top: 1px solid var(--border); 
   display: grid; grid-template-columns: repeat(6, 1fr); 
-  z-index: 1000; padding: 10px 4px calc(10px + var(--safe-area-bottom)); 
+  z-index: 1000; padding: 12px 4px calc(15px + var(--safe-area-bottom)); 
 }
 .bottom-nav button { 
   background: none; border: none; color: var(--muted); 
   display: flex; flex-direction: column; align-items: center; 
-  gap: 5px; font-size: 8px; font-weight: 600; cursor: pointer; 
+  gap: 6px; font-size: 10px; font-weight: 600; cursor: pointer; 
   transition: all 0.2s ease;
-  min-width: 0; padding: 4px 0;
+  min-width: 0; padding: 6px 0;
 }
-.bottom-nav button.active { color: var(--azul); transform: translateY(-2px); }
-.bottom-nav button i { font-size: 1.1rem; }
+.bottom-nav button.active { color: var(--azul); transform: translateY(-4px); }
+.bottom-nav button i { font-size: 1.3rem; }
 .content-section { display: none; padding: 14px 12px; }
 .content-section.active { display: block; }
 
