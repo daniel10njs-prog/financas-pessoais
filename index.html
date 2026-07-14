@@ -441,7 +441,8 @@ function renderCompras() {
     if(!db.compras) db.compras = [];
     db.compras.forEach(item => {
         total += item.val;
-        list.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon" style="background:var(--azul)"><span class="material-icons-round">shopping_basket</span></div><div class="item-text"><b>${item.desc}</b><span>Compra</span></div></div><div class="item-right"><b class="item-val" style="color:var(--azul)">R$ ${item.val.toFixed(2)}</b><button class="btn-del" onclick="deleteItem(${item.id}, 'compra', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
+        const sub = item.qtd && item.qtd > 1 ? `${item.qtd}x R$ ${item.val_unit.toFixed(2)}` : 'Compra';
+        list.innerHTML += `<div class="item" onclick="openModal('compra', ${item.id})"><div class="item-info"><div class="item-icon" style="background:var(--azul)"><span class="material-icons-round">shopping_basket</span></div><div class="item-text"><b>${item.desc}</b><span>${sub}</span></div></div><div class="item-right"><b class="item-val" style="color:var(--azul)">R$ ${item.val.toFixed(2)}</b><button class="btn-del" onclick="deleteItem(${item.id}, 'compra', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
     });
     document.getElementById('totalComprasValue').innerText = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
     
@@ -472,8 +473,33 @@ function addCalcToCompras() {
 
 function openModal(mode, id = null) {
   const select = document.getElementById('tipoSub'); select.innerHTML = '';
+  const modalEntry = document.getElementById('modalEntry');
+  
+  // Remove container de quantidade antigo se existir para evitar duplicatas
+  const oldQty = document.getElementById('qtyContainer');
+  if(oldQty) oldQty.remove();
+
   if(mode === 'compra') {
       select.innerHTML = '<option value="Compra">Compra</option>';
+      // Adiciona campo de quantidade para Compras
+      const valInput = document.getElementById('val');
+      const qtyHTML = `
+        <div id="qtyContainer" style="margin-top:10px;">
+            <label style="font-size:0.8rem; color:var(--muted); display:block; margin-bottom:4px;">Quantidade</label>
+            <input type="number" id="modalQty" value="1" min="1" step="1" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--text); padding:12px; border-radius:8px; font-size:1rem;">
+            <small style="color:var(--azul); margin-top:4px; display:block;" id="qtyPreview">Total: R$ 0,00</small>
+        </div>
+      `;
+      valInput.parentElement.insertAdjacentHTML('afterend', qtyHTML);
+      
+      // Listener para preview do total (Qtd x Valor Unitário)
+      const updatePreview = () => {
+          const q = parseFloat(document.getElementById('modalQty').value) || 1;
+          const v = parseFloat(document.getElementById('val').value) || 0;
+          document.getElementById('qtyPreview').innerText = `Total: R$ ${(q * v).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+      };
+      document.getElementById('val').addEventListener('input', updatePreview);
+      document.getElementById('modalQty').addEventListener('input', updatePreview);
   } else {
       const cats = db.categories[mode] || []; cats.forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
   }
@@ -490,7 +516,13 @@ function openModal(mode, id = null) {
     if(item) {
         document.getElementById('modalTitle').innerText = 'Editar'; 
         document.getElementById('desc').value = item.desc; 
-        document.getElementById('val').value = item.val; 
+        document.getElementById('val').value = item.val_unit || item.val; 
+        if(mode === 'compra' && document.getElementById('modalQty')) {
+            document.getElementById('modalQty').value = item.qtd || 1;
+            const q = item.qtd || 1;
+            const v = item.val_unit || item.val;
+            document.getElementById('qtyPreview').innerText = `Total: R$ ${(q * v).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+        }
         document.getElementById('tipoSub').value = item.sub || 'Compra';
         document.getElementById('entryDate').value = item.data ? item.data.split('T')[0] : new Date().toISOString().split('T')[0];
         document.getElementById('obs').value = item.obs || '';
@@ -515,8 +547,13 @@ function saveEntry() {
     else db.pendencias.push({ id: Date.now(), desc: d, val: v, sub: s, data: isoDate, obs: o });
   } else if(type === 'compra') {
     if(!db.compras) db.compras = [];
-    if(id) { const idx = db.compras.findIndex(x => x.id == id); if(idx!==-1) db.compras[idx] = { ...db.compras[idx], desc: d, val: v, sub: s, data: isoDate, obs: o }; }
-    else db.compras.push({ id: Date.now(), desc: d, val: v, sub: s, data: isoDate, obs: o });
+    const q = document.getElementById('modalQty') ? (parseInt(document.getElementById('modalQty').value) || 1) : 1;
+    const totalVal = v * q;
+    if(id) { 
+        const idx = db.compras.findIndex(x => x.id == id); 
+        if(idx!==-1) db.compras[idx] = { ...db.compras[idx], desc: d, val: totalVal, val_unit: v, qtd: q, sub: s, data: isoDate, obs: o }; 
+    }
+    else db.compras.push({ id: Date.now(), desc: d, val: totalVal, val_unit: v, qtd: q, sub: s, data: isoDate, obs: o });
     renderCompras();
   } else {
     if(id) { const idx = db.items.findIndex(x => x.id == id); if(idx!==-1) db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s, data: isoDate, obs: o }; }
