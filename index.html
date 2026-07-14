@@ -255,18 +255,18 @@ try {
 } catch(e) {
     db = { 
         items: [], pendencias: [], metas: [], previstos: [], 
-        icons: { 'Salário': 'payments', 'Pix Recebido': 'account_balance_wallet', 'Ajuste': 'settings', 'Alimentação': 'restaurant', 'Transporte': 'directions_car', 'Moradia': 'home', 'Lazer': 'celebration', 'Saúde': 'medical_services', 'Educação': 'school', 'Assinaturas': 'subscriptions', 'Outros': 'inventory_2' }, 
+        icons: { 'Salário': 'payments', 'Pix Recebido': 'account_balance_wallet', 'Ajuste': 'settings', 'Alimentação': 'restaurant', 'Transporte': 'directions_car', 'Moradia': 'home', 'Lazer': 'celebration', 'Saúde': 'medical_services', 'Educação': 'school', 'Assinaturas': 'subscriptions', 'Outros': 'inventory_2', 'Empréstimo': 'handshake', 'Cartão': 'credit_card' }, 
         categories: {
-            receita: ['Salário', 'Pix Recebido', 'Ajuste'],
-            despesa: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'],
-            pendencia: ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros']
+            receita: ['Salário', 'Pix Recebido', 'Ajuste', 'Empréstimo'],
+            despesa: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros', 'Cartão'],
+            pendencia: ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros', 'Cartão']
         },
         theme: 'dark' 
     };
 }
 
 const materialIcons = [
-    'payments','account_balance_wallet','savings','paid','trending_up','restaurant','shopping_cart','local_mall','home','bolt','water_drop','language','directions_car','local_gas_station','directions_bike','flight','celebration','sports_esports','movie','subscriptions','headset','school','edit','medical_services','medication','fitness_center','medical_information','baby_changing_station','toys','checkroom','shopping_bag','face','smartphone','computer','inventory_2','settings','build','cleaning_services','calendar_month','label','help_outline','work','security','pets','local_shipping'
+    'payments','account_balance_wallet','savings','paid','trending_up','restaurant','shopping_cart','local_mall','home','bolt','water_drop','language','directions_car','local_gas_station','directions_bike','flight','celebration','sports_esports','movie','subscriptions','headset','school','edit','medical_services','medication','fitness_center','medical_information','baby_changing_station','toys','checkroom','shopping_bag','face','smartphone','computer','inventory_2','settings','build','cleaning_services','calendar_month','label','help_outline','work','security','pets','local_shipping','handshake','credit_card','account_balance','request_quote','price_check'
 ];
 
 let simChecks = {}; let chartInstance = null; let currentCatTab = 'receita';
