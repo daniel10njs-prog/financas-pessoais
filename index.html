@@ -118,9 +118,10 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </style>
 </head>
 <body>
-<header>
-  <h1>💰 Finanças</h1>
-  <div class="menu-container">
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; position: relative;">
+  <h1 id="tab-title" style="font-size: 1.1rem; font-weight: 800; color: var(--azul); z-index: 2;">Lançamentos</h1>
+  <h1 style="position: absolute; width: 100%; left: 0; text-align: center; font-size: 0.9rem; font-weight: 400; opacity: 0.5; pointer-events: none; z-index: 1;">Finanças</h1>
+  <div class="menu-container" style="z-index: 2;">
     <button class="dots-btn" onclick="toggleMenu()"><i class="fas fa-ellipsis-v"></i></button>
     <div class="dropdown-menu" id="dropdownMenu">
       <div class="dropdown-item" onclick="toggleTheme()"><i class="fas fa-circle-half-stroke"></i> Tema Claro/Escuro</div>
@@ -435,6 +436,19 @@ function setTab(t) {
   document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('sec-'+t).classList.add('active'); document.getElementById('nav-'+t).classList.add('active');
+  
+  // Atualiza o título da aba no header
+  const titles = {
+    'lancamentos': 'Lançamentos',
+    'compras': 'Compras',
+    'pendencias': 'Pendências',
+    'comparativo': 'Mensal',
+    'simular': 'Simular',
+    'metas': 'Metas',
+    'analise': 'Análise'
+  };
+  document.getElementById('tab-title').innerText = titles[t] || 'Finanças';
+
   if(t==='analise') initChart();
   if(t==='compras') renderCompras();
   render();
