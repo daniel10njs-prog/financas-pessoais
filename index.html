@@ -3,7 +3,7 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
-    <title>Zapia Finance Elite v10</title>
+    <title>Zapia Finance Pro v11</title>
     <link href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css' rel='stylesheet'>
     <style>
@@ -12,148 +12,208 @@
             --muted: #64748b; --up: #10b981; --down: #f43f5e; --warn: #f59e0b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 120px; max-width: 500px; margin: 0 auto; min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 140px; max-width: 500px; margin: 0 auto; min-height: 100vh; overflow-x: hidden; }
         
-        header { padding: 40px 20px 25px; }
+        header { padding: 40px 20px 20px; }
         header h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(to right, #3b82f6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         header p { font-size: 0.8rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
 
-        .tab-content { display: none; padding: 0 20px; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .tab-content { display: none; padding: 0 20px; animation: slideUp 0.3s ease-out; }
         .tab-content.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Dashboard */
-        .dash-main { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 32px; padding: 25px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
-        .dash-row { display: flex; justify-content: space-between; margin-bottom: 25px; }
-        .dash-item { flex: 1; }
-        .dash-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 1px; display: block; margin-bottom: 8px; }
+        /* Shared Components */
+        .dash-main { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 32px; padding: 25px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.1); }
+        .dash-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 1px; display: block; margin-bottom: 5px; }
         .dash-val { font-size: 1.2rem; font-weight: 800; }
-        .dash-total { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; }
-        .dash-total .dash-val { font-size: 2.2rem; color: var(--text); letter-spacing: -1px; }
+        .dash-total { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; margin-top: 15px; }
+        
+        .card-inner { background: var(--card); padding: 20px; border-radius: 28px; border: 1px solid rgba(255,255,255,0.03); margin-bottom: 15px; }
+        .section-title { font-size: 0.8rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin: 25px 0 15px; }
 
         /* Form */
-        .form-box { background: var(--card); padding: 20px; border-radius: 28px; border: 1px solid rgba(255,255,255,0.03); margin-bottom: 20px; }
         .input-group { position: relative; margin-bottom: 12px; }
         .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 1.1rem; }
         input { width: 100%; padding: 16px 16px 16px 45px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 18px; color: white; font-size: 0.95rem; outline: none; }
-        .btn-main { width: 100%; padding: 18px; background: #3b82f6; border: none; border-radius: 18px; color: white; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.3s; }
-        .btn-main.warn { background: var(--warn); color: black; }
+        .btn-main { width: 100%; padding: 18px; border: none; border-radius: 18px; color: white; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; }
         .btn-main:active { transform: scale(0.97); }
 
-        /* List */
-        .section-title { font-size: 0.85rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin: 25px 0 15px; }
-        .item-card { background: var(--card); padding: 18px; border-radius: 24px; display: flex; align-items: center; gap: 15px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.03); }
-        .item-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.03); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        /* Item Row */
+        .item-card { background: var(--card); padding: 16px; border-radius: 20px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.02); }
+        .item-icon { width: 44px; height: 44px; background: rgba(255,255,255,0.03); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         .item-info { flex: 1; }
-        .item-title { font-size: 0.95rem; font-weight: 700; }
-        .item-val { text-align: right; font-weight: 800; font-size: 1rem; }
+        .item-title { font-size: 0.9rem; font-weight: 700; }
+        .item-val { font-weight: 800; font-size: 0.95rem; }
 
-        /* Nav */
-        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 460px; background: rgba(15, 20, 36, 0.9); backdrop-filter: blur(20px); border-radius: 28px; border: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around; padding: 10px; z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--muted); text-decoration: none; cursor: pointer; padding: 12px 8px; border-radius: 20px; flex: 1; }
+        /* Monthly View */
+        .month-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        
+        /* Metas */
+        .goal-bar { height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-top: 10px; }
+        .goal-fill { height: 100%; background: var(--primary); transition: 1s ease-out; }
+
+        /* Nav Bar - 7 icons */
+        .bottom-nav { position: fixed; bottom: 15px; left: 5%; width: 90%; max-width: 460px; background: rgba(15, 20, 36, 0.95); backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; padding: 8px 5px; z-index: 1000; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--muted); text-decoration: none; cursor: pointer; flex: 1; min-width: 0; padding: 10px 0; border-radius: 16px; }
         .nav-item.active { color: var(--primary); background: rgba(59, 130, 246, 0.1); }
-        .nav-item i { font-size: 1.3rem; }
-        .nav-item span { font-size: 0.5rem; font-weight: 800; text-transform: uppercase; }
+        .nav-item i { font-size: 1.2rem; }
+        .nav-item span { font-size: 0.45rem; font-weight: 800; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
+
+        /* Charts Simple */
+        .chart-simple { display: flex; align-items: flex-end; gap: 8px; height: 120px; padding-top: 20px; }
+        .chart-bar { flex: 1; background: var(--primary); border-radius: 4px 4px 0 0; position: relative; }
+        .chart-bar::after { content: attr(data-label); position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 0.6rem; color: var(--muted); font-weight: 700; }
     </style>
 </head>
 <body>
 
 <header>
     <h1 id='viewTitle'>Lançar</h1>
-    <p id='headerDate'>Finanças Elite</p>
+    <p id='headerStatus'>Online</p>
 </header>
 
-<!-- VIEW: LANÇAR (Somente Receita/Despesa) -->
+<!-- 1. LANÇAR -->
 <div id='view-lancar' class='tab-content active'>
     <div class='dash-main'>
-        <div class='dash-row'>
-            <div class='dash-item'>
-                <span class='dash-label'>Receitas</span>
-                <div class='dash-val' style='color: var(--up)' id='dashRec'>R$ 0,00</div>
-            </div>
-            <div class='dash-item' style='text-align: right'>
-                <span class='dash-label'>Despesas</span>
-                <div class='dash-val' style='color: var(--down)' id='dashDesp'>R$ 0,00</div>
-            </div>
+        <div style='display:flex; justify-content:space-between; margin-bottom:20px'>
+            <div><span class='dash-label'>Receitas</span><div class='dash-val' style='color:var(--up)' id='lRec'>R$ 0,00</div></div>
+            <div style='text-align:right'><span class='dash-label'>Despesas</span><div class='dash-val' style='color:var(--down)' id='lDesp'>R$ 0,00</div></div>
         </div>
-        <div class='dash-total'>
-            <span class='dash-label'>Saldo em Conta</span>
-            <div class='dash-val' id='dashSaldo'>R$ 0,00</div>
-        </div>
+        <div class='dash-total'><span class='dash-label'>Saldo Real</span><div class='dash-val' style='font-size:2rem' id='lSaldo'>R$ 0,00</div></div>
     </div>
-
-    <div class='form-box'>
-        <div class='input-group'><i class='lucide-text-cursor-input'></i><input type='text' id='fDesc' placeholder='Descrição do gasto/ganho'></div>
+    <div class='card-inner'>
+        <div class='input-group'><i class='lucide-tag'></i><input type='text' id='fDesc' placeholder='Descrição'></div>
         <div class='input-group'><i class='lucide-dollar-sign'></i><input type='number' id='fVal' placeholder='Valor R$'></div>
         <div style='display:flex; gap:10px'>
-            <button class='btn-main' style='background: var(--up); color: black' onclick='add("rec")'>+ RECEITA</button>
-            <button class='btn-main' style='background: var(--down)' onclick='add("desp")'>- DESPESA</button>
+            <button class='btn-main' style='background:var(--up); color:black' onclick='add("rec")'>+ Ganho</button>
+            <button class='btn-main' style='background:var(--down)' onclick='add("desp")'>- Gasto</button>
         </div>
     </div>
-
-    <h2 class='section-title'>Últimas Movimentações</h2>
-    <div id='recentList'></div>
+    <h2 class='section-title'>Movimentações</h2>
+    <div id='lList'></div>
 </div>
 
-<!-- VIEW: CONTAS (Lançar Pendências + Lista) -->
-<div id='view-contas' class='tab-content'>
-    <div class='dash-main' style='border-color: var(--warn)'>
-        <span class='dash-label' style='color:var(--warn)'>Total Pendente</span>
-        <div class='dash-val' style='font-size: 2.2rem; color: var(--warn)' id='pTotal'>R$ 0,00</div>
+<!-- 2. PENDÊNCIAS -->
+<div id='view-pendencias' class='tab-content'>
+    <div class='dash-main' style='border-color:var(--warn)'>
+        <span class='dash-label' style='color:var(--warn)'>Contas a Pagar</span>
+        <div class='dash-val' style='font-size:2rem; color:var(--warn)' id='pTotal'>R$ 0,00</div>
     </div>
-
-    <div class='form-box' style='border-color: var(--warn)'>
-        <div class='input-group'><i class='lucide-calendar-clock'></i><input type='text' id='pDesc' placeholder='Qual conta vai pagar depois?'></div>
+    <div class='card-inner' style='border-color:var(--warn)'>
+        <div class='input-group'><i class='lucide-calendar-clock'></i><input type='text' id='pDesc' placeholder='Nome da conta'></div>
         <div class='input-group'><i class='lucide-dollar-sign'></i><input type='number' id='pVal' placeholder='Valor R$'></div>
-        <button class='btn-main warn' onclick='addPend()'>AGENDAR PENDÊNCIA</button>
+        <button class='btn-main' style='background:var(--warn); color:black' onclick='addPend()'>Agendar para Depois</button>
     </div>
-
-    <h2 class='section-title'>Contas Pendentes</h2>
     <div id='pList'></div>
+</div>
+
+<!-- 3. GRÁFICOS -->
+<div id='view-graficos' class='tab-content'>
+    <div class='card-inner'>
+        <span class='dash-label'>Distribuição de Gastos</span>
+        <div class='chart-simple' id='cSimple'></div>
+    </div>
+</div>
+
+<!-- 4. IA -->
+<div id='view-ia' class='tab-content'>
+    <div class='card-inner' style='text-align:center; padding:40px 20px'>
+        <i class='lucide-sparkles' style='font-size:3rem; color:var(--primary); margin-bottom:20px'></i>
+        <h3 style='margin-bottom:10px'>Análise da Zapia</h3>
+        <p id='iaStatus' style='color:var(--muted); font-size:0.9rem; line-height:1.5'></p>
+    </div>
+</div>
+
+<!-- 5. ANUAL -->
+<div id='view-anual' class='tab-content'>
+    <div class='card-inner'>
+        <span class='dash-label'>Comparativo Mensal</span>
+        <div id='aList'></div>
+    </div>
+</div>
+
+<!-- 6. METAS -->
+<div id='view-metas' class='tab-content'>
+    <div class='card-inner'>
+        <span class='dash-label'>Nova Meta de Economia</span>
+        <div class='input-group'><i class='lucide-target'></i><input type='text' id='mNome' placeholder='Nome da Meta'></div>
+        <div class='input-group'><i class='lucide-dollar-sign'></i><input type='number' id='mAlvo' placeholder='Valor Objetivo'></div>
+        <button class='btn-main' style='background:var(--primary)' onclick='addGoal()'>Criar Meta</button>
+    </div>
+    <div id='mList'></div>
+</div>
+
+<!-- 7. SIMULAR -->
+<div id='view-simular' class='tab-content'>
+    <div class='card-inner' style='text-align:center'>
+        <i class='lucide-scale' style='font-size:3rem; color:var(--warn); margin-bottom:20px'></i>
+        <h3 style='margin-bottom:10px'>Simulação de Quitação</h3>
+        <div id='simRes' style='margin:20px 0'></div>
+        <p style='font-size:0.75rem; color:var(--muted)'>Esta simulação abate todas as suas pendências do saldo atual para mostrar o cenário real.</p>
+    </div>
 </div>
 
 <nav class='bottom-nav'>
     <div class='nav-item active' onclick='switchTab("lancar")'><i class='lucide-plus-circle'></i><span>Lançar</span></div>
-    <div class='nav-item' onclick='switchTab("contas")'><i class='lucide-clock'></i><span>Pendências</span></div>
-    <div class='nav-item'><i class='lucide-bar-chart-3'></i><span>Anual</span></div>
-    <div class='nav-item'><i class='lucide-target'></i><span>Metas</span></div>
-    <div class='nav-item'><i class='lucide-scale'></i><span>Simular</span></div>
+    <div class='nav-item' onclick='switchTab("pendencias")'><i class='lucide-clock'></i><span>Contas</span></div>
+    <div class='nav-item' onclick='switchTab("graficos")'><i class='lucide-pie-chart'></i><span>Gráficos</span></div>
+    <div class='nav-item' onclick='switchTab("ia")'><i class='lucide-sparkles'></i><span>IA</span></div>
+    <div class='nav-item' onclick='switchTab("anual")'><i class='lucide-calendar-days'></i><span>Anual</span></div>
+    <div class='nav-item' onclick='switchTab("metas")'><i class='lucide-target'></i><span>Metas</span></div>
+    <div class='nav-item' onclick='switchTab("simular")'><i class='lucide-scale'></i><span>Simular</span></div>
 </nav>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('zapia_v10')) || { items: [] };
+    let db = JSON.parse(localStorage.getItem('zapia_v11')) || { items: [], goals: [] };
 
     function switchTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + t).classList.add('active');
         event.currentTarget.classList.add('active');
-        document.getElementById('viewTitle').innerText = t === 'lancar' ? 'Lançar' : 'Pendências';
+        const titles = {lancar:'Lançar', pendencias:'Pendências', graficos:'Gráficos', ia:'Zapia IA', anual:'Anual', metas:'Metas', simular:'Simular'};
+        document.getElementById('viewTitle').innerText = titles[t];
         render();
     }
 
     function add(tipo) {
         const d = document.getElementById('fDesc').value, v = parseFloat(document.getElementById('fVal').value);
         if(!d || isNaN(v)) return;
-        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: tipo, date: '14/07' });
+        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: tipo, mes: 'Jul' });
         document.getElementById('fDesc').value = ''; document.getElementById('fVal').value = '';
-        persist();
+        save();
     }
 
     function addPend() {
         const d = document.getElementById('pDesc').value, v = parseFloat(document.getElementById('pVal').value);
         if(!d || isNaN(v)) return;
-        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: 'pend', date: '14/07' });
+        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: 'pend', mes: 'Jul' });
         document.getElementById('pDesc').value = ''; document.getElementById('pVal').value = '';
-        persist();
+        save();
     }
 
-    function persist() { localStorage.setItem('zapia_v10', JSON.stringify(db)); render(); }
+    function addGoal() {
+        const n = document.getElementById('mNome').value, a = parseFloat(document.getElementById('mAlvo').value);
+        if(!n || isNaN(a)) return;
+        db.goals.push({ id: Date.now(), nome: n, alvo: a });
+        document.getElementById('mNome').value = ''; document.getElementById('mAlvo').value = '';
+        save();
+    }
+
+    function pay(id) {
+        const i = db.items.find(x => x.id === id);
+        if(i) i.tipo = 'desp';
+        save();
+    }
+
+    function save() { localStorage.setItem('zapia_v11', JSON.stringify(db)); render(); }
 
     function render() {
         let rec = 0, desp = 0, pnd = 0;
-        const rList = document.getElementById('recentList'); rList.innerHTML = '';
+        const lList = document.getElementById('lList'); lList.innerHTML = '';
         const pList = document.getElementById('pList'); pList.innerHTML = '';
+        const aList = document.getElementById('aList'); aList.innerHTML = '';
+        const mList = document.getElementById('mList'); mList.innerHTML = '';
 
         db.items.forEach(i => {
             if(i.tipo === 'rec') rec += i.val;
@@ -162,21 +222,50 @@
 
             const color = i.tipo === 'rec' ? 'var(--up)' : (i.tipo === 'pend' ? 'var(--warn)' : 'var(--down)');
             const icon = i.tipo === 'rec' ? 'lucide-trending-up' : (i.tipo === 'pend' ? 'lucide-clock' : 'lucide-trending-down');
-            
             const html = `<div class='item-card'>
                 <div class='item-icon' style='color:${color}'><i class='${icon}'></i></div>
-                <div class='item-info'><div class='item-title'>${i.desc}</div><div style='font-size:0.7rem;color:var(--muted)'>${i.date}</div></div>
-                <div class='item-val' style='color:${color}'>R$ ${i.val.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
+                <div class='item-info'><div class='item-title'>${i.desc}</div><div style='font-size:0.6rem; color:var(--muted)'>JULHO</div></div>
+                <div class='item-val' style='color:${color}'>R$ ${i.val.toLocaleString()} ${i.tipo==='pend'?`<br><button onclick='pay(${i.id})' style='font-size:0.5rem; background:var(--up); border:none; padding:2px 5px; border-radius:4px; cursor:pointer'>PAGAR</button>`:''}</div>
             </div>`;
 
             if(i.tipo === 'pend') pList.innerHTML += html;
-            else rList.innerHTML += html;
+            else lList.innerHTML += html;
         });
 
-        document.getElementById('dashRec').innerText = 'R$ ' + rec.toLocaleString('pt-BR');
-        document.getElementById('dashDesp').innerText = 'R$ ' + desp.toLocaleString('pt-BR');
-        document.getElementById('dashSaldo').innerText = 'R$ ' + (rec - desp).toLocaleString('pt-BR');
-        document.getElementById('pTotal').innerText = 'R$ ' + pnd.toLocaleString('pt-BR');
+        const bal = rec - desp;
+        document.getElementById('lRec').innerText = 'R$ ' + rec.toLocaleString();
+        document.getElementById('lDesp').innerText = 'R$ ' + desp.toLocaleString();
+        document.getElementById('lSaldo').innerText = 'R$ ' + bal.toLocaleString();
+        document.getElementById('pTotal').innerText = 'R$ ' + pnd.toLocaleString();
+
+        // Anual
+        ['Jan','Fev','Mar','Abr','Mai','Jun','Jul'].forEach(m => {
+            let mR = 0, mD = 0;
+            db.items.filter(x => x.mes === m).forEach(x => { if(x.tipo==='rec') mR+=x.val; else if(x.tipo==='desp') mD+=x.val; });
+            aList.innerHTML += `<div class='month-row'><span>${m}</span><div style='text-align:right'><div style='color:var(--up); font-size:0.7rem'>+R$ ${mR}</div><div style='color:var(--down); font-size:0.7rem'>-R$ ${mD}</div></div></div>`;
+        });
+
+        // Metas
+        db.goals.forEach(g => {
+            const perc = Math.min((bal > 0 ? (bal/g.alvo)*100 : 0), 100);
+            mList.innerHTML += `<div class='card-inner'><div style='display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700'><span>${g.nome}</span><span>${perc.toFixed(0)}%</span></div><div class='goal-bar'><div class='goal-fill' style='width:${perc}%'></div></div><div style='font-size:0.6rem; color:var(--muted); margin-top:5px'>Saldo: R$ ${bal} / Alvo: R$ ${g.alvo}</div></div>`;
+        });
+
+        // Simular
+        document.getElementById('simRes').innerHTML = `<div style='font-size:0.8rem; color:var(--muted)'>Saldo Final após quitação:</div><div style='font-size:2.2rem; font-weight:800; color:${(bal-pnd)<0?'var(--down)':'var(--up)'}'>R$ ${(bal-pnd).toLocaleString()}</div>`;
+
+        // IA
+        document.getElementById('iaStatus').innerText = bal > pnd ? `Daniel, sua saúde financeira está estável. Seu saldo cobre todas as pendências e ainda sobram R$ ${bal-pnd}.` : `Atenção Daniel, suas pendências (R$ ${pnd}) superam seu saldo atual. Considere priorizar pagamentos essenciais.`;
+
+        // Simple Chart
+        const chart = document.getElementById('cSimple');
+        if(chart) {
+            chart.innerHTML = '';
+            const max = Math.max(rec, desp, pnd, 10);
+            [{l:'Ganhos', v:rec, c:'var(--up)'}, {l:'Gastos', v:desp, c:'var(--down)'}, {l:'Contas', v:pnd, c:'var(--warn)'}].forEach(b => {
+                chart.innerHTML += `<div class='chart-bar' data-label='${b.l}' style='height:${(b.v/max)*100}%; background:${b.c}'></div>`;
+            });
+        }
     }
     render();
 </script>
