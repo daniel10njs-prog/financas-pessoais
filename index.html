@@ -3,155 +3,130 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
-    <title>Finanças Elite v21</title>
-    <link href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap' rel='stylesheet'>
+    <title>Finanças Premium v22</title>
+    <link href='https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css' rel='stylesheet'>
     <style>
         :root {
             --bg: #000000; 
-            --card: #111111;
+            --card-dark: #121214;
+            --card-header: #1a1a1e;
+            --text-primary: #ffffff;
+            --text-muted: #88888b;
+            --up: #4ade80;
+            --down: #f87171;
             --primary: #ffffff;
-            --accent: #3d5afe;
-            --text: #ffffff;
-            --muted: #888888;
-            --up: #00e676;
-            --down: #ff1744;
-            --warn: #ffea00;
-            --border: rgba(255, 255, 255, 0.1);
+            --accent-red: #ff3b30;
+            --border: rgba(255, 255, 255, 0.08);
+            --nav-bg: #0a0a0c;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
             background: var(--bg); 
-            color: var(--text); 
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            padding-bottom: 100px;
+            color: var(--text-primary); 
+            font-family: 'Outfit', sans-serif;
+            padding-bottom: 120px;
             min-height: 100vh;
-            line-height: 1.5;
         }
 
-        /* HEADER PREMIUM */
+        /* HEADER & MONTH PICKER */
         header { 
-            padding: 20px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--border);
-            position: sticky; top: 0; z-index: 1000;
+            padding: 24px 20px; 
+            display: flex; justify-content: space-between; align-items: flex-start; 
         }
-        header h1 { 
-            font-size: 1.2rem; font-weight: 800; 
-            letter-spacing: -0.02em;
+        .title-area h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+        .title-area p { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+        
+        .header-controls { display: flex; gap: 8px; }
+        .control-btn { 
+            background: var(--card-header); border: 1px solid var(--border); 
+            color: #fff; width: 42px; height: 38px; display: flex; align-items: center; justify-content: center;
+            border-radius: 10px; cursor: pointer;
         }
-        .menu-btn { padding: 8px; cursor: pointer; color: var(--primary); }
 
-        /* MENU EXECUTIVO */
+        /* RESUMO CARD (Estilo Imagem) */
+        .summary-card {
+            background: var(--card-dark);
+            margin: 0 20px 32px;
+            padding: 24px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+        .summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .summary-row span { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+        .summary-row b { font-family: 'JetBrains Mono', monospace; font-size: 1rem; }
+        .summary-divider { border-top: 1px dotted var(--border); margin: 16px 0; }
+        .summary-total { display: flex; justify-content: space-between; align-items: center; }
+        .summary-total span { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .summary-total b { font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; color: var(--up); }
+
+        /* LISTA DE PENDÊNCIAS (DESIGN SOLICITADO) */
+        .view-section { padding: 0 20px; }
+        .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-title { font-size: 1.1rem; font-weight: 700; }
+        .section-subtitle { font-size: 0.7rem; color: var(--text-muted); font-style: italic; }
+
+        .pending-card {
+            background: var(--card-dark);
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        /* Detalhe Vermelho na Lateral Esquerda */
+        .pending-card::before {
+            content: ''; position: absolute; left: 0; top: 15%; height: 70%; width: 4px; 
+            background: var(--accent-red); border-radius: 0 4px 4px 0;
+        }
+
+        .pending-left { display: flex; align-items: center; gap: 16px; }
+        .custom-checkbox {
+            width: 24px; height: 24px; border-radius: 6px;
+            background: #2563eb; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 12px; cursor: pointer;
+        }
+        
+        .pending-info .p-name { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 4px; display: block; }
+        .pending-info .p-meta { font-size: 0.75rem; color: var(--text-muted); }
+        .pending-value { font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--down); }
+
+        /* NAVEGAÇÃO (DESIGN IMAGEM) */
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 85px;
+            background: var(--nav-bg); border-top: 1px solid var(--border);
+            display: flex; justify-content: space-around; align-items: center;
+            padding-bottom: 10px; z-index: 2000;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); cursor: pointer; }
+        .nav-item.active { color: #2563eb; }
+        .nav-item i { font-size: 1.4rem; }
+        .nav-item span { font-size: 0.6rem; text-transform: uppercase; font-weight: 700; }
+
+        /* MODAIS E FORMS */
+        #menuOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2500; display: none; }
         #mainMenu { 
-            position: fixed; top: 75px; right: 20px; background: #111; 
-            border: 1px solid var(--border); border-radius: 16px; width: 260px; 
-            display: none; flex-direction: column; z-index: 3000; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6); overflow: hidden;
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #1a1a1e; 
+            border-radius: 24px 24px 0 0; padding: 24px; z-index: 3000; display: none; 
+            animation: slideUp 0.3s ease;
         }
-        .menu-item { 
-            padding: 16px 20px; display: flex; align-items: center; gap: 14px; 
-            font-size: 0.9rem; font-weight: 600; color: #fff; cursor: pointer; 
-            border-bottom: 1px solid var(--border);
-        }
-        .menu-item i { font-size: 1.2rem; color: var(--muted); }
-        .menu-item:active { background: #222; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .menu-option { padding: 16px; font-weight: 600; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
 
-        .tab-content { display: none; padding: 24px 20px; animation: fadeIn 0.3s ease; }
+        .tab-content { display: none; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .tab-title { 
-            display: flex; align-items: center; gap: 10px; font-size: 0.8rem; font-weight: 700; 
-            color: var(--muted); text-transform: uppercase; margin-bottom: 24px; letter-spacing: 0.05em;
-        }
-        .tab-title i { color: var(--accent); }
-
-        /* SUMMARY EXECUTIVO */
-        .summary-label { font-size: 0.85rem; color: var(--muted); font-weight: 500; margin-bottom: 4px; display: block; }
-        .summary-val { 
-            font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; 
-            margin-bottom: 32px;
-        }
         
-        .summary-grid { 
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px; 
+        .floating-add { 
+            position: fixed; bottom: 105px; right: 20px; width: 56px; height: 56px; 
+            background: #2563eb; border-radius: 18px; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 24px; box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4); z-index: 1000;
         }
-        .grid-item { 
-            background: var(--card); border: 1px solid var(--border); 
-            border-radius: 16px; padding: 20px;
-        }
-        .grid-label { font-size: 0.7rem; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .grid-val { font-size: 1.2rem; font-weight: 700; }
-
-        /* FORMULÁRIO LIMPO */
-        .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-        .input-field { 
-            background: var(--card); border: 1px solid var(--border); 
-            border-radius: 14px; padding: 14px 18px; transition: border 0.2s;
-        }
-        .input-field:focus-within { border-color: var(--accent); }
-        .input-field label { 
-            display: block; font-size: 0.7rem; color: var(--muted); font-weight: 700; 
-            text-transform: uppercase; margin-bottom: 4px;
-        }
-        input, select { 
-            background: transparent; border: none; color: white; width: 100%; outline: none; 
-            font-size: 1rem; font-weight: 600; font-family: inherit;
-        }
-
-        /* BOTÕES ELEGANTES */
-        .btn-row { display: flex; gap: 12px; margin-top: 10px; }
-        .btn-exec { 
-            flex: 1; padding: 18px; border-radius: 14px; border: none; font-weight: 700; 
-            cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
-        }
-        .btn-primary { background: var(--primary); color: #000; }
-        .btn-secondary { background: var(--card); color: #fff; border: 1px solid var(--border); }
-
-        /* LISTA DE TRANSAÇÕES */
-        .section-header { font-size: 0.9rem; font-weight: 700; margin: 40px 0 20px; color: var(--primary); }
-        .transaction-card { 
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 20px; padding: 20px; margin-bottom: 16px;
-        }
-        .trans-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
-        .trans-name { font-size: 1rem; font-weight: 700; color: #fff; }
-        .trans-info { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
-        .trans-amount { font-size: 1.1rem; font-weight: 800; }
-        
-        .trans-actions { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 16px; }
-        .btn-action { 
-            flex: 1; padding: 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border); color: #fff; font-size: 0.75rem; font-weight: 700;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-
-        /* NAVEGAÇÃO ANDROID */
-        .android-nav { 
-            position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border); display: flex; height: 80px; 
-            z-index: 2000; padding-bottom: env(safe-area-inset-bottom);
-        }
-        .nav-link { 
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            color: var(--muted); transition: color 0.2s;
-        }
-        .nav-link.active { color: var(--primary); }
-        .nav-link span { font-size: 0.65rem; font-weight: 600; margin-top: 6px; }
-
-        #editModeBadge { 
-            background: var(--accent); color: white; padding: 12px; font-size: 0.75rem; 
-            font-weight: 800; text-align: center; border-radius: 12px;
-            display: none; margin-bottom: 24px; text-transform: uppercase;
-        }
-        
-        #menuOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2500; display: none; }
     </style>
 </head>
 <body>
@@ -159,213 +134,148 @@
 <div id='menuOverlay' onclick='toggleMenu()'></div>
 
 <header>
-    <h1>Finanças</h1>
-    <div class='menu-btn' onclick='toggleMenu()'>
-        <i class='lucide-more-vertical'></i>
+    <div class='title-area'>
+        <h1>Finanças</h1>
+        <p id='displayDate'>Julho de 2026</p>
+    </div>
+    <div class='header-controls'>
+        <div class='control-btn'><i class='lucide-chevron-left'></i></div>
+        <div class='control-btn'><i class='lucide-chevron-right'></i></div>
+        <div class='control-btn' onclick='toggleMenu()'><i class='lucide-more-vertical'></i></div>
     </div>
 </header>
 
-<div id='mainMenu'>
-    <div class='menu-item' onclick='exportToClipboard()'><i class='lucide-copy'></i> Copiar Backup (Drive)</div>
-    <div class='menu-item' onclick='importFromClipboard()'><i class='lucide-file-input'></i> Importar do Drive</div>
-    <div class='menu-item' onclick='exportar()'><i class='lucide-download'></i> Baixar Arquivo JSON</div>
-    <div class='menu-item' onclick='resetAll()' style='color:var(--down)'><i class='lucide-trash-2' style='color:var(--down)'></i> Apagar Todos os Dados</div>
+<!-- RESUMO PRINCIPAL -->
+<div class='summary-card'>
+    <div class='summary-row'>
+        <span>Total Entradas:</span>
+        <b id='resRec' style='color:var(--up)'>R$ 0,00</b>
+    </div>
+    <div class='summary-row'>
+        <span>Total Pendências:</span>
+        <b id='resPend' style='color:var(--down)'>R$ 0,00</b>
+    </div>
+    <div class='summary-divider'></div>
+    <div class='summary-total'>
+        <span>Saldo Livre:</span>
+        <b id='resSaldo'>R$ 0,00</b>
+    </div>
 </div>
 
-<!-- INÍCIO -->
+<!-- CONTEÚDO PRINCIPAL (PENDÊNCIAS) -->
 <div id='view-lancar' class='tab-content active'>
-    <div class='tab-title'><i class='lucide-layout-grid'></i> Visão Geral</div>
-    <div id='editModeBadge'>Modo de Edição Ativo</div>
-    <span class='summary-label'>Saldo Disponível</span>
-    <div class='summary-val' id='lSaldo'>R$ 0,00</div>
-    
-    <div class='summary-grid'>
-        <div class='grid-item'><span class='grid-label'>Receitas</span><div id='lRec' style='color:var(--up)' class='grid-val'>R$ 0,00</div></div>
-        <div class='grid-item'><span class='grid-label'>Despesas</span><div id='lDesp' style='color:var(--down)' class='grid-val'>R$ 0,00</div></div>
-    </div>
-    
-    <div class='input-group'>
-        <div class='input-field'><label>Descrição</label><input type='text' id='fDesc' placeholder='Ex: Aluguel'></div>
-        <div style='display:flex; gap:12px'>
-            <div class='input-field' style='flex:1'><label>Valor</label><input type='number' id='fVal' placeholder='0,00'></div>
-            <div class='input-field' style='flex:1'><label>Categoria</label>
-                <select id='fCat'>
-                    <option value='Corporativo'>Corporativo</option>
-                    <option value='Estilo de Vida'>Estilo de Vida</option>
-                    <option value='Saúde'>Saúde</option>
-                    <option value='Custo Fixo'>Custo Fixo</option>
-                    <option value='Investimento'>Investimento</option>
-                </select>
-            </div>
+    <div class='view-section'>
+        <div class='section-header-row'>
+            <h2 class='section-title'>Suas Pendências</h2>
+            <span class='section-subtitle'>Desmarque o que não pretende pagar agora</span>
+        </div>
+        <div id='pendingList'>
+            <!-- Cards gerados dinamicamente -->
         </div>
     </div>
-    
-    <div id='formBtns' class='btn-row'>
-        <button class='btn-exec btn-secondary' onclick='add("desp")'>Lançar Gasto</button>
-        <button class='btn-exec btn-primary' onclick='add("rec")'>Lançar Ganho</button>
-    </div>
-    <div id='editBtns' style='display:none' class='btn-row'>
-        <button class='btn-exec btn-secondary' onclick='cancelEdit()'>Cancelar</button>
-        <button class='btn-exec btn-primary' onclick='saveUpdate()'>Salvar Alteração</button>
-    </div>
-    
-    <h2 class='section-header'>Últimos Lançamentos</h2>
-    <div id='lList'></div>
 </div>
 
-<!-- CONTAS -->
-<div id='view-contas' class='tab-content'>
-    <div class='tab-title'><i class='lucide-layers'></i> Contas a Pagar</div>
-    <span class='summary-label'>Total Pendente</span>
-    <div class='summary-val' style='color:var(--warn)' id='pTotal'>R$ 0,00</div>
-    
-    <div class='input-group'>
-        <div class='input-field'><label>Nome da Conta</label><input type='text' id='pDesc' placeholder='Ex: Internet'></div>
-        <div class='input-field'><label>Valor</label><input type='number' id='pVal' placeholder='0,00'></div>
-    </div>
-    <button id='btnNewP' class='btn-exec btn-primary' style='width:100%' onclick='addPend()'>Agendar Pagamento</button>
-    
-    <h2 class='section-header'>Obrigações Agendadas</h2>
-    <div id='pList'></div>
-</div>
+<!-- OUTRAS ABAS (SKELETON) -->
+<div id='view-graficos' class='tab-content'><div class='view-section'><h2>Gráficos</h2></div></div>
+<div id='view-ia' class='tab-content'><div class='view-section'><h2>Zapia IA</h2></div></div>
+<div id='view-metas' class='tab-content'><div class='view-section'><h2>Metas</h2></div></div>
 
-<!-- STATUS -->
-<div id='view-analise' class='tab-content'>
-    <div class='tab-title'><i class='lucide-pie-chart'></i> Status Financeiro</div>
-    <div id='cList'></div>
-</div>
-
-<!-- IA -->
-<div id='view-ia' class='tab-content'>
-    <div class='tab-title'><i class='lucide-zap'></i> Zapia Intelligence</div>
-    <div style='background:var(--card); border:1px solid var(--border); padding:24px; border-radius:20px; color:var(--muted); font-size:0.9rem'>
-        Aguardando análise de dados para gerar insights executivos...
-    </div>
-</div>
-
-<nav class='android-nav'>
-    <div class='nav-link active' onclick='switchTab("lancar")'><i class='lucide-layout-grid'></i><span>Início</span></div>
-    <div class='nav-link' onclick='switchTab("contas")'><i class='lucide-layers'></i><span>Contas</span></div>
-    <div class='nav-link' onclick='switchTab("analise")'><i class='lucide-pie-chart'></i><span>Status</span></div>
-    <div class='nav-link' onclick='switchTab("ia")'><i class='lucide-zap'></i><span>Zapia IA</span></div>
+<!-- MENU INFERIOR (ESTILO IMAGEM) -->
+<nav class='nav-bar'>
+    <div class='nav-item active' onclick='switchTab("lancar")'><i class='lucide-banknote'></i><span>Lançar</span></div>
+    <div class='nav-item' onclick='switchTab("contas")'><i class='lucide-hourglass'></i><span>Contas</span></div>
+    <div class='nav-item' onclick='switchTab("graficos")'><i class='lucide-bar-chart-2'></i><span>Gráficos</span></div>
+    <div class='nav-item' onclick='switchTab("ia")'><i class='lucide-sparkles'></i><span>IA</span></div>
+    <div class='nav-item' onclick='switchTab("metas")'><i class='lucide-target'></i><span>Metas</span></div>
 </nav>
 
+<div class='floating-add' onclick='openAddForm()'>+</div>
+
+<div id='mainMenu'>
+    <div class='menu-option' onclick='exportToClipboard()'><i class='lucide-copy'></i> Copiar Backup</div>
+    <div class='menu-option' onclick='importFromClipboard()'><i class='lucide-upload'></i> Importar Backup</div>
+    <div class='menu-option' onclick='resetAll()' style='color:var(--down)'><i class='lucide-trash-2'></i> Resetar Sistema</div>
+</div>
+
 <script>
-    let db = JSON.parse(localStorage.getItem('financas_elite_v21')) || { items: [], goals: [] };
-    let editingId = null;
+    // Inicialização do Banco de Dados
+    let db = JSON.parse(localStorage.getItem('financas_premium_v22')) || {
+        items: [
+            { id: 1, desc: 'Moto - 1/48', val: 888.17, tipo: 'pend', cat: 'bike Moto', date: '2026-07-20' },
+            { id: 2, desc: 'Aluguel', val: 250.00, tipo: 'pend', cat: 'home Moradia', date: '2026-07-20' },
+            { id: 3, desc: 'Salgados - Bebeba', val: 54.00, tipo: 'pend', cat: 'utensils-crossed Alimentação', date: '2026-07-20' },
+            { id: 4, desc: 'Lanches - Guiguia', val: 40.00, tipo: 'pend', cat: 'utensils-crossed Alimentação', date: '2026-07-20' },
+            { id: 5, desc: 'Internet', val: 60.00, tipo: 'pend', cat: 'home Moradia', date: '2026-07-20' }
+        ]
+    };
 
     function toggleMenu() {
         const m = document.getElementById('mainMenu'), o = document.getElementById('menuOverlay');
-        const show = m.style.display !== 'flex';
-        m.style.display = show ? 'flex' : 'none';
+        const show = m.style.display !== 'block';
+        m.style.display = show ? 'block' : 'none';
         o.style.display = show ? 'block' : 'none';
-    }
-
-    function exportToClipboard() {
-        const data = JSON.stringify(db);
-        navigator.clipboard.writeText(data).then(() => {
-            alert('Backup copiado! Agora você pode colar no seu Drive.');
-            toggleMenu();
-        });
-    }
-
-    function importFromClipboard() {
-        const data = prompt('Cole os dados do seu backup aqui:');
-        if(data) {
-            try {
-                const parsed = JSON.parse(data);
-                if(parsed.items) { db = parsed; save(); alert('Dados restaurados com sucesso.'); }
-            } catch(e) { alert('Erro: Dados inválidos.'); }
-        }
-        toggleMenu();
     }
 
     function switchTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-        document.getElementById('view-' + t).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const target = document.getElementById('view-' + t);
+        if(target) target.classList.add('active');
         event.currentTarget.classList.add('active');
-        render();
     }
 
-    function add(tipo) {
-        const d = document.getElementById('fDesc').value, v = parseFloat(document.getElementById('fVal').value), c = document.getElementById('fCat').value;
-        if(!d || isNaN(v)) return;
-        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: tipo, cat: c, date: new Date().toISOString() });
-        save();
-    }
-
-    function addPend() {
-        const d = document.getElementById('pDesc').value, v = parseFloat(document.getElementById('pVal').value);
-        if(!d || isNaN(v)) return;
-        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: 'pend', cat: 'Obrigação', date: new Date().toISOString() });
-        save();
-    }
-
-    function editItem(id) {
-        editingId = id; const item = db.items.find(x => x.id === id);
-        if(!item) return;
-        if(item.tipo === 'pend') {
-            switchTabNoClear('contas'); document.getElementById('pDesc').value = item.desc; document.getElementById('pVal').value = item.val;
-        } else {
-            switchTabNoClear('lancar'); document.getElementById('fDesc').value = item.desc; document.getElementById('fVal').value = item.val; document.getElementById('fCat').value = item.cat;
-            document.getElementById('formBtns').style.display = 'none'; document.getElementById('editBtns').style.display = 'flex'; document.getElementById('editModeBadge').style.display = 'block';
+    function openAddForm() {
+        const desc = prompt("Descrição:");
+        const valor = parseFloat(prompt("Valor:"));
+        const tipo = prompt("Tipo (rec/desp/pend):");
+        if(desc && !isNaN(valor)) {
+            db.items.unshift({ id: Date.now(), desc, val: valor, tipo: tipo || 'pend', cat: 'Geral', date: new Date().toISOString() });
+            save();
         }
-        window.scrollTo({top:0, behavior:'smooth'});
     }
 
-    function switchTabNoClear(t) {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('view-' + t).classList.add('active');
-    }
-
-    function saveUpdate() {
-        const item = db.items.find(x => x.id === editingId);
-        if(item) {
-            if(item.tipo === 'pend') { item.desc = document.getElementById('pDesc').value; item.val = parseFloat(document.getElementById('pVal').value); }
-            else { item.desc = document.getElementById('fDesc').value; item.val = parseFloat(document.getElementById('fVal').value); item.cat = document.getElementById('fCat').value; }
-        }
-        cancelEdit(); save();
-    }
-
-    function cancelEdit() {
-        editingId = null; document.getElementById('fDesc').value = ''; document.getElementById('fVal').value = '';
-        document.getElementById('formBtns').style.display = 'flex'; document.getElementById('editBtns').style.display = 'none'; document.getElementById('editModeBadge').style.display = 'none';
-    }
-
-    function deleteItem(id) { if(confirm('Deseja excluir este registro?')) { db.items = db.items.filter(x => x.id !== id); save(); } }
-    function save() { localStorage.setItem('financas_elite_v21', JSON.stringify(db)); render(); }
-    function exportar() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); const a = document.createElement('a'); a.href = dataStr; a.download = "backup_financas.json"; a.click(); }
-    function resetAll() { if(confirm('Apagar todos os seus dados permanentemente?')) { db = {items:[], goals:[]}; save(); toggleMenu(); } }
+    function save() { localStorage.setItem('financas_premium_v22', JSON.stringify(db)); render(); }
 
     function render() {
-        let rec = 0, desp = 0, pnd = 0;
-        const lList = document.getElementById('lList'); lList.innerHTML = '';
-        const pList = document.getElementById('pList'); pList.innerHTML = '';
+        let rec = 0, pnd = 0, desp = 0;
+        const pList = document.getElementById('pendingList');
+        pList.innerHTML = '';
+
         db.items.forEach(i => {
-            if(i.tipo === 'rec') rec += i.val; else if(i.tipo === 'desp') desp += i.val; else if(i.tipo === 'pend') pnd += i.val;
-            const color = i.tipo === 'rec' ? 'var(--up)' : (i.tipo === 'pend' ? 'var(--warn)' : 'var(--down)');
-            const html = `
-                <div class='transaction-card'>
-                    <div class='trans-header'>
-                        <div>
-                            <div class='trans-name'>${i.desc}</div>
-                            <div class='trans-info'>${i.cat} • ${new Date(i.date).toLocaleDateString('pt-BR')}</div>
+            if(i.tipo === 'rec') rec += i.val;
+            else if(i.tipo === 'desp') desp += i.val;
+            else if(i.tipo === 'pend') {
+                pnd += i.val;
+                // Renderizar card estilo imagem
+                const html = `
+                    <div class='pending-card'>
+                        <div class='pending-left'>
+                            <div class='custom-checkbox'><i class='lucide-check'></i></div>
+                            <div class='pending-info'>
+                                <span class='p-name'>${i.desc}</span>
+                                <span class='p-meta'>Venc: ${new Date(i.date).toLocaleDateString('pt-BR')} | ${i.cat}</span>
+                            </div>
                         </div>
-                        <div class='trans-amount' style='color:${color}'>R$ ${i.val.toLocaleString('pt-BR', {minimumFractionDigits:2})}</div>
+                        <div class='pending-value'>R$ ${i.val.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
                     </div>
-                    <div class='trans-actions'>
-                        <button class='btn-action' onclick='editItem(${i.id})'><i class='lucide-edit-2'></i> Editar</button>
-                        <button class='btn-action' style='color:var(--down)' onclick='deleteItem(${i.id})'><i class='lucide-trash-2'></i> Excluir</button>
-                    </div>
-                </div>`;
-            if(i.tipo === 'pend') pList.innerHTML += html; else lList.innerHTML += html;
+                `;
+                pList.innerHTML += html;
+            }
         });
-        document.getElementById('lSaldo').innerText = 'R$ ' + (rec - desp).toLocaleString('pt-BR', {minimumFractionDigits:2});
-        document.getElementById('lRec').innerText = 'R$ ' + rec.toLocaleString('pt-BR', {minimumFractionDigits:2});
-        document.getElementById('lDesp').innerText = 'R$ ' + desp.toLocaleString('pt-BR', {minimumFractionDigits:2});
-        document.getElementById('pTotal').innerText = 'R$ ' + pnd.toLocaleString('pt-BR', {minimumFractionDigits:2});
+
+        document.getElementById('resRec').innerText = 'R$ ' + rec.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+        document.getElementById('resPend').innerText = 'R$ ' + pnd.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+        document.getElementById('resSaldo').innerText = 'R$ ' + (rec - pnd - desp).toLocaleString('pt-BR', {minimumFractionDigits: 2});
     }
+
+    function exportToClipboard() { navigator.clipboard.writeText(JSON.stringify(db)); alert('Copiado!'); toggleMenu(); }
+    function importFromClipboard() { 
+        const d = prompt('Cole os dados:'); 
+        if(d) { db = JSON.parse(d); save(); } 
+        toggleMenu(); 
+    }
+    function resetAll() { if(confirm('Resetar?')) { db = {items:[]}; save(); } toggleMenu(); }
+
     render();
 </script>
 </body>
