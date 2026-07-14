@@ -203,6 +203,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
     <h2 id="modalTitle">Lançamento</h2>
     <input type="hidden" id="editId">
     <input type="hidden" id="editType">
+    <div class="form-group"><label>Data do Lançamento</label><input id="entryDate" type="date"></div>
     <div class="form-group"><label>Descrição</label><input id="desc" type="text"></div>
     <div class="form-group"><label>Valor (R$)</label><input id="val" type="number" step="0.01"></div>
     <div class="form-group"><label>Categoria</label><select id="tipoSub"></select></div>
@@ -373,25 +374,28 @@ function openModal(mode, id = null) {
         document.getElementById('desc').value = item.desc; 
         document.getElementById('val').value = item.val; 
         document.getElementById('tipoSub').value = item.sub;
+        document.getElementById('entryDate').value = item.data ? item.data.split('T')[0] : new Date().toISOString().split('T')[0];
     }
   } else { 
     document.getElementById('modalTitle').innerText = mode==='receita'?'Nova Receita':(mode==='despesa'?'Nova Despesa':'Nova Pendência'); 
     document.getElementById('desc').value = ''; 
     document.getElementById('val').value = ''; 
+    document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
   }
   document.getElementById('modalEntry').classList.add('show');
 }
 function closeModal() { document.getElementById('modalEntry').classList.remove('show'); }
 
 function saveEntry() {
-  const d = document.getElementById('desc').value, v = parseFloat(document.getElementById('val').value), s = document.getElementById('tipoSub').value, id = document.getElementById('editId').value, type = document.getElementById('editType').value;
+  const d = document.getElementById('desc').value, v = parseFloat(document.getElementById('val').value), s = document.getElementById('tipoSub').value, id = document.getElementById('editId').value, type = document.getElementById('editType').value, dt = document.getElementById('entryDate').value;
   if(!d || isNaN(v)) return;
+  const isoDate = dt ? new Date(dt + 'T12:00:00').toISOString() : new Date().toISOString();
   if(type === 'pendencia') {
-    if(id) { const idx = db.pendencias.findIndex(x => x.id == id); if(idx!==-1) db.pendencias[idx] = { ...db.pendencias[idx], desc: d, val: v, sub: s }; }
-    else db.pendencias.push({ id: Date.now(), desc: d, val: v, sub: s });
+    if(id) { const idx = db.pendencias.findIndex(x => x.id == id); if(idx!==-1) db.pendencias[idx] = { ...db.pendencias[idx], desc: d, val: v, sub: s, data: isoDate }; }
+    else db.pendencias.push({ id: Date.now(), desc: d, val: v, sub: s, data: isoDate });
   } else {
-    if(id) { const idx = db.items.findIndex(x => x.id == id); if(idx!==-1) db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s }; }
-    else db.items.push({ id: Date.now(), desc: d, val: v, tipo: type, sub: s, data: new Date().toISOString() });
+    if(id) { const idx = db.items.findIndex(x => x.id == id); if(idx!==-1) db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s, data: isoDate }; }
+    else db.items.push({ id: Date.now(), desc: d, val: v, tipo: type, sub: s, data: isoDate });
   }
   save(); closeModal();
 }
@@ -450,8 +454,11 @@ function render() {
   document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); document.getElementById('saldoReal').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
   document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
   const l = document.getElementById('list'); l.innerHTML = '';
-  db.items.slice().reverse().forEach(i => { 
-    l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'inventory_2'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
+  // Ordenar por data (mais recente primeiro)
+  const sortedItems = [...db.items].sort((a,b) => new Date(b.data) - new Date(a.data));
+  sortedItems.forEach(i => { 
+    const dateFormatted = new Date(i.data).toLocaleDateString('pt-BR');
+    l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'inventory_2'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub} • ${dateFormatted}</span></div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
   });
   const lp = document.getElementById('listPend'); lp.innerHTML = '';
   db.pendencias.forEach(i => { lp.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
