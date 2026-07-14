@@ -337,33 +337,45 @@ header .date {
 </div>
 
 <script>
-// Scanner de Emergência e Migração de Dados
+// Scanner de Emergência de Nível 3
 function loadData() {
-  // 1. Tenta recuperar da chave atual v4
-  let data = localStorage.getItem('zapia_fin_v4');
+  console.log("Scanner Nível 3 Iniciado...");
   
-  // 2. Se estiver vazio, inicia busca em TODAS as chaves do localStorage
-  if (!data || data === '[]') {
-    console.log("Scanner: Buscando em outras chaves...");
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      // Pula chaves de sistema ou de tema
-      if (key === 'financas_theme' || key === 'loglevel') continue;
-      
-      const potentialData = localStorage.getItem(key);
+  // Tenta as chaves conhecidas primeiro em ordem de probabilidade
+  const knownKeys = ['zapia_fin_v4', 'zapia_fin_v4.2', 'zapia_fin_v4.0', 'zapia_fin_v3', 'zapia_fin_v2', 'zapia_fin', 'financas_pessoais'];
+  
+  for (let key of knownKeys) {
+    const d = localStorage.getItem(key);
+    if (d) {
       try {
-        const parsed = JSON.parse(potentialData);
-        // Se for um array com conteúdo, achamos o tesouro
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          console.log("Scanner: Dados recuperados da chave:", key);
-          localStorage.setItem('zapia_fin_v4', potentialData);
-          return parsed;
+        const p = JSON.parse(d);
+        if (Array.isArray(p) && p.length > 0) {
+          console.log("Achou em chave conhecida:", key);
+          localStorage.setItem('zapia_fin_v4', d);
+          return p;
         }
       } catch(e) {}
     }
   }
+
+  // Se não achou, varre TUDO mesmo
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    const d = localStorage.getItem(k);
+    try {
+      const p = JSON.parse(d);
+      if (Array.isArray(p) && p.length > 0) {
+        // Verifica se o primeiro item tem cara de transação
+        if (p[0].desc || p[0].val || p[0].tipo) {
+           console.log("Achou por estrutura na chave:", k);
+           localStorage.setItem('zapia_fin_v4', d);
+           return p;
+        }
+      }
+    } catch(e) {}
+  }
   
-  return JSON.parse(data || '[]');
+  return [];
 }
 
 let transactions = loadData();
