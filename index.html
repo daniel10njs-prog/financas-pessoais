@@ -850,10 +850,19 @@ const catNome     = c => {
   return c;
 };
 const catEmoji    = c => {
-  if (!c) return '';
-  const parts = c.split(' ');
+  if (!c) return 'circle';
+  const parts = c.trim().split(' ');
+  // Se tem espaço, o primeiro é o nome do ícone
   if (parts.length > 1) return parts[0];
   return 'circle';
+};
+
+const catNome     = c => {
+  if (!c) return '';
+  const parts = c.trim().split(' ');
+  // Se tem espaço, o resto é o nome da categoria
+  if (parts.length > 1) return parts.slice(1).join(' ');
+  return c;
 };
 
 function renderIcon(iconName) {
@@ -1316,11 +1325,10 @@ function renderGraficos() {
     // Lista de Barras
     barEl.innerHTML = arr.map(([cat,val],i)=>{
       const pct = Math.round((val/totalD)*100);
-      const nomeLimpo = catNome(cat);
       return `
       <div class="bar-row">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
-          <div class="bar-cat" style="margin:0">${nomeLimpo}</div>
+          <div class="bar-cat" style="margin:0">${catNome(cat)}</div>
           <div style="font-size:0.75rem; font-weight:800; color:var(--muted)">${pct}%</div>
         </div>
         <div class="bar-track"><div class="bar-fill" style="width:${pct}%; background:${COLORS[i%COLORS.length]}"></div></div>
