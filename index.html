@@ -236,7 +236,24 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </section>
 
 <section id="sec-analise" class="content-section">
-  <div class="widget" style="text-align:center;"><canvas id="myChart" style="max-height:280px;"></canvas></div>
+  <div class="widget" style="text-align:center; margin-bottom: 20px;">
+    <canvas id="myChart" style="max-height:280px;"></canvas>
+  </div>
+  
+  <div class="widget" style="background: rgba(59, 130, 246, 0.05); border: 1px solid var(--azul); border-radius: 16px; padding: 15px;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+      <div style="background: var(--azul); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+        <i class="fas fa-robot"></i>
+      </div>
+      <b style="color: var(--azul); font-size: 0.9rem;">Zapia Insights</b>
+    </div>
+    <div id="ai-tips" style="font-size: 0.85rem; line-height: 1.4; color: var(--text); opacity: 0.9;">
+      Analisando seus dados para gerar dicas personalizadas...
+    </div>
+    <button onclick="generateAITips()" style="margin-top: 12px; background: none; border: 1px solid var(--azul); color: var(--azul); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+      <i class="fas fa-sync-alt"></i> Atualizar Dicas
+    </button>
+  </div>
 </section>
 
 <nav class="bottom-nav">
@@ -454,12 +471,51 @@ function saveCategory() {
 
 function removeCategory(name) { if(!confirm(`Excluir "${name}"?`)) return; delete db.icons[name]; ['receita','despesa','pendencia'].forEach(t => db.categories[t] = db.categories[t].filter(c => c !== name)); save(); setCatTab(currentCatTab); }
 
+function generateAITips() {
+  const container = document.getElementById('ai-tips');
+  if(!container) return;
+  
+  const rec = db.items.filter(x => x.tipo === 'receita').reduce((a, b) => a + b.val, 0);
+  const desp = db.items.filter(x => x.tipo === 'despesa').reduce((a, b) => a + b.val, 0);
+  const saldo = rec - desp;
+  const pend = db.pendencias.reduce((a, b) => a + b.val, 0);
+  const totalMetas = db.metas.reduce((a, b) => a + b.pretendido, 0);
+  const totalAcumMeta = db.metas.reduce((a, b) => a + b.acumulado, 0);
+
+  let tips = [];
+  
+  if (saldo > 0) {
+    tips.push("Seu saldo está positivo! Considere destinar uma parte para suas <b>Metas</b> e acelerar seus sonhos.");
+  } else if (saldo < 0) {
+    tips.push("Atenção: Suas despesas superaram as receitas. Revise seus lançamentos e identifique onde pode cortar gastos supérfluos.");
+  }
+
+  if (pend > 0) {
+    tips.push(`Você possui <b>R$ ${pend.toLocaleString('pt-BR')}</b> em pendências. Tente quitá-las logo para não comprometer seu fluxo de caixa.`);
+  }
+
+  if (db.metas.length > 0 && totalAcumMeta < totalMetas) {
+    tips.push("Manter a constância nas Metas é o segredo. Mesmo valores pequenos hoje fazem diferença no futuro!");
+  }
+
+  if (db.compras && db.compras.length > 0) {
+    tips.push("Sua lista de compras ajuda a evitar compras por impulso. Tente segui-la à risca no mercado!");
+  }
+
+  if (tips.length === 0) {
+    tips.push("Comece a lançar suas receitas e despesas para que eu possa te dar dicas financeiras personalizadas!");
+  }
+
+  // Sorteia 2 dicas para mostrar
+  const shuffled = tips.sort(() => 0.5 - Math.random());
+  container.innerHTML = shuffled.slice(0, 2).map(t => `<div style="margin-bottom:8px;">• ${t}</div>`).join('');
+}
+
 function setTab(t) {
   document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('sec-'+t).classList.add('active'); document.getElementById('nav-'+t).classList.add('active');
   
-  // Atualiza o título da aba no header
   const titles = {
     'lancamentos': 'Lançamentos',
     'compras': 'Compras',
@@ -471,7 +527,10 @@ function setTab(t) {
   };
   document.getElementById('tab-title').innerText = titles[t] || 'Finanças';
 
-  if(t==='analise') initChart();
+  if(t==='analise') {
+    initChart();
+    generateAITips();
+  }
   if(t==='compras') renderCompras();
   render();
 }
