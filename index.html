@@ -1087,13 +1087,18 @@ function render() {
   });
 
   // Migração ícones
+  let dataChanged = false;
   doMes.forEach(i => {
-    if (i.cat && !catEmoji(i.cat)) {
+    if (i.cat && i.cat.indexOf(' ') === -1) {
       const all = [...(d.cats.receita||DEFAULT_CATS.receita), ...(d.cats.despesa||DEFAULT_CATS.despesa)];
       const match = all.find(c => catNome(c) === i.cat);
-      if (match) i.cat = match;
+      if (match) {
+        i.cat = match;
+        dataChanged = true;
+      }
     }
   });
+  if (dataChanged) saveData(d);
 
   const rec  = doMes.filter(i=>i.tipo==='receita').reduce((a,i)=>a+Number(i.val),0);
   const desp = doMes.filter(i=>i.tipo==='despesa').reduce((a,i)=>a+Number(i.val),0);
