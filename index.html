@@ -146,9 +146,15 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </section>
 
 <section id="sec-compras" class="content-section">
-  <div class="widget" style="background: rgba(59, 130, 246, 0.05); border-color: var(--azul); text-align:center;">
-    <div class="widget-title" style="color: var(--azul);">Total do Orçamento</div>
-    <div id="totalComprasValue" style="font-size:1.4rem; font-weight:800; color: var(--azul);">R$ 0,00</div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+      <div class="widget" style="background: rgba(59, 130, 246, 0.05); border-color: var(--azul); text-align:center; margin-bottom:0;">
+        <div class="widget-title" style="color: var(--azul);">Itens</div>
+        <div id="totalItensCount" style="font-size:1.4rem; font-weight:800; color: var(--azul);">0</div>
+      </div>
+      <div class="widget" style="background: rgba(59, 130, 246, 0.05); border-color: var(--azul); text-align:center; margin-bottom:0;">
+        <div class="widget-title" style="color: var(--azul);">Total Orçado</div>
+        <div id="totalComprasValue" style="font-size:1.4rem; font-weight:800; color: var(--azul);">R$ 0,00</div>
+      </div>
   </div>
   <button class="btn-action plus" style="width:100%; margin-bottom:14px;" onclick="openModal('compra')">＋ Item de Compra</button>
   <div class="list" id="listCompras"></div>
@@ -438,21 +444,28 @@ function renderCompras() {
     const list = document.getElementById('listCompras');
     list.innerHTML = '';
     let total = 0;
+    let totalItens = 0;
     if(!db.compras) db.compras = [];
     db.compras.forEach(item => {
         total += item.val;
+        totalItens += (item.qtd || 1);
         const sub = item.qtd && item.qtd > 1 ? `${item.qtd}x R$ ${item.val_unit.toFixed(2)}` : 'Compra';
         list.innerHTML += `<div class="item" onclick="openModal('compra', ${item.id})"><div class="item-info"><div class="item-icon" style="background:var(--azul)"><span class="material-icons-round">shopping_basket</span></div><div class="item-text"><b>${item.desc}</b><span>${sub}</span></div></div><div class="item-right"><b class="item-val" style="color:var(--azul)">R$ ${item.val.toFixed(2)}</b><button class="btn-del" onclick="deleteItem(${item.id}, 'compra', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
     });
     document.getElementById('totalComprasValue').innerText = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+    document.getElementById('totalItensCount').innerText = totalItens;
     
     // Adicionar listeners para a calculadora de peso
     const p = document.getElementById('calcPeso'), pr = document.getElementById('calcPrecoKg');
     if(p && pr) {
-        [p, pr].forEach(el => el.addEventListener('input', () => {
+        const updateCalc = () => {
             const res = (parseFloat(p.value)||0) * (parseFloat(pr.value)||0);
             document.getElementById('calcResult').innerText = 'R$ ' + res.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-        }));
+        };
+        p.removeEventListener('input', updateCalc);
+        pr.removeEventListener('input', updateCalc);
+        p.addEventListener('input', updateCalc);
+        pr.addEventListener('input', updateCalc);
     }
 }
 
