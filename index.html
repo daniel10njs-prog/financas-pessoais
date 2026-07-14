@@ -1523,11 +1523,11 @@ function compartilharWhatsApp() {
   const desp = doMes.filter(i => i.tipo === 'despesa').reduce((a, b) => a + Number(b.val), 0);
   const saldo = rec - desp;
 
-  let texto = `*Resumo Financeiro - ${meses[mesAtual]}/${anoAtual}*\n\n`;
-  texto += `💰 *Ganhos:* R$ ${rec.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n`;
-  texto += `💸 *Gastos:* R$ ${desp.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n`;
-  texto += `⚖️ *Saldo:* R$ ${saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n\n`;
-  texto += `📊 *Top Gastos por Categoria:*\n`;
+  let texto = `Resumo Financeiro - ${meses[mesAtual]}/${anoAtual}\n\n`;
+  texto += `💰 Ganhos: R$ ${rec.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n`;
+  texto += `💸 Gastos: R$ ${desp.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n`;
+  texto += `⚖️ Saldo: R$ ${saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n\n`;
+  texto += `📊 Top Gastos:\n`;
 
   const cats = {};
   doMes.filter(i => i.tipo === 'despesa').forEach(i => {
@@ -1539,10 +1539,19 @@ function compartilharWhatsApp() {
     texto += `- ${c}: R$ ${v.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n`;
   });
 
-  texto += `\n_Enviado via Zapia Finance_`;
+  // Copia para o clipboard
+  const tempInput = document.createElement("textarea");
+  tempInput.value = texto;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  document.execCommand("copy");
+  document.body.removeChild(tempInput);
+
+  alert("✅ Resumo copiado! Agora vou abrir o app da Zapia para você colar o texto na nossa conversa.");
   
-  const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
-  window.open(url, '_blank');
+  // Tenta abrir o app Zapia (URL Scheme ou deep link)
+  // Caso não funcione, redireciona para a home da Zapia
+  window.location.href = "https://zapia.com";
 }
 
 // ── Planos (Simulação) ────────────────────────────────────
