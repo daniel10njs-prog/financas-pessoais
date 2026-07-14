@@ -68,7 +68,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
 .modal-overlay.show { display: flex; }
-.modal { background: var(--card); border-radius: 20px; padding: 20px; width: 100%; max-width: 380px; border: 1px solid var(--border); overflow-y: auto; max-height: 90vh; }
+.modal { background: var(--card); border-radius: 20px; padding: 20px; width: 100%; max-width: 380px; border: 1px solid var(--border); overflow-y: auto; max-height: 90vh; position: relative; }
 .modal h2 { margin-bottom: 18px; font-size: 1rem; text-align: center; }
 
 .form-group { margin-bottom: 14px; }
@@ -78,6 +78,26 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
 .btn-save { flex: 1; padding: 12px; border-radius: 8px; border: none; background: var(--azul); color: #fff; font-weight: 700; cursor: pointer; }
 .btn-cancel { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: none; color: var(--muted); font-weight: 600; cursor: pointer; }
+
+/* ESTILO GERENCIADOR DE CATEGORIAS */
+.cat-manager-modal { max-width: 420px !important; padding: 0 !important; overflow: hidden !important; }
+.cat-header { background: var(--card2); padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
+.cat-header h2 { margin: 0; font-size: 1.1rem; }
+.cat-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--card); }
+.cat-tab { flex: 1; padding: 12px; text-align: center; font-size: 0.7rem; font-weight: 700; color: var(--muted); cursor: pointer; text-transform: uppercase; border-bottom: 2px solid transparent; }
+.cat-tab.active { color: var(--azul); border-bottom-color: var(--azul); background: rgba(59,130,246,0.05); }
+.cat-list-container { padding: 15px; max-height: 400px; overflow-y: auto; background: var(--bg); }
+.cat-item-row { display: flex; align-items: center; gap: 12px; background: var(--card); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 8px; }
+.cat-item-icon { width: 40px; height: 40px; background: var(--card2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid var(--border); }
+.cat-item-name { flex: 1; font-weight: 600; font-size: 0.9rem; }
+.cat-actions { display: flex; gap: 8px; }
+.cat-btn-add { margin: 15px; padding: 14px; background: var(--azul); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.9rem; }
+
+/* BIBLIOTECA DE ÍCONES (EMOJIS) */
+.icon-selector-btn { width: 100%; height: 50px; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 10px; }
+.emoji-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; max-height: 200px; overflow-y: auto; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; margin-top: 10px; }
+.emoji-item { font-size: 1.5rem; padding: 10px; cursor: pointer; border-radius: 8px; text-align: center; }
+.emoji-item:hover { background: var(--card2); }
 
 .widget { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
 .widget-title { font-size: .7rem; font-weight: 700; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; }
@@ -91,20 +111,6 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .sim-item { background: var(--card); border-radius: 12px; padding: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .sim-btn-del { color: var(--vermelho); background: none; border: none; font-size: 0.8rem; cursor: pointer; margin-left: 10px; }
 .sync-btn { background: none; border: 1px solid var(--verde); color: var(--verde); padding: 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
-
-/* ESTILO GERENCIADOR DE CATEGORIAS FIEL À IMAGEM */
-.cat-manager-modal { max-width: 420px !important; padding: 0 !important; overflow: hidden !important; }
-.cat-header { background: var(--card2); padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
-.cat-header h2 { margin: 0; font-size: 1.1rem; }
-.cat-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--card); }
-.cat-tab { flex: 1; padding: 12px; text-align: center; font-size: 0.7rem; font-weight: 700; color: var(--muted); cursor: pointer; text-transform: uppercase; border-bottom: 2px solid transparent; }
-.cat-tab.active { color: var(--azul); border-bottom-color: var(--azul); background: rgba(59,130,246,0.05); }
-.cat-list-container { padding: 15px; max-height: 400px; overflow-y: auto; background: var(--bg); }
-.cat-item-row { display: flex; align-items: center; gap: 12px; background: var(--card); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 8px; }
-.cat-item-icon { width: 40px; height: 40px; background: var(--card2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid var(--border); }
-.cat-item-name { flex: 1; font-weight: 600; font-size: 0.9rem; }
-.cat-actions { display: flex; gap: 8px; }
-.cat-btn-add { margin: 15px; padding: 14px; background: var(--azul); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.9rem; }
 </style>
 </head>
 <body>
@@ -167,9 +173,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
       <b id="simRestante" style="font-size:1.3rem; color:var(--verde);">R$ 0,00</b>
     </div>
   </div>
-  <div class="widget-title">Previstos (Recebimentos)</div>
   <div id="simRecList" style="margin-bottom: 20px;"></div>
-  <div class="widget-title">Selecionar Pendências</div>
   <div id="simList" class="list"></div>
 </section>
 
@@ -204,69 +208,41 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
   </div>
 </div>
 
-<div class="modal-overlay" id="modalMeta">
-  <div class="modal">
-    <h2>Nova Meta</h2>
-    <div class="form-group"><label>Nome da Meta</label><input id="metaNome" type="text"></div>
-    <div class="form-group"><label>Valor Pretendido (R$)</label><input id="metaPretendido" type="number" step="0.01"></div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeMetaModal()">Cancelar</button><button class="btn-save" onclick="saveMeta()">Criar</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modalAddMeta">
-  <div class="modal">
-    <h2>Adicionar à Meta</h2>
-    <input type="hidden" id="addMetaId">
-    <div class="form-group"><label>Valor a Guardar (R$)</label><input id="valAddMeta" type="number" step="0.01"></div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeAddMetaModal()">Cancelar</button><button class="btn-save" onclick="confirmAddMeta()">Adicionar</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modalSimRec">
-  <div class="modal">
-    <h2>Recebimento Previsto</h2>
-    <div class="form-group"><label>Descrição</label><input id="simRecDesc" type="text"></div>
-    <div class="form-group"><label>Valor (R$)</label><input id="simRecVal" type="number" step="0.01"></div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeSimRecModal()">Cancelar</button><button class="btn-save" onclick="saveSimRec()">Adicionar</button></div>
-  </div>
-</div>
-
-<!-- NOVO GERENCIADOR DE CATEGORIAS ESTILO IMAGEM -->
 <div class="modal-overlay" id="modalIcon">
   <div class="modal cat-manager-modal">
-    <div class="cat-header">
-        <h2>Gerenciar Categorias</h2>
-    </div>
+    <div class="cat-header"><h2>Gerenciar Categorias</h2></div>
     <div class="cat-tabs">
         <div class="cat-tab active" id="tab-cat-receita" onclick="setCatTab('receita')">Receitas</div>
         <div class="cat-tab" id="tab-cat-despesa" onclick="setCatTab('despesa')">Despesas</div>
         <div class="cat-tab" id="tab-cat-pendencia" onclick="setCatTab('pendencia')">Pendências</div>
     </div>
-    <div class="cat-list-container" id="catListContent">
-        <!-- Itens injetados via JS -->
-    </div>
-    <button class="cat-btn-add" onclick="openAddCatForm()">
-        <i class="fas fa-plus-circle"></i> ADICIONAR CATEGORIA
-    </button>
-    <div class="modal-actions" style="padding:0 15px 15px;">
-        <button class="btn-cancel" style="width:100%" onclick="closeIconManager()">Fechar</button>
-    </div>
+    <div class="cat-list-container" id="catListContent"></div>
+    <button class="cat-btn-add" onclick="openAddCatForm()"><i class="fas fa-plus-circle"></i> ADICIONAR CATEGORIA</button>
+    <div class="modal-actions" style="padding:0 15px 15px;"><button class="btn-cancel" style="width:100%" onclick="closeIconManager()">Fechar</button></div>
   </div>
 </div>
 
-<!-- MODAL PARA ADICIONAR/EDITAR CATEGORIA ESPECÍFICA -->
 <div class="modal-overlay" id="modalAddEditCat">
     <div class="modal">
-        <h2 id="catModalTitle">Nova Categoria</h2>
+        <h2 id="catModalTitle">Categoria</h2>
         <input type="hidden" id="catOldName">
+        <div class="form-group"><label>Ícone Selecionado</label>
+            <div id="selectedIconDisplay" class="icon-selector-btn" onclick="toggleEmojiGrid()">❓</div>
+            <input type="hidden" id="catInputIcon" value="❓">
+            <div id="emojiGrid" class="emoji-grid" style="display:none;"></div>
+        </div>
         <div class="form-group"><label>Nome da Categoria</label><input type="text" id="catInputName" placeholder="Ex: Internet"></div>
-        <div class="form-group"><label>Ícone (Emoji)</label><input type="text" id="catInputIcon" placeholder="Ex: 🌐" style="text-align:center; font-size:1.5rem;"></div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closeAddEditCat()">Cancelar</button>
             <button class="btn-save" onclick="saveCategory()">Salvar</button>
         </div>
     </div>
 </div>
+
+<!-- Resto dos modais menores -->
+<div class="modal-overlay" id="modalMeta"><div class="modal"><h2>Nova Meta</h2><div class="form-group"><label>Nome</label><input id="metaNome" type="text"></div><div class="form-group"><label>Valor Pretendido (R$)</label><input id="metaPretendido" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeMetaModal()">Cancelar</button><button class="btn-save" onclick="saveMeta()">Criar</button></div></div></div>
+<div class="modal-overlay" id="modalAddMeta"><div class="modal"><h2>Adicionar à Meta</h2><input type="hidden" id="addMetaId"><div class="form-group"><label>Valor (R$)</label><input id="valAddMeta" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeAddMetaModal()">Cancelar</button><button class="btn-save" onclick="confirmAddMeta()">Adicionar</button></div></div></div>
+<div class="modal-overlay" id="modalSimRec"><div class="modal"><h2>Recebimento Previsto</h2><div class="form-group"><label>Descrição</label><input id="simRecDesc" type="text"></div><div class="form-group"><label>Valor (R$)</label><input id="simRecVal" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeSimRecModal()">Cancelar</button><button class="btn-save" onclick="saveSimRec()">Adicionar</button></div></div></div>
 
 <script>
 let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { 
@@ -280,23 +256,17 @@ let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || {
     theme: 'dark' 
 };
 
-if(!db.items) db.items = []; if(!db.pendencias) db.pendencias = []; if(!db.metas) db.metas = []; if(!db.previstos) db.previstos = []; if(!db.icons) db.icons = {};
-if(!db.categories) db.categories = { receita: ['Salário', 'Pix Recebido', 'Ajuste'], despesa: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'], pendencia: ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros'] };
+const emojiLibrary = [
+    '💰','💸','💎','💳','🏧','🏦','🧾','🍽️','🍕','🍔','🛒','🍎','🏠','🛋️','🔌','🌐','🚗','⛽','🚲','✈️','🎡','🎮','🎬','📺','🎧','📚','✏️','🏥','💊','🏋️','🦷','🍼','🧸','👕','👞','💄','📱','💻','📦','⚙️','🔧','🧹','📅','🏷️','❓'
+];
 
-let simChecks = {}; 
-let chartInstance = null;
-let currentCatTab = 'receita';
+let simChecks = {}; let chartInstance = null; let currentCatTab = 'receita';
 
 function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
-
 function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('show'); }
-window.onclick = function(event) { if (!event.target.closest('.menu-container')) { document.getElementById('dropdownMenu').classList.remove('show'); } };
+window.onclick = function(e) { if (!e.target.closest('.menu-container')) { document.getElementById('dropdownMenu').classList.remove('show'); } };
 
-function toggleTheme() {
-    db.theme = db.theme === 'dark' ? 'light' : 'dark';
-    applyTheme();
-    save();
-}
+function toggleTheme() { db.theme = db.theme === 'dark' ? 'light' : 'dark'; applyTheme(); save(); }
 function applyTheme() {
     if(db.theme === 'light') { document.body.classList.add('light-mode'); document.querySelector('meta[name="theme-color"]').setAttribute("content", "#f8fafc"); }
     else { document.body.classList.remove('light-mode'); document.querySelector('meta[name="theme-color"]').setAttribute("content", "#0f172a"); }
@@ -304,141 +274,85 @@ function applyTheme() {
 
 function exportBackup() {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-    const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "backup_financas.json");
-    document.body.appendChild(downloadAnchorNode);
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+    const downloadAnchorNode = document.createElement('a'); downloadAnchorNode.setAttribute("href", dataStr); downloadAnchorNode.setAttribute("download", "backup_financas.json"); document.body.appendChild(downloadAnchorNode); downloadAnchorNode.click(); downloadAnchorNode.remove();
 }
-
 function importBackup() {
-    const input = document.createElement('input');
-    input.type = 'file';
+    const input = document.createElement('input'); input.type = 'file';
     input.onchange = e => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.readAsText(file,'UTF-8');
-        reader.onload = readerEvent => {
-            const content = readerEvent.target.result;
-            try {
-                db = JSON.parse(content);
-                save();
-                location.reload();
-            } catch(e) { alert("Arquivo de backup inválido!"); }
-        }
+        const file = e.target.files[0]; const reader = new FileReader(); reader.readAsText(file,'UTF-8');
+        reader.onload = rEvent => { try { db = JSON.parse(rEvent.target.result); save(); location.reload(); } catch(e) { alert("Erro no backup!"); } }
     }
     input.click();
 }
 
-function openIconManager() {
-    document.getElementById('modalIcon').classList.add('show');
-    document.getElementById('dropdownMenu').classList.remove('show');
-    setCatTab(currentCatTab);
-}
+function openIconManager() { document.getElementById('modalIcon').classList.add('show'); document.getElementById('dropdownMenu').classList.remove('show'); setCatTab(currentCatTab); }
 function closeIconManager() { document.getElementById('modalIcon').classList.remove('show'); }
 
 function setCatTab(tab) {
-    currentCatTab = tab;
-    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    currentCatTab = tab; document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
     document.getElementById('tab-cat-' + tab).classList.add('active');
-    
-    const content = document.getElementById('catListContent');
-    content.innerHTML = '';
-    
+    const content = document.getElementById('catListContent'); content.innerHTML = '';
     const list = db.categories[tab] || [];
     list.forEach(catName => {
-        content.innerHTML += `
-            <div class="cat-item-row">
-                <div class="cat-item-icon">${db.icons[catName] || '❓'}</div>
-                <div class="cat-item-name">${catName}</div>
-                <div class="cat-actions">
-                    <button class="icon-btn edit" onclick="editCatForm('${catName}')"><i class="fas fa-pencil-alt"></i></button>
-                    <button class="icon-btn delete" onclick="removeCategory('${catName}')"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            </div>`;
+        content.innerHTML += `<div class="cat-item-row"><div class="cat-item-icon">${db.icons[catName] || '❓'}</div><div class="cat-item-name">${catName}</div><div class="cat-actions"><button class="icon-btn edit" onclick="editCatForm('${catName}')"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="removeCategory('${catName}')"><i class="fas fa-trash-alt"></i></button></div></div>`;
     });
+}
+
+function toggleEmojiGrid() {
+    const grid = document.getElementById('emojiGrid');
+    if(grid.style.display === 'none') {
+        grid.innerHTML = '';
+        emojiLibrary.forEach(emoji => { grid.innerHTML += `<div class="emoji-item" onclick="selectEmoji('${emoji}')">${emoji}</div>`; });
+        grid.style.display = 'grid';
+    } else { grid.style.display = 'none'; }
+}
+function selectEmoji(emoji) {
+    document.getElementById('catInputIcon').value = emoji;
+    document.getElementById('selectedIconDisplay').innerText = emoji;
+    document.getElementById('emojiGrid').style.display = 'none';
 }
 
 function openAddCatForm() {
-    document.getElementById('catModalTitle').innerText = 'Nova Categoria';
-    document.getElementById('catOldName').value = '';
-    document.getElementById('catInputName').value = '';
-    document.getElementById('catInputIcon').value = '';
+    document.getElementById('catModalTitle').innerText = 'Nova Categoria'; document.getElementById('catOldName').value = '';
+    document.getElementById('catInputName').value = ''; selectEmoji('❓');
     document.getElementById('modalAddEditCat').classList.add('show');
 }
-
 function editCatForm(name) {
-    document.getElementById('catModalTitle').innerText = 'Editar Categoria';
-    document.getElementById('catOldName').value = name;
-    document.getElementById('catInputName').value = name;
-    document.getElementById('catInputIcon').value = db.icons[name] || '';
+    document.getElementById('catModalTitle').innerText = 'Editar Categoria'; document.getElementById('catOldName').value = name;
+    document.getElementById('catInputName').value = name; selectEmoji(db.icons[name] || '❓');
     document.getElementById('modalAddEditCat').classList.add('show');
 }
-
 function closeAddEditCat() { document.getElementById('modalAddEditCat').classList.remove('show'); }
 
 function saveCategory() {
-    const name = document.getElementById('catInputName').value.trim();
-    const icon = document.getElementById('catInputIcon').value.trim();
-    const oldName = document.getElementById('catOldName').value;
-    
-    if(!name || !icon) return;
-    
+    const name = document.getElementById('catInputName').value.trim(), icon = document.getElementById('catInputIcon').value, oldName = document.getElementById('catOldName').value;
+    if(!name) return;
     if(oldName) {
-        // Renomear categoria em todos os lugares
         if(oldName !== name) {
-            delete db.icons[oldName];
-            db.categories[currentCatTab] = db.categories[currentCatTab].map(c => c === oldName ? name : c);
-            // Atualizar itens existentes
-            db.items.forEach(i => { if(i.sub === oldName) i.sub = name; });
-            db.pendencias.forEach(p => { if(p.sub === oldName) p.sub = name; });
+            delete db.icons[oldName]; db.categories[currentCatTab] = db.categories[currentCatTab].map(c => c === oldName ? name : c);
+            db.items.forEach(i => { if(i.sub === oldName) i.sub = name; }); db.pendencias.forEach(p => { if(p.sub === oldName) p.sub = name; });
         }
-    } else {
-        if(!db.categories[currentCatTab].includes(name)) {
-            db.categories[currentCatTab].push(name);
-        }
-    }
-    
-    db.icons[name] = icon;
-    save();
-    closeAddEditCat();
-    setCatTab(currentCatTab);
+    } else { if(!db.categories[currentCatTab].includes(name)) db.categories[currentCatTab].push(name); }
+    db.icons[name] = icon; save(); closeAddEditCat(); setCatTab(currentCatTab);
 }
 
-function removeCategory(name) {
-    if(!confirm(`Excluir categoria "${name}"?`)) return;
-    delete db.icons[name];
-    ['receita','despesa','pendencia'].forEach(t => {
-        db.categories[t] = db.categories[t].filter(c => c !== name);
-    });
-    save();
-    setCatTab(currentCatTab);
-}
+function removeCategory(name) { if(!confirm(`Excluir "${name}"?`)) return; delete db.icons[name]; ['receita','despesa','pendencia'].forEach(t => db.categories[t] = db.categories[t].filter(c => c !== name)); save(); setCatTab(currentCatTab); }
 
 function setTab(t) {
   document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('sec-'+t).classList.add('active');
-  document.getElementById('nav-'+t).classList.add('active');
-  if(t==='analise') initChart();
-  render();
+  document.getElementById('sec-'+t).classList.add('active'); document.getElementById('nav-'+t).classList.add('active');
+  if(t==='analise') initChart(); render();
 }
 
 function openModal(mode, id = null) {
   const select = document.getElementById('tipoSub'); select.innerHTML = '';
-  const cats = db.categories[mode] || [];
-  cats.forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
+  const cats = db.categories[mode] || []; cats.forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
   document.getElementById('editType').value = mode;
   if(id) {
-    const list = mode === 'pendencia' ? db.pendencias : db.items;
-    const item = list.find(x => x.id == id);
-    document.getElementById('modalTitle').innerText = 'Editar';
-    document.getElementById('editId').value = id; document.getElementById('desc').value = item.desc; document.getElementById('val').value = item.val; document.getElementById('tipoSub').value = item.sub;
-  } else {
-    document.getElementById('modalTitle').innerText = mode==='receita'?'Nova Receita':(mode==='despesa'?'Nova Despesa':'Nova Pendência');
-    document.getElementById('editId').value = ''; document.getElementById('desc').value = ''; document.getElementById('val').value = '';
-  }
+    const list = mode === 'pendencia' ? db.pendencias : db.items; const item = list.find(x => x.id == id);
+    document.getElementById('modalTitle').innerText = 'Editar'; document.getElementById('editId').value = id; document.getElementById('desc').value = item.desc; document.getElementById('val').value = item.val; document.getElementById('tipoSub').value = item.sub;
+  } else { document.getElementById('modalTitle').innerText = mode==='receita'?'Nova Receita':(mode==='despesa'?'Nova Despesa':'Nova Pendência'); document.getElementById('editId').value = ''; document.getElementById('desc').value = ''; document.getElementById('val').value = ''; }
   document.getElementById('modalEntry').classList.add('show');
 }
 function closeModal() { document.getElementById('modalEntry').classList.remove('show'); }
@@ -465,36 +379,25 @@ function deleteItem(id, type, event) {
 }
 
 function directPay(id, event) {
-  event.stopPropagation();
-  const p = db.pendencias.find(x => x.id == id);
-  if(p) {
-    db.items.push({ id: Date.now(), desc: p.desc, val: p.val, tipo: 'despesa', sub: p.sub, data: new Date().toISOString() });
-    db.pendencias = db.pendencias.filter(x => x.id != id);
-    save();
-  }
+  event.stopPropagation(); const p = db.pendencias.find(x => x.id == id);
+  if(p) { db.items.push({ id: Date.now(), desc: p.desc, val: p.val, tipo: 'despesa', sub: p.sub, data: new Date().toISOString() }); db.pendencias = db.pendencias.filter(x => x.id != id); save(); }
 }
 
 function openSimRecModal() { document.getElementById('modalSimRec').classList.add('show'); }
 function closeSimRecModal() { document.getElementById('modalSimRec').classList.remove('show'); }
 function saveSimRec() {
     const d = document.getElementById('simRecDesc').value, v = parseFloat(document.getElementById('simRecVal').value);
-    if(!d || isNaN(v)) return;
-    db.previstos.push({ id: Date.now(), desc: d, val: v });
-    save(); closeSimRecModal();
+    if(!d || isNaN(v)) return; db.previstos.push({ id: Date.now(), desc: d, val: v }); save(); closeSimRecModal();
 }
 
 function renderSim() {
   let totalPrev = 0; db.previstos.forEach(p => totalPrev += p.val);
   document.getElementById('simTotalRec').innerText = 'R$ ' + totalPrev.toLocaleString('pt-BR');
   let totalSimPend = 0; db.pendencias.forEach(p => { if(simChecks[p.id] !== false) totalSimPend += p.val; });
-  const rest = totalPrev - totalSimPend;
-  const el = document.getElementById('simRestante');
-  el.innerText = 'R$ ' + rest.toLocaleString('pt-BR');
+  const rest = totalPrev - totalSimPend; const el = document.getElementById('simRestante'); el.innerText = 'R$ ' + rest.toLocaleString('pt-BR');
   el.style.color = rest >= 0 ? 'var(--verde)' : 'var(--vermelho)';
   const slRec = document.getElementById('simRecList'); slRec.innerHTML = '';
-  db.previstos.forEach(p => {
-    slRec.innerHTML += `<div class="sim-item"><div><b>${p.desc}</b><br><small style="color:var(--verde)">+ R$ ${p.val.toFixed(2)}</small></div><button class="sim-btn-del" onclick="deleteItem(${p.id}, 'previsto', event)"><i class="fas fa-trash"></i></button></div>`;
-  });
+  db.previstos.forEach(p => { slRec.innerHTML += `<div class="sim-item"><div><b>${p.desc}</b><br><small style="color:var(--verde)">+ R$ ${p.val.toFixed(2)}</small></div><button class="sim-btn-del" onclick="deleteItem(${p.id}, 'previsto', event)"><i class="fas fa-trash"></i></button></div>`; });
   const sl = document.getElementById('simList'); sl.innerHTML = '';
   db.pendencias.forEach(p => {
     const isChecked = simChecks[p.id] !== false;
@@ -504,11 +407,9 @@ function renderSim() {
 function toggleSim(id) { simChecks[id] = simChecks[id] === false ? true : false; renderSim(); }
 
 function renderComp() {
-  const months = {};
-  db.items.forEach(i => {
+  const months = {}; db.items.forEach(i => {
     const m = new Date(i.data).toLocaleDateString('pt-BR', {month:'short', year:'2-digit'}).toUpperCase();
-    if(!months[m]) months[m] = {r:0, d:0};
-    if(i.tipo==='receita') months[m].r += i.val; else months[m].d += i.val;
+    if(!months[m]) months[m] = {r:0, d:0}; if(i.tipo==='receita') months[m].r += i.val; else months[m].d += i.val;
   });
   const cl = document.getElementById('compList'); cl.innerHTML = '';
   Object.keys(months).reverse().forEach(m => {
@@ -519,10 +420,7 @@ function renderComp() {
 
 function render() {
   let r=0, d=0, p=0; db.items.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val); db.pendencias.forEach(i => p+=i.val);
-  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR');
-  document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR');
-  document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
-  document.getElementById('saldoReal').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
+  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); document.getElementById('saldoReal').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
   document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
   const l = document.getElementById('list'); l.innerHTML = '';
   db.items.slice().reverse().forEach(i => { l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon">${db.icons[i.sub]||'📦'}</div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span></div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; });
@@ -531,23 +429,17 @@ function render() {
   const ml = document.getElementById('metasList'); ml.innerHTML = '';
   db.metas.forEach(m => {
     const perc = Math.min((m.acumulado / m.pretendido) * 100, 100).toFixed(1);
-    ml.innerHTML += `<div class="widget"><div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;"><div><b style="font-size:.9rem; color:var(--azul);">${m.nome}</b><div style="font-size:.7rem; color:var(--muted);">Meta: R$ ${m.pretendido.toLocaleString('pt-BR')}</div></div><div style="text-align:right;"><b style="font-size:1rem;">R$ ${m.acumulado.toLocaleString('pt-BR')}</b><div style="font-size:.7rem; color:var(--verde);">${perc}%</div></div></div><div class="progress-bar"><div class="progress-fill" style="width:${perc}%;"></div></div><div style="display:flex; gap:10px; margin-top:15px;"><button class="sync-btn" style="flex:1;" onclick="openAddMeta(${m.id})">ADICIONAR</button><button class="icon-btn delete" onclick="deleteItem(${m.id}, 'meta', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
+    ml.innerHTML += `<div class="widget"><div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;"><div><b style="font-size:.9rem; color:var(--azul);">${m.nome}</b><div style="font-size:.7rem; color:var(--muted);">Meta: R$ ${m.pretendido.toLocaleString('pt-BR')}</div></div><div style="text-align:right;"><b style="font-size:1rem;">R$ ${m.acumulado.toLocaleString('pt-BR')}</b><div style="font-size:.7rem; color:var(--verde);">${perc} %</div></div></div><div class="progress-bar"><div class="progress-fill" style="width:${perc}%;"></div></div><div style="display:flex; gap:10px; margin-top:15px;"><button class="sync-btn" style="flex:1;" onclick="openAddMeta(${m.id})">ADICIONAR</button><button class="icon-btn delete" onclick="deleteItem(${m.id}, 'meta', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
   });
   renderComp(); renderSim();
 }
 
 function openMetaModal() { document.getElementById('modalMeta').classList.add('show'); }
 function closeMetaModal() { document.getElementById('modalMeta').classList.remove('show'); }
-function saveMeta() {
-  const n = document.getElementById('metaNome').value, p = parseFloat(document.getElementById('metaPretendido').value);
-  if(!n || isNaN(p)) return; db.metas.push({ id: Date.now(), nome: n.toUpperCase(), pretendido: p, acumulado: 0 }); save(); closeMetaModal();
-}
+function saveMeta() { const n = document.getElementById('metaNome').value, p = parseFloat(document.getElementById('metaPretendido').value); if(!n || isNaN(p)) return; db.metas.push({ id: Date.now(), nome: n.toUpperCase(), pretendido: p, acumulado: 0 }); save(); closeMetaModal(); }
 function openAddMeta(id) { document.getElementById('addMetaId').value = id; document.getElementById('modalAddMeta').classList.add('show'); }
 function closeAddMetaModal() { document.getElementById('modalAddMeta').classList.remove('show'); }
-function confirmAddMeta() {
-  const id = document.getElementById('addMetaId').value, v = parseFloat(document.getElementById('valAddMeta').value);
-  if(isNaN(v)) return; const idx = db.metas.findIndex(x => x.id == id); if(idx!==-1) db.metas[idx].acumulado += v; save(); closeAddMetaModal();
-}
+function confirmAddMeta() { const id = document.getElementById('addMetaId').value, v = parseFloat(document.getElementById('valAddMeta').value); if(isNaN(v)) return; const idx = db.metas.findIndex(x => x.id == id); if(idx!==-1) db.metas[idx].acumulado += v; save(); closeAddMetaModal(); }
 
 function initChart() {
   const ctx = document.getElementById('myChart').getContext('2d'); if(chartInstance) chartInstance.destroy();
