@@ -3,175 +3,137 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
-    <title>Zapia Finance v2.0 - Sincronizado</title>
-    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap' rel='stylesheet'>
+    <title>Zapia Finance Pro</title>
+    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/icon?family=Material+Icons+Round' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css' rel='stylesheet'>
     <style>
-        :root { --bg: #f8fafc; --card: #ffffff; --primary: #6366f1; --text: #1e293b; --muted: #64748b; --up: #10b981; --down: #ef4444; --warn: #f59e0b; }
+        :root {
+            --bg: #0b0f1a; --card: #161b2c; --primary: #3b82f6; --text: #f8fafc;
+            --muted: #94a3b8; --up: #10b981; --down: #ef4444; --warn: #f59e0b;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 50px; max-width: 500px; margin: 0 auto; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 120px; max-width: 500px; margin: 0 auto; overflow-x: hidden; }
         
-        header { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; }
-        header h1 { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
-        .sync-btn { background: #eef2ff; color: var(--primary); border: none; padding: 8px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+        header { padding: 30px 20px 20px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .h-info h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 5px; }
+        .h-info p { font-size: 0.8rem; color: var(--muted); }
+        .h-btns { display: flex; gap: 8px; }
+        .h-btn { background: #1e293b; border: none; color: var(--muted); padding: 10px; border-radius: 12px; display: flex; align-items: center; }
 
-        .cards-scroll { display: flex; gap: 15px; padding: 0 20px 20px; overflow-x: auto; scrollbar-width: none; }
-        .card { min-width: 200px; padding: 20px; border-radius: 20px; color: white; flex-shrink: 0; }
-        .card-main { background: var(--primary); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2); }
-        .card-warn { background: var(--warn); box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2); }
-        .c-label { font-size: 0.7rem; opacity: 0.8; text-transform: uppercase; }
-        .c-val { font-size: 1.5rem; font-weight: 800; margin-top: 5px; }
+        .total-card { margin: 0 20px 30px; padding: 30px; background: #161b2c; border-radius: 28px; border: 2px solid var(--warn); position: relative; }
+        .total-card::before { content: 'ZAPIA FINANCE PRO'; position: absolute; top: 15px; right: 20px; font-size: 0.5rem; color: var(--muted); letter-spacing: 1px; }
+        .tc-label { font-size: 0.65rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; display: block; }
+        .tc-val { font-size: 2.8rem; font-weight: 800; color: var(--warn); margin-bottom: 15px; letter-spacing: -1px; }
+        .tc-count { font-size: 0.7rem; color: #38bdf8; text-transform: uppercase; font-weight: 700; }
 
-        .tabs { display: flex; gap: 10px; padding: 0 20px 15px; }
-        .tab { padding: 8px 16px; background: white; border-radius: 10px; font-size: 0.8rem; font-weight: 600; color: var(--muted); border: 1px solid #e2e8f0; }
-        .tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .section-title { margin: 0 20px 15px; font-size: 1rem; font-weight: 600; color: var(--text); }
 
-        .form-section { margin: 0 20px 20px; padding: 20px; background: white; border-radius: 20px; border: 1px solid #e2e8f0; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem; outline: none; }
-        .btn-save { width: 100%; padding: 14px; background: var(--primary); border: none; border-radius: 10px; color: white; font-weight: 700; }
+        .list { padding: 0 20px; display: flex; flex-direction: column; gap: 12px; }
+        .item { background: #161b2c; padding: 20px; border-radius: 24px; display: flex; align-items: center; gap: 15px; }
+        .item-icon { width: 55px; height: 55px; background: #1e293b; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--warn); font-size: 1.4rem; flex-shrink: 0; }
+        .item-content { flex: 1; }
+        .item-title { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+        .item-meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+        .item-note { font-size: 0.75rem; color: var(--warn); font-style: italic; }
+        .item-side { text-align: right; }
+        .item-price { font-size: 1rem; font-weight: 700; color: var(--warn); margin-bottom: 10px; }
+        .item-actions { display: flex; gap: 6px; align-items: center; }
+        .btn-pay { background: #00ff88; color: #000; border: none; padding: 10px 18px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; display: flex; align-items: center; gap: 5px; }
+        .btn-sm { background: #1e293b; border: none; color: #38bdf8; padding: 10px; border-radius: 12px; display: flex; align-items: center; }
+        .btn-sm.red { color: var(--down); }
 
-        .list-section { padding: 0 20px; }
-        .list-title { font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; }
-        .item { padding: 14px; background: white; border-radius: 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; border: 1px solid #f1f5f9; }
-        .icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-        .item-info { flex: 1; }
-        .item-title { font-size: 0.9rem; font-weight: 600; }
-        .item-val { font-size: 0.9rem; font-weight: 700; text-align: right; }
-        
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
-        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; }
-        textarea { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; margin: 10px 0; font-family: monospace; font-size: 0.7rem; }
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: #0b0f1a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 15px 5px 35px; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--muted); text-decoration: none; position: relative; }
+        .nav-item i { font-size: 1.5rem; }
+        .nav-item span { font-size: 0.6rem; font-weight: 600; }
+        .nav-item.active { color: #38bdf8; }
+        .nav-badge { position: absolute; top: -5px; right: -5px; background: var(--down); color: white; font-size: 0.6rem; padding: 2px 5px; border-radius: 10px; border: 2px solid var(--bg); font-weight: 800; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Zapia<span>.pro</span></h1>
-    <button class='sync-btn' onclick='openSync()'>
-        <span class='material-icons-round' style='font-size:1rem'>sync</span> Sincronizar
-    </button>
+    <div class='h-info'>
+        <h1>Finanças</h1>
+        <p>Julho de 2026</p>
+    </div>
+    <div class='h-btns'>
+        <button class='h-btn'><span class='material-icons-round'>chevron_left</span></button>
+        <button class='h-btn'><span class='material-icons-round'>chevron_right</span></button>
+        <button class='h-btn'><span class='material-icons-round'>more_vert</span></button>
+    </div>
 </header>
 
-<div class='cards-scroll'>
-    <div class='card card-main'>
-        <div class='c-label'>Saldo em Conta</div>
-        <div class='c-val' id='balance'>R$ 0,00</div>
-    </div>
-    <div class='card card-warn'>
-        <div class='c-label'>Pendências</div>
-        <div class='c-val' id='pending'>R$ 0,00</div>
-    </div>
+<div class='total-card'>
+    <span class='tc-label'>Total a Pagar</span>
+    <div class='tc-val'>R$ 3.967,19</div>
+    <span class='tc-count'>11 Contas Pendentes</span>
 </div>
 
-<div class='form-section'>
-    <input type='text' id='fDesc' placeholder='O que é? (ex: Aluguel)'>
-    <div style='display:flex; gap:10px'>
-        <input type='number' id='fVal' placeholder='Valor R$'>
-        <select id='fTipo' style='width:120px'>
-            <option value='desp'>Gasto</option>
-            <option value='rec'>Ganho</option>
-            <option value='pend'>Pendência</option>
-        </select>
+<h2 class='section-title'>Contas a Pagar</h2>
+
+<div class='list'>
+    <div class='item'>
+        <div class='item-icon'><i class='lucide-bike'></i></div>
+        <div class='item-content'>
+            <div class='item-title'>Moto - 1/48</div>
+            <div class='item-meta'>Moto • 20/07</div>
+            <div class='item-note'>Parcela 1/48</div>
+        </div>
+        <div class='item-side'>
+            <div class='item-price'>R$ 888,17</div>
+            <div class='item-actions'>
+                <button class='btn-pay'><span class='material-icons-round' style='font-size:14px'>check</span> PAGAR</button>
+                <button class='btn-sm'><i class='lucide-pen-line' style='font-size:14px'></i></button>
+                <button class='btn-sm red'><span class='material-icons-round' style='font-size:14px'>close</span></button>
+            </div>
+        </div>
     </div>
-    <button class='btn-save' onclick='add()'>Salvar Registro</button>
-</div>
 
-<div class='list-section'>
-    <div class='list-title'>Atividades Recentes</div>
-    <div id='mainList'></div>
-</div>
+    <div class='item'>
+        <div class='item-icon'><i class='lucide-home'></i></div>
+        <div class='item-content'>
+            <div class='item-title'>Aluguel</div>
+            <div class='item-meta'>Moradia • 20/07</div>
+            <div class='item-note'>Mês Julho</div>
+        </div>
+        <div class='item-side'>
+            <div class='item-price'>R$ 250,00</div>
+            <div class='item-actions'>
+                <button class='btn-pay'><span class='material-icons-round' style='font-size:14px'>check</span> PAGAR</button>
+                <button class='btn-sm'><i class='lucide-pen-line' style='font-size:14px'></i></button>
+                <button class='btn-sm red'><span class='material-icons-round' style='font-size:14px'>close</span></button>
+            </div>
+        </div>
+    </div>
 
-<div class='modal' id='syncModal'>
-    <div class='modal-content'>
-        <h3>Sincronizar Dados</h3>
-        <p style='font-size:0.8rem; color:var(--muted); margin: 10px 0;'>Copie o código abaixo para salvar seu backup ou cole um código antigo para restaurar.</p>
-        <textarea id='syncBox' rows='8'></textarea>
-        <div style='display:flex; gap:10px'>
-            <button class='btn-save' onclick='doRestore()' style='background:#10b981'>Restaurar</button>
-            <button class='btn-save' onclick='closeSync()' style='background:#64748b'>Fechar</button>
+    <div class='item'>
+        <div class='item-icon'><i class='lucide-utensils'></i></div>
+        <div class='item-content'>
+            <div class='item-title'>Salgados - Bebeba</div>
+            <div class='item-meta'>Alimentação • 20/07</div>
+        </div>
+        <div class='item-side'>
+            <div class='item-price'>R$ 54,00</div>
+            <div class='item-actions'>
+                <button class='btn-pay'><span class='material-icons-round' style='font-size:14px'>check</span> PAGAR</button>
+                <button class='btn-sm'><i class='lucide-pen-line' style='font-size:14px'></i></button>
+                <button class='btn-sm red'><span class='material-icons-round' style='font-size:14px'>close</span></button>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-    let db = JSON.parse(localStorage.getItem('zapia_v2_db')) || { items: [] };
+<nav class='bottom-nav'>
+    <a href='#' class='nav-item'><i class='lucide-layout-grid'></i><span>Lançar</span></a>
+    <a href='#' class='nav-item active'><i class='lucide-clock'></i><span>Contas</span></a>
+    <a href='#' class='nav-item'><i class='lucide-pie-chart'></i><span>Gráficos</span></a>
+    <a href='#' class='nav-item'><i class='lucide-sparkles'></i><span>IA</span></a>
+    <a href='#' class='nav-item'><i class='lucide-calendar-days'></i><span>Anual</span></a>
+    <a href='#' class='nav-item'><i class='lucide-target'></i><span>Metas</span></a>
+    <a href='#' class='nav-item'><i class='lucide-scale'></i><span>Simular</span><div class='nav-badge'>11</div></a>
+</nav>
 
-    function persist() { 
-        localStorage.setItem('zapia_v2_db', JSON.stringify(db));
-        render();
-    }
-
-    function add() {
-        const d = document.getElementById('fDesc').value;
-        const v = parseFloat(document.getElementById('fVal').value);
-        const t = document.getElementById('fTipo').value;
-        if(!d || !v) return;
-
-        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: t, data: new Date().toLocaleDateString('pt-BR') });
-        document.getElementById('fDesc').value = '';
-        document.getElementById('fVal').value = '';
-        persist();
-    }
-
-    function del(id) {
-        if(!confirm('Excluir este registro?')) return;
-        db.items = db.items.filter(i => i.id !== id);
-        persist();
-    }
-
-    function render() {
-        const list = document.getElementById('mainList');
-        list.innerHTML = '';
-        let bal = 0, pnd = 0;
-
-        db.items.forEach(i => {
-            if(i.tipo === 'rec') bal += i.val;
-            else if(i.tipo === 'desp') bal -= i.val;
-            else if(i.tipo === 'pend') pnd += i.val;
-
-            const iconBg = i.tipo === 'rec' ? '#dcfce7' : (i.tipo === 'desp' ? '#fee2e2' : '#fef3c7');
-            const iconColor = i.tipo === 'rec' ? 'var(--up)' : (i.tipo === 'desp' ? 'var(--down)' : 'var(--warn)');
-            const iconName = i.tipo === 'rec' ? 'add' : (i.tipo === 'desp' ? 'remove' : 'schedule');
-
-            list.innerHTML += `
-                <div class='item'>
-                    <div class='icon' style='background:${iconBg}; color:${iconColor}'>
-                        <span class='material-icons-round'>${iconName}</span>
-                    </div>
-                    <div class='item-info'>
-                        <div class='item-title'>${i.desc}</div>
-                        <div style='font-size:0.7rem; color:var(--muted)'>${i.data}</div>
-                    </div>
-                    <div class='item-val' style='color:${i.tipo==='pend' ? 'var(--warn)' : 'var(--text)'}'>
-                        R$ ${i.val.toLocaleString('pt-BR', {minimumFractionDigits:2})}
-                        <div onclick='del(${i.id})' style='font-size:0.6rem; color:var(--muted); font-weight:400'>EXCLUIR</div>
-                    </div>
-                </div>
-            `;
-        });
-
-        document.getElementById('balance').innerText = 'R$ ' + bal.toLocaleString('pt-BR', {minimumFractionDigits:2});
-        document.getElementById('pending').innerText = 'R$ ' + pnd.toLocaleString('pt-BR', {minimumFractionDigits:2});
-    }
-
-    function openSync() {
-        document.getElementById('syncBox').value = JSON.stringify(db);
-        document.getElementById('syncModal').style.display = 'flex';
-    }
-    function closeSync() { document.getElementById('syncModal').style.display = 'none'; }
-    function doRestore() {
-        try {
-            const data = JSON.parse(document.getElementById('syncBox').value);
-            if(data.items) {
-                db = data;
-                persist();
-                alert('Dados restaurados!');
-                closeSync();
-            }
-        } catch(e) { alert('Código inválido!'); }
-    }
-
-    render();
-</script>
 </body>
 </html>
