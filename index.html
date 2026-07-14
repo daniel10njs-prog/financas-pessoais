@@ -3,290 +3,104 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>Finanças Pessoais Ultra-Premium</title>
+<title>Finanças Pessoais</title>
 <meta name="theme-color" content="#0f172a">
-<!-- Fontes e Ícones -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root {
   --verde: #22c55e; --vermelho: #ef4444; --amarelo: #f59e0b; --azul: #3b82f6; --roxo: #a855f7;
-  --bg: #000000; --card: #121214; --card2: #1a1a1e; --border: rgba(255,255,255,0.08);
-  --text: #f1f5f9; --muted: #8e8e93;
+  --bg: #0f172a; --card: #1e293b; --card2: #253047; --border: #334155; --text: #f1f5f9; --muted: #94a3b8;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-body { background: var(--bg); color: var(--text); padding-bottom: 100px; max-width: 480px; margin: 0 auto; overflow-x: hidden; }
-
-/* HEADER PREMIUM */
-header { padding: 24px 16px; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 100; }
-.header-top { display: flex; justify-content: space-between; align-items: center; }
-header h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
-.header-sync { display: flex; gap: 8px; }
-.sync-btn { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); padding: 8px 12px; font-size: .8rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-
-/* DASHBOARD / SALDO REAL */
-.hero { padding: 20px 16px; background: linear-gradient(180deg, var(--card) 0%, var(--bg) 100%); border-bottom: 1px solid var(--border); }
-.main-balance { text-align: center; margin-bottom: 24px; }
-.main-balance .label { font-size: .75rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 4px; }
-.main-balance .value { font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; font-weight: 700; }
-.main-balance .real-liquido { font-size: .85rem; color: var(--azul); margin-top: 5px; font-weight: 600; }
-
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.stat-item { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 16px; }
-.stat-item .label { font-size: .65rem; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
-.stat-item .val { font-size: 1.1rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-
-/* BUSCA */
-.search-bar { padding: 0 16px 16px; }
-.search-bar input { width: 100%; background: var(--card2); border: 1px solid var(--border); padding: 12px 16px; border-radius: 12px; color: var(--text); outline: none; }
-
-/* TABS */
-.nav-bottom { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(18,18,20,0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0 24px; z-index: 1000; }
-.nav-btn { background: none; border: none; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
-.nav-btn.active { color: var(--azul); }
-.nav-btn span { font-size: .6rem; font-weight: 700; text-transform: uppercase; }
-
-/* FORMS */
-.form-box { background: var(--card); margin: 16px; padding: 20px; border-radius: 20px; border: 1px solid var(--border); }
-.form-group { margin-bottom: 16px; }
-.form-group label { display: block; font-size: .7rem; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; }
-.form-group input, .form-group select { width: 100%; background: var(--card2); border: 1px solid var(--border); padding: 12px; border-radius: 10px; color: var(--text); }
-
-/* LISTAS */
-.list { padding: 0 16px; }
-.item { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-.item-info { display: flex; align-items: center; gap: 12px; }
-.item-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--card2); font-size: 1.2rem; }
-.item-text .desc { font-size: .9rem; font-weight: 700; }
-.item-text .meta { font-size: .7rem; color: var(--muted); margin-top: 2px; }
-.item-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
-
-/* CHART CONTAINER */
-.chart-container { padding: 16px; background: var(--card); margin: 16px; border-radius: 20px; border: 1px solid var(--border); }
-
-/* UTIL */
-.hidden { display: none; }
-.verde { color: var(--verde); }
-.vermelho { color: var(--vermelho); }
-.amarelo { color: var(--amarelo); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding-bottom: 24px; }
+header { padding: 18px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 1.2rem; font-weight: 700; }
+.sync-btn { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); padding: 5px 8px; font-size: .75rem; cursor: pointer; }
+.tab-nav { display: flex; border-bottom: 1px solid var(--border); background: var(--card); }
+.tab-nav button { flex: 1; padding: 12px 4px; background: none; border: none; color: var(--muted); font-size: .85rem; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
+.tab-nav button.active { color: var(--text); border-bottom-color: var(--azul); }
+.cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 14px 12px; }
+.card { background: var(--card); border-radius: 12px; padding: 12px 10px; border: 1px solid var(--border); text-align: center; }
+.card .label { font-size: .65rem; text-transform: uppercase; color: var(--muted); }
+.card .value { font-size: 1rem; font-weight: 700; }
+.card.rec .value { color: var(--verde); } .card.desp .value { color: var(--vermelho); } .card.saldo .value { color: var(--azul); }
+.real-card { background: rgba(59, 130, 246, 0.1); border: 1px dashed var(--azul); margin: 0 12px 12px; padding: 12px; border-radius: 12px; text-align: center; }
+.real-card .label { font-size: .7rem; color: var(--azul); font-weight: 700; }
+.real-card .value { font-size: 1.2rem; font-weight: 800; }
+.form-box { background: var(--card); margin: 0 12px 12px; border-radius: 14px; padding: 14px; border: 1px solid var(--border); }
+.list { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
+.item { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.item-val.receita { color: var(--verde); } .item-val.despesa { color: var(--vermelho); } .item-val.pend { color: var(--amarelo); }
 </style>
 </head>
 <body>
-
 <header>
-  <div class="header-top">
-    <div>
-      <h1 id="userTitle">Finanças Executivo</h1>
-      <p id="currentDate" style="color:var(--muted); font-size: .75rem;"></p>
-    </div>
-    <div class="header-sync">
-      <button class="sync-btn" onclick="exportCSV()">📊 CSV</button>
-      <button class="sync-btn" onclick="openModal()">☁ Drive</button>
-    </div>
+  <h1>💰 Finanças</h1>
+  <div class="header-sync">
+    <button class="sync-btn" onclick="exportCSV()">📊 CSV</button>
+    <button class="sync-btn" onclick="abrirModal()">☁ Drive</button>
   </div>
 </header>
-
-<div id="view-dashboard">
-  <div class="hero">
-    <div class="main-balance">
-      <div class="label">Saldo em Conta</div>
-      <div class="value" id="resumoSaldo">R$ 0,00</div>
-      <div class="real-liquido" id="realLiquido">Líquido Real: R$ 0,00</div>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-item"><div class="label">Receitas</div><div class="val verde" id="resumoRec">R$ 0,00</div></div>
-      <div class="stat-item"><div class="label">Pendências</div><div class="val amarelo" id="resumoPend">R$ 0,00</div></div>
-    </div>
-  </div>
-  
-  <div class="chart-container">
-    <canvas id="mainChart"></canvas>
-  </div>
+<div class="tab-nav">
+  <button class="active" onclick="setTab('lancamentos')">Lançamentos</button>
+  <button onclick="setTab('pendencias')">Pendências</button>
+  <button onclick="setTab('graficos')">Análise</button>
 </div>
-
-<div id="view-lancamentos" class="hidden">
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Pesquisar lançamentos..." onkeyup="renderLancamentos()">
+<div id="tab-lancamentos">
+  <div class="cards">
+    <div class="card rec"><div class="label">Receitas</div><div class="value" id="totalRec">R$ 0</div></div>
+    <div class="card desp"><div class="label">Despesas</div><div class="value" id="totalDesp">R$ 0</div></div>
+    <div class="card saldo"><div class="label">Saldo</div><div class="value" id="saldo">R$ 0</div></div>
   </div>
+  <div class="real-card"><div class="label">Líquido Real</div><div class="value" id="saldoReal">R$ 0,00</div></div>
   <div class="form-box">
-    <div class="form-group">
-      <label>Descrição</label>
-      <input type="text" id="desc" placeholder="Ex: Mercado, Salário..." oninput="autoCategorize(this.value)">
-    </div>
-    <div style="display:flex; gap:10px">
-      <div class="form-group" style="flex:1">
-        <label>Valor</label>
-        <input type="number" id="val" placeholder="0,00">
-      </div>
-      <div class="form-group" style="flex:1">
-        <label>Tipo</label>
-        <select id="tipo">
-          <option value="receita">Receita</option>
-          <option value="despesa">Despesa</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-        <label>Categoria</label>
-        <select id="cat">
-            <option value="Outros">Outros</option>
-            <option value="Salário">Salário</option>
-            <option value="Alimentação">Alimentação</option>
-            <option value="Moradia">Moradia</option>
-            <option value="Transporte">Transporte</option>
-            <option value="Lazer">Lazer</option>
-        </select>
-    </div>
-    <button class="sync-btn" style="width:100%; justify-content:center; background:var(--azul); font-weight:700" onclick="addLancamento()">Lançar Agora</button>
+    <input id="searchInput" type="text" placeholder="🔍 Buscar..." onkeyup="render()" style="width:100%; background:var(--card2); border:1px solid var(--border); border-radius:8px; color:#fff; padding:10px; margin-bottom:10px">
+    <input id="desc" type="text" placeholder="Descrição..." style="width:65%; background:var(--card2); border:1px solid var(--border); border-radius:8px; color:#fff; padding:10px">
+    <input id="val" type="number" placeholder="0,00" style="width:30%; background:var(--card2); border:1px solid var(--border); border-radius:8px; color:#fff; padding:10px">
+    <button onclick="addItem()" style="width:100%; padding:12px; border-radius:10px; border:none; background:var(--verde); color:#fff; font-weight:700; margin-top:10px">Lançar</button>
   </div>
-  <div class="list" id="listLancamentos"></div>
+  <div class="list" id="list"></div>
 </div>
-
-<div id="view-pendencias" class="hidden">
-    <div class="form-box">
-        <div class="form-group">
-            <label>O que pagar?</label>
-            <input type="text" id="pdesc" placeholder="Conta de Luz...">
-        </div>
-        <div class="form-group">
-            <label>Valor</label>
-            <input type="number" id="pval">
-        </div>
-        <button class="sync-btn" style="width:100%; justify-content:center; background:var(--amarelo); color:#000; font-weight:700" onclick="addPendencia()">Agendar Pendência</button>
-    </div>
-    <div class="list" id="listPendencias"></div>
+<div id="tab-pendencias" style="display:none">
+  <div class="form-box">
+    <input id="pdesc" type="text" placeholder="O que pagar?" style="width:100%; background:var(--card2); border:1px solid var(--border); border-radius:8px; color:#fff; padding:10px; margin-bottom:8px">
+    <input id="pval" type="number" placeholder="Valor" style="width:100%; background:var(--card2); border:1px solid var(--border); border-radius:8px; color:#fff; padding:10px">
+    <button onclick="addPend()" style="width:100%; padding:12px; border-radius:10px; border:none; background:var(--amarelo); color:#000; font-weight:700; margin-top:10px">Agendar</button>
+  </div>
+  <div class="list" id="listPend"></div>
 </div>
-
-<nav class="nav-bottom">
-  <button class="nav-btn active" onclick="setTab('dashboard')"><span>Dashboard</span></button>
-  <button class="nav-btn" onclick="setTab('lancamentos')"><span>Lançamentos</span></button>
-  <button class="nav-btn" onclick="setTab('pendencias')"><span>Pendências</span></button>
-</nav>
-
+<div id="tab-graficos" style="display:none"><div class="form-box" style="text-align:center"><canvas id="myChart"></canvas></div></div>
 <script>
-let db = JSON.parse(localStorage.getItem('zapia_financas_pro')) || { items: [], pends: [] };
-let myChart = null;
-
-const icones = { 'Alimentação': '🍽️', 'Salário': '💰', 'Moradia': '🏠', 'Transporte': '🚗', 'Lazer': '🎡', 'Outros': '📦' };
-const sugestoes = { 'salario': 'Salário', 'mercado': 'Alimentação', 'ifood': 'Alimentação', 'aluguel': 'Moradia', 'uber': 'Transporte' };
-
-function save() { 
-    localStorage.setItem('zapia_financas_pro', JSON.stringify(db)); 
-    render(); 
-}
-
-function setTab(tab) {
-    document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
-    document.getElementById('view-' + tab).classList.remove('hidden');
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    render();
-}
-
-function autoCategorize(val) {
-    const v = val.toLowerCase();
-    for(let key in sugestoes) {
-        if(v.includes(key)) { document.getElementById('cat').value = sugestoes[key]; break; }
-    }
-}
-
-function addLancamento() {
-    const desc = document.getElementById('desc').value;
-    const val = parseFloat(document.getElementById('val').value);
-    const tipo = document.getElementById('tipo').value;
-    const cat = document.getElementById('cat').value;
-    if(!desc || !val) return;
-    db.items.push({ id: Date.now(), desc, val, tipo, cat, date: new Date().toISOString() });
-    save();
-}
-
-function addPendencia() {
-    const desc = document.getElementById('pdesc').value;
-    const val = parseFloat(document.getElementById('pval').value);
-    if(!desc || !val) return;
-    db.pends.push({ id: Date.now(), desc, val, date: new Date().toISOString() });
-    save();
-}
-
-function pagarPendencia(id) {
-    const p = db.pends.find(x => x.id === id);
-    db.items.push({ ...p, tipo: 'despesa', cat: 'Outros', date: new Date().toISOString() });
-    db.pends = db.pends.filter(x => x.id !== id);
-    save();
-}
-
-function exportCSV() {
-    let csv = "Data,Descricao,Valor,Tipo,Categoria\n";
-    db.items.forEach(i => { csv += `${i.date},${i.desc},${i.val},${i.tipo},${i.cat}\n`; });
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'financas.csv'; a.click();
-}
-
+let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { items: [], pendencias: [] };
+let chartInstance = null;
+function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
+function setTab(tab) { ['lancamentos', 'pendencias', 'graficos'].forEach(t => document.getElementById('tab-'+t).style.display = (t===tab?'block':'none')); render(); }
+function addItem() { const d = document.getElementById('desc').value, v = parseFloat(document.getElementById('val').value); if(d&&v) db.items.push({id:Date.now(), desc:d, val:v, tipo:'despesa', cat:'Outros', data:new Date().toISOString().split('T')[0]}); save(); }
+function addPend() { const d = document.getElementById('pdesc').value, v = parseFloat(document.getElementById('pval').value); if(d&&v) db.pendencias.push({id:Date.now(), desc:d, val:v}); save(); }
+function pagarPend(id) { const p = db.pendencias.find(x=>x.id===id); db.items.push({...p, tipo:'despesa', data:new Date().toISOString().split('T')[0]}); db.pendencias=db.pendencias.filter(x=>x.id!==id); save(); }
 function render() {
-    const saldo = db.items.reduce((acc, i) => i.tipo === 'receita' ? acc + i.val : acc - i.val, 0);
-    const pendTotal = db.pends.reduce((acc, i) => acc + i.val, 0);
-    const recTotal = db.items.filter(i => i.tipo === 'receita').reduce((acc, i) => acc + i.val, 0);
-
-    document.getElementById('resumoSaldo').innerText = saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    document.getElementById('resumoRec').innerText = '+ ' + recTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    document.getElementById('resumoPend').innerText = '- ' + pendTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    document.getElementById('realLiquido').innerText = `Líquido Real: ${(saldo - pendTotal).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
-
-    renderLancamentos();
-    renderPendencias();
-    updateChart();
+    const s = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = db.items.filter(i => i.desc.toLowerCase().includes(s));
+    let r=0, d=0; filtered.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val);
+    const pTotal = db.pendencias.reduce((a,b)=>a+b.val, 0);
+    document.getElementById('totalRec').innerText = 'R$ '+r.toFixed(2);
+    document.getElementById('totalDesp').innerText = 'R$ '+d.toFixed(2);
+    document.getElementById('saldo').innerText = 'R$ '+(r-d).toFixed(2);
+    document.getElementById('saldoReal').innerText = 'R$ '+(r-d-pTotal).toFixed(2);
+    const l = document.getElementById('list'); l.innerHTML = '';
+    filtered.reverse().forEach(i => l.innerHTML += `<div class="item"><span>${i.desc}</span><b class="item-val ${i.tipo}">R$ ${i.val.toFixed(2)}</b></div>`);
+    const lp = document.getElementById('listPend'); lp.innerHTML = '';
+    db.pendencias.forEach(p => lp.innerHTML += `<div class="item" onclick="pagarPend(${p.id})"><span>${p.desc}</span><b class="item-val pend">R$ ${p.val.toFixed(2)}</b></div>`);
+    if(document.getElementById('tab-graficos').style.display === 'block') updateChart(filtered);
 }
-
-function renderLancamentos() {
-    const list = document.getElementById('listLancamentos');
-    const search = document.getElementById('searchInput').value.toLowerCase();
-    list.innerHTML = '';
-    db.items.filter(i => i.desc.toLowerCase().includes(search)).reverse().forEach(i => {
-        list.innerHTML += `<div class="item">
-            <div class="item-info">
-                <div class="item-icon">${icones[i.cat] || '📦'}</div>
-                <div class="item-text"><div class="desc">${i.desc}</div><div class="meta">${i.cat}</div></div>
-            </div>
-            <div class="item-val ${i.tipo === 'receita' ? 'verde' : 'vermelho'}">${i.tipo === 'receita' ? '+' : '-'} R$ ${i.val.toFixed(2)}</div>
-        </div>`;
-    });
+function updateChart(data) {
+    const ctx = document.getElementById('myChart'); if(!ctx) return;
+    const cats = {}; data.forEach(i => cats[i.tipo] = (cats[i.tipo]||0)+i.val);
+    if(chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(ctx, { type: 'pie', data: { labels: Object.keys(cats), datasets: [{ data: Object.values(cats), backgroundColor: ['#ef4444','#22c55e'] }] }, options: { plugins: { legend: { labels: { color: '#fff' } } } } });
 }
-
-function renderPendencias() {
-    const list = document.getElementById('listPendencias');
-    list.innerHTML = '';
-    db.pends.forEach(p => {
-        list.innerHTML += `<div class="item" onclick="pagarPendencia(${p.id})">
-            <div class="item-text"><div class="desc">${p.desc}</div><div class="meta">Clique para pagar</div></div>
-            <div class="item-val amarelo">R$ ${p.val.toFixed(2)}</div>
-        </div>`;
-    });
-}
-
-function updateChart() {
-    const ctx = document.getElementById('mainChart').getContext('2d');
-    const cats = {};
-    db.items.filter(i => i.tipo === 'despesa').forEach(i => cats[i.cat] = (cats[i.cat] || 0) + i.val);
-    
-    if(myChart) myChart.destroy();
-    myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(cats),
-            datasets: [{
-                data: Object.values(cats),
-                backgroundColor: ['#3b82f6', '#ef4444', '#f59e0b', '#22c55e', '#a855f7'],
-                borderWidth: 0
-            }]
-        },
-        options: { plugins: { legend: { display: false } }, cutout: '70%' }
-    });
-}
-
-document.getElementById('currentDate').innerText = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
-render();
+function exportCSV() { let csv = "Desc,Val,Tipo\n"; db.items.forEach(i => csv += i.desc + "," + i.val + "," + i.tipo + "\n"); window.open(URL.createObjectURL(new Blob([csv], {type:'text/csv'}))); }
+window.onload = render;
 </script>
 </body>
 </html>
