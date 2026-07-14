@@ -14,29 +14,29 @@
 <style>
 /* ===== TOKENS ===== */
 :root {
-  --verde: #10b981;
-  --verm: #ef4444;
-  --amar: #f59e0b;
-  --azul: #000000;
-  --roxo: #6366f1;
-  --bg: #ffffff;
-  --card: #f9fafb;
-  --card2: #f3f4f6;
-  --border: #e5e7eb;
-  --text: #000000;
-  --muted: #737373;
-  --shadow: none;
-  --radius: 8px;
+  --verde: #00ff9d;
+  --verm: #ff3e3e;
+  --amar: #ffcc00;
+  --azul: #00d4ff;
+  --roxo: #bd00ff;
+  --bg: #0d0d0f;
+  --card: #16161a;
+  --card2: #1f1f23;
+  --border: rgba(0, 212, 255, 0.15);
+  --text: #ffffff;
+  --muted: #8b8b9e;
+  --shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+  --radius: 12px;
   --header-h: 70px;
 }
-body:not(.light-mode) {
-  --bg: #000000;
-  --card: #111111;
-  --card2: #171717;
-  --border: #262626;
-  --text: #ffffff;
-  --muted: #a3a3a3;
-  --azul: #ffffff;
+body.light-mode {
+  --bg: #f5f6fa;
+  --card: #ffffff;
+  --card2: #eceef5;
+  --border: rgba(99, 102, 241, 0.1);
+  --text: #1a1a2e;
+  --muted: #64748b;
+  --azul: #6366f1;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -102,30 +102,37 @@ header .date { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
   opacity: 1;
 }
 .bnav-btn .icon { font-size: 1.5rem; margin-bottom: 4px; transition: 0.2s; }
-.bnav-btn.active { color: var(--text); }
-.bnav-btn.active .icon { transform: scale(1.1); }
+.bnav-btn.active { color: var(--azul); }
+.bnav-btn.active .icon { transform: scale(1.2); filter: drop-shadow(0 0 5px var(--azul)); }
 
-/* Resumo Card Bancário */
+/* Resumo Card Cyberpunk Anime */
 .resumo {
-  background: var(--text);
-  color: var(--bg);
-  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--azul);
+  border-left: 5px solid var(--azul);
+  border-radius: 4px 20px 4px 20px;
   padding: 24px;
   margin-bottom: 24px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 10px 10px 0px rgba(0, 212, 255, 0.05);
   position: relative;
+  overflow: hidden;
 }
-.resumo-title { font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; font-weight: 600; text-transform: none; letter-spacing: 0; }
-.resumo-val { font-size: 2.2rem; font-weight: 700; margin-bottom: 20px; letter-spacing: -1px; color: var(--bg); }
-.resumo-grid { display: flex; gap: 20px; }
-.resumo-item { background: transparent; padding: 0; border: none; }
-.resumo-item .lab { font-size: 0.7rem; color: var(--muted); font-weight: 600; }
-.resumo-item .amt { font-size: 1rem; font-weight: 700; margin-top: 2px; color: var(--bg); }
+.resumo::after {
+  content: 'ZAPIA SYSTEM v3.5';
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 0.5rem;
+  font-weight: 900;
+  color: var(--azul);
+  opacity: 0.5;
+}
+.resumo-title { font-size: 0.7rem; color: var(--azul); margin-bottom: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+.resumo-val { font-size: 2.4rem; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px; color: var(--text); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
 .resumo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.resumo-item { background: rgba(255,255,255,0.03); padding: 16px; border-radius: 16px; border: 1px solid var(--border); }
-body.light-mode .resumo-item { background: rgba(0,0,0,0.02); }
-.resumo-item .lab { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }
-.resumo-item .amt { font-size: 1.1rem; font-weight: 800; margin-top: 6px; letter-spacing: -0.5px; }
+.resumo-item { background: var(--card2); padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
+.resumo-item .lab { font-size: 0.6rem; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+.resumo-item .amt { font-size: 1rem; font-weight: 800; margin-top: 2px; color: var(--text); }
 
 /* Tabs Modernas */
 .tabs { 
@@ -163,29 +170,40 @@ body.light-mode .resumo-item { background: rgba(0,0,0,0.02); }
 .list-header h2 { font-size: 1rem; font-weight: 700; }
 
 .item {
-  background: var(--bg);
-  padding: 16px 4px;
-  border-radius: 0;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 0;
-  border: none;
-  border-bottom: 1px solid var(--border);
-  transition: 0.2s;
-  box-shadow: none;
-}
-.item:active { background: var(--card2); }
-.item-ico {
-  width: 44px;
-  height: 44px;
+  background: var(--card);
+  padding: 16px;
   border-radius: 12px;
   display: flex;
   align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  transition: 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--border);
+  transition: 0.2s;
+}
+.item:active { background: var(--card2); transform: translateX(5px); }
+.item:active::before { background: var(--azul); }
+.item-ico {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
-  box-shadow: none;
+  border: 1px solid rgba(255,255,255,0.05);
 }
 .item-ico.rec  { background: rgba(34,197,94,0.1); color: var(--verde); }
 .item-ico.desp { background: rgba(239,68,68,0.1); color: var(--verm); }
@@ -277,20 +295,22 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 
 .btn-add {
   width: 100%;
-  background: var(--text);
-  color: var(--bg);
-  border: none;
+  background: var(--card2);
+  color: var(--text);
+  border: 1px solid var(--azul);
   padding: 16px;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 700;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 800;
   margin-top: 12px;
   transition: 0.2s;
-  box-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 4px 4px 0px var(--azul);
 }
-.btn-add:active { opacity: 0.8; }
-.btn-add.rec  { background: var(--verde); color: white; }
-.btn-add.desp { background: var(--verm); color: white; }
+.btn-add:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px var(--azul); }
+.btn-add.rec  { border-color: var(--verde); box-shadow: 4px 4px 0px var(--verde); }
+.btn-add.desp { border-color: var(--verm); box-shadow: 4px 4px 0px var(--verm); }
 
 .check-row { display: flex; align-items: center; gap: 10px; padding: 4px; margin-top: 4px; }
 .check-row input { width: 20px; height: 20px; accent-color: var(--azul); }
