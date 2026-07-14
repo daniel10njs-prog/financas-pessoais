@@ -102,7 +102,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
       <div class="dropdown-item" onclick="toggleTheme()"><i class="fas fa-circle-half-stroke"></i> Tema Claro/Escuro</div>
       <div class="dropdown-item" onclick="exportBackup()"><i class="fas fa-file-export"></i> Salvar Backup (JSON)</div>
       <div class="dropdown-item" onclick="importBackup()"><i class="fas fa-file-import"></i> Restaurar Backup</div>
-      <div class="dropdown-item" onclick="openIconManager()"><i class="fas fa-icons"></i> Gerenciar Ícones</div>
+      <div class="dropdown-item" onclick="openIconManager()"><i class="fas fa-icons"></i> Gerenciar Categorias</div>
     </div>
   </div>
 </header>
@@ -219,18 +219,43 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 
 <div class="modal-overlay" id="modalIcon">
   <div class="modal">
-    <h2>Gerenciar Ícones</h2>
-    <div id="iconList" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px;"></div>
-    <div class="modal-actions"><button class="btn-save" style="width:100%" onclick="closeIconManager()">Concluir</button></div>
+    <h2>Gerenciar Categorias</h2>
+    <div id="iconList" style="max-height: 350px; overflow-y: auto; margin-bottom: 20px;"></div>
+    <div style="border-top:1px solid var(--border); padding-top:15px;">
+        <p style="font-size:0.7rem; color:var(--muted); margin-bottom:10px; text-transform:uppercase;">Nova Categoria</p>
+        <div class="form-group"><input type="text" id="newCatName" placeholder="Nome (Ex: Presentes)"></div>
+        <div class="form-group"><input type="text" id="newCatIcon" placeholder="Emoji (Ex: 🎁)"></div>
+        <div class="form-group">
+            <select id="newCatType">
+                <option value="receita">Receita</option>
+                <option value="despesa">Despesa</option>
+                <option value="pendencia">Pendência</option>
+            </select>
+        </div>
+        <button class="btn-save" style="width:100%; background:var(--verde); margin-bottom:10px;" onclick="addCategory()">+ Adicionar Categoria</button>
+    </div>
+    <div class="modal-actions"><button class="btn-cancel" style="width:100%" onclick="closeIconManager()">Fechar</button></div>
   </div>
 </div>
 
 <script>
-let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { items: [], pendencias: [], metas: [], previstos: [], icons: { 'Salário': '💰', 'Pix Recebido': '💸', 'Ajuste': '⚙️', 'Alimentação': '🍽️', 'Transporte': '🚗', 'Moradia': '🏠', 'Lazer': '🎡', 'Saúde': '🏥', 'Educação': '📚', 'Assinaturas': '📺', 'Outros': '📦' }, theme: 'dark' };
+let db = JSON.parse(localStorage.getItem('zapia_financas_db')) || { 
+    items: [], pendencias: [], metas: [], previstos: [], 
+    icons: { 'Salário': '💰', 'Pix Recebido': '💸', 'Ajuste': '⚙️', 'Alimentação': '🍽️', 'Transporte': '🚗', 'Moradia': '🏠', 'Lazer': '🎡', 'Saúde': '🏥', 'Educação': '📚', 'Assinaturas': '📺', 'Outros': '📦' }, 
+    categories: {
+        receita: ['Salário', 'Pix Recebido', 'Ajuste'],
+        despesa: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'],
+        pendencia: ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros']
+    },
+    theme: 'dark' 
+};
+
+// Migração para garantir que novas propriedades existam
 if(!db.items) db.items = []; if(!db.pendencias) db.pendencias = []; if(!db.metas) db.metas = []; if(!db.previstos) db.previstos = []; if(!db.icons) db.icons = {};
+if(!db.categories) db.categories = { receita: ['Salário', 'Pix Recebido', 'Ajuste'], despesa: ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'], pendencia: ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros'] };
+
 let simChecks = {}; 
 let chartInstance = null;
-const categorias = { 'receita': ['Salário', 'Pix Recebido', 'Ajuste'], 'despesa': ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Ajuste', 'Outros'], 'pendencia': ['Moradia', 'Educação', 'Assinaturas', 'Saúde', 'Outros'] };
 
 function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
 
@@ -279,13 +304,41 @@ function importBackup() {
 function openIconManager() {
     const il = document.getElementById('iconList'); il.innerHTML = '';
     Object.keys(db.icons).forEach(cat => {
-        il.innerHTML += `<div class="form-group" style="display:flex; align-items:center; gap:10px;"><label style="flex:1; margin:0;">${cat}</label><input type="text" style="width:60px; text-align:center;" value="${db.icons[cat]}" oninput="updateIcon('${cat}', this.value)"></div>`;
+        il.innerHTML += `
+            <div class="item" style="margin-bottom:8px; padding:8px;">
+                <div style="flex:1;"><b>${cat}</b></div>
+                <input type="text" style="width:50px; text-align:center; background:var(--card2); border:1px solid var(--border); color:var(--text); border-radius:6px; padding:4px;" value="${db.icons[cat]}" oninput="updateIcon('${cat}', this.value)">
+                <button class="icon-btn delete" style="margin-left:10px;" onclick="removeCategory('${cat}')"><i class="fas fa-times"></i></button>
+            </div>`;
     });
     document.getElementById('modalIcon').classList.add('show');
     document.getElementById('dropdownMenu').classList.remove('show');
 }
 function closeIconManager() { document.getElementById('modalIcon').classList.remove('show'); }
-function updateIcon(cat, val) { db.icons[cat] = val; localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
+function updateIcon(cat, val) { db.icons[cat] = val; localStorage.setItem('zapia_financas_db', JSON.stringify(db)); }
+
+function addCategory() {
+    const name = document.getElementById('newCatName').value;
+    const icon = document.getElementById('newCatIcon').value;
+    const type = document.getElementById('newCatType').value;
+    if(!name || !icon) return;
+    db.icons[name] = icon;
+    if(!db.categories[type].includes(name)) db.categories[type].push(name);
+    document.getElementById('newCatName').value = '';
+    document.getElementById('newCatIcon').value = '';
+    save();
+    openIconManager();
+}
+
+function removeCategory(name) {
+    if(!confirm(`Excluir categoria "${name}"?`)) return;
+    delete db.icons[name];
+    ['receita','despesa','pendencia'].forEach(t => {
+        db.categories[t] = db.categories[t].filter(c => c !== name);
+    });
+    save();
+    openIconManager();
+}
 
 function setTab(t) {
   document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
@@ -298,7 +351,7 @@ function setTab(t) {
 
 function openModal(mode, id = null) {
   const select = document.getElementById('tipoSub'); select.innerHTML = '';
-  const cats = mode === 'pendencia' ? categorias['pendencia'] : (mode === 'receita' ? categorias['receita'] : categorias['despesa']);
+  const cats = db.categories[mode] || [];
   cats.forEach(cat => select.innerHTML += `<option value="${cat}">${cat}</option>`);
   document.getElementById('editType').value = mode;
   if(id) {
