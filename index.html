@@ -26,7 +26,6 @@
 
 body { background: var(--azul-fundo); color: var(--texto); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-/* Header e Navegação */
 header { padding: calc(var(--safe-area-top) + 15px) 20px 15px; background: var(--azul-card); border-bottom: 2px solid var(--borda); text-align: center; }
 h1 { font-size: 1.2rem; letter-spacing: 1px; color: var(--azul-claro); text-transform: uppercase; }
 
@@ -42,7 +41,6 @@ nav {
 .nav-item.active { color: var(--azul-claro); }
 .nav-item span.material-icons-round { font-size: 24px; margin-bottom: 4px; }
 
-/* Cards e Listas */
 .card { background: var(--azul-card); padding: 20px; border-radius: 12px; border: 2px solid var(--borda); margin-bottom: 20px; }
 .card-title { font-size: 0.9rem; color: var(--texto-secundario); margin-bottom: 10px; text-transform: uppercase; }
 .card-value { font-size: 1.8rem; font-weight: bold; }
@@ -61,20 +59,6 @@ nav {
 .item-obs { font-size: 0.7rem; color: var(--azul-claro); font-style: italic; margin-top: 2px; }
 .item-valor { font-weight: bold; font-size: 0.95rem; text-align: right; }
 
-/* Controles de Filtro e Busca */
-.search-box {
-    display: flex; gap: 10px; margin-bottom: 15px;
-}
-.input-search {
-    flex: 1; background: var(--azul-fundo); border: 2px solid var(--borda);
-    color: var(--texto); padding: 10px 15px; border-radius: 8px; outline: none;
-}
-.filter-select {
-    background: var(--azul-fundo); border: 2px solid var(--borda);
-    color: var(--texto); padding: 10px; border-radius: 8px; outline: none; font-size: 0.8rem;
-}
-
-/* Modais */
 .modal {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px;
@@ -104,40 +88,18 @@ label { display: block; font-size: 0.8rem; color: var(--texto-secundario); margi
   display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 90;
 }
 
-/* Ranking de Gastos */
-.ranking-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.ranking-bar-container { flex: 1; height: 8px; background: var(--borda); border-radius: 4px; overflow: hidden; }
-.ranking-bar { height: 100%; background: var(--azul-claro); border-radius: 4px; }
-.ranking-label { min-width: 80px; font-size: 0.8rem; color: var(--texto-secundario); }
-.ranking-val { min-width: 70px; text-align: right; font-size: 0.8rem; font-weight: bold; }
-
-/* Grid de ícones */
 .icon-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 15px; }
-.icon-option {
-    padding: 10px; border: 2px solid var(--borda); border-radius: 8px; text-align: center; cursor: pointer;
-}
+.icon-option { padding: 10px; border: 2px solid var(--borda); border-radius: 8px; text-align: center; cursor: pointer; }
 .icon-option.selected { border-color: var(--azul-claro); background: rgba(56, 189, 248, 0.1); }
-
-/* Tabs interno de Análise */
-.tab-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-.tab-btn {
-    flex: 1; padding: 8px; background: var(--azul-fundo); border: 2px solid var(--borda);
-    color: var(--texto-secundario); border-radius: 8px; font-size: 0.8rem; cursor: pointer;
-}
-.tab-btn.active { border-color: var(--azul-claro); color: var(--azul-claro); }
 
 [hidden] { display: none !important; }
 </style>
 </head>
 <body>
 
-<header>
-  <h1 id="app-title">Finanças Pro</h1>
-</header>
-
+<header><h1>Finanças Pro</h1></header>
 <div class="main-content" id="content"></div>
 
-<!-- Navegação -->
 <nav>
   <div class="nav-item active" onclick="navegar('home')"><span class="material-icons-round">home</span>Início</div>
   <div class="nav-item" onclick="navegar('lancamentos')"><span class="material-icons-round">list_alt</span>Lançamentos</div>
@@ -146,34 +108,21 @@ label { display: block; font-size: 0.8rem; color: var(--texto-secundario); margi
   <div class="nav-item" onclick="navegar('analise')"><span class="material-icons-round">insights</span>Análise</div>
 </nav>
 
-<!-- Botão Add flutuante (muda de função conforme a aba) -->
 <div id="float-btn" class="btn-add" onclick="abrirModalCadastro()"><span class="material-icons-round">add</span></div>
 
-<!-- Modal Lançamento (Receita/Despesa/Pendência) -->
+<!-- Modal Lançamento -->
 <div id="modal-lancamento" class="modal">
   <div class="modal-content">
     <div class="modal-header">
       <h2 id="modal-title">Novo Lançamento</h2>
       <span class="material-icons-round" style="cursor:pointer" onclick="fecharModal('modal-lancamento')">close</span>
     </div>
-    <input type="hidden" id="edit-id">
-    <input type="hidden" id="tipo-lancamento">
-    
-    <label>Descrição</label>
-    <input type="text" id="desc" placeholder="Ex: Salário, Aluguel...">
-    
-    <label>Valor (R$)</label>
-    <input type="number" id="valor" step="0.01" placeholder="0,00">
-
-    <label>Data</label>
-    <input type="date" id="data-lancamento">
-    
-    <label>Categoria</label>
-    <select id="cat-select"></select>
-
-    <label>Observação</label>
-    <textarea id="obs" rows="2" placeholder="Opcional..."></textarea>
-    
+    <input type="hidden" id="edit-id"><input type="hidden" id="tipo-lancamento">
+    <label>Descrição</label><input type="text" id="desc">
+    <label>Valor (R$)</label><input type="number" id="valor" step="0.01">
+    <label>Data</label><input type="date" id="data-lancamento">
+    <label>Categoria</label><select id="cat-select"></select>
+    <label>Observação</label><textarea id="obs" rows="2"></textarea>
     <button class="btn btn-primary" onclick="salvarLancamento()">SALVAR</button>
     <button id="btn-excluir" class="btn btn-outline" style="color:var(--vermelho); border-color:var(--vermelho); display:none;" onclick="excluirLancamento()">EXCLUIR</button>
   </div>
@@ -187,59 +136,37 @@ label { display: block; font-size: 0.8rem; color: var(--texto-secundario); margi
       <span class="material-icons-round" onclick="fecharModal('modal-meta')">close</span>
     </div>
     <input type="hidden" id="meta-edit-id">
-    <label>Nome da Meta</label>
-    <input type="text" id="meta-nome" placeholder="Ex: Reserva, Viagem...">
-    <label>Valor Objetivo (R$)</label>
-    <input type="number" id="meta-valor" step="0.01">
-    
-    <div id="edit-meta-fields" style="display:none">
-        <label>Valor já Acumulado (R$)</label>
-        <input type="number" id="meta-acumulado" step="0.01">
-    </div>
-
+    <label>Nome da Meta</label><input type="text" id="meta-nome">
+    <label>Valor Objetivo (R$)</label><input type="number" id="meta-valor" step="0.01">
+    <div id="edit-meta-fields" style="display:none"><label>Valor já Acumulado (R$)</label><input type="number" id="meta-acumulado" step="0.01"></div>
     <button class="btn btn-primary" onclick="salvarMeta()">SALVAR META</button>
   </div>
 </div>
 
-<!-- Modal Aporte Meta -->
+<!-- Modal Aporte -->
 <div id="modal-aporte" class="modal">
   <div class="modal-content">
-    <div class="modal-header">
-      <h2>Novo Aporte</h2>
-      <span class="material-icons-round" onclick="fecharModal('modal-aporte')">close</span>
-    </div>
-    <input type="hidden" id="aporte-meta-id">
-    <label>Valor do Aporte (R$)</label>
-    <input type="number" id="aporte-valor" step="0.01">
-    <p style="font-size:0.7rem; color:var(--texto-secundario); margin-bottom:15px;">* Este valor será deduzido do seu Saldo Real.</p>
+    <div class="modal-header"><h2>Novo Aporte</h2><span class="material-icons-round" onclick="fecharModal('modal-aporte')">close</span></div>
+    <input type="hidden" id="aporte-meta-id"><label>Valor do Aporte (R$)</label><input type="number" id="aporte-valor" step="0.01">
     <button class="btn btn-primary" onclick="confirmarAporte()">CONFIRMAR APORTE</button>
   </div>
 </div>
 
-<!-- Modal Gerenciar Categorias -->
+<!-- Modal Categorias -->
 <div id="modal-categorias" class="modal">
   <div class="modal-content">
-    <div class="modal-header">
-      <h2>Categorias</h2>
-      <span class="material-icons-round" onclick="fecharModal('modal-categorias')">close</span>
-    </div>
+    <div class="modal-header"><h2>Categorias</h2><span class="material-icons-round" onclick="fecharModal('modal-categorias')">close</span></div>
     <div id="lista-cats-config" style="margin-bottom:20px;"></div>
     <hr style="border:1px solid var(--borda); margin-bottom:20px;">
-    <h3 style="font-size:0.9rem; margin-bottom:10px;">Nova Categoria</h3>
-    <input type="text" id="nova-cat-nome" placeholder="Nome da categoria">
-    <label>Selecione um Ícone</label>
-    <div class="icon-grid" id="icon-picker"></div>
+    <input type="text" id="nova-cat-nome" placeholder="Nome"><div class="icon-grid" id="icon-picker"></div>
     <button class="btn btn-primary" onclick="adicionarCategoria()">ADICIONAR</button>
   </div>
 </div>
 
 <script>
 let currentTab = 'home';
-let db = JSON.parse(localStorage.getItem('financas_db_v55')) || {
-  saldoReal: 0,
-  lancamentos: [],
-  pendencias: [],
-  metas: [],
+let db = JSON.parse(localStorage.getItem('financas_db_v55')) || JSON.parse(localStorage.getItem('financas_db_v54')) || {
+  saldoReal: 0, lancamentos: [], pendencias: [], metas: [],
   categorias: [
     { id: 1, nome: 'Salário', icone: 'payments', tipo: 'receita' },
     { id: 2, nome: 'Alimentação', icone: 'restaurant', tipo: 'despesa' },
@@ -250,43 +177,19 @@ let db = JSON.parse(localStorage.getItem('financas_db_v55')) || {
   ]
 };
 
-const materialIcons = [
-    'payments', 'restaurant', 'home', 'directions_car', 'shopping_cart', 
-    'medical_services', 'school', 'bolt', 'water_drop', 'wifi',
-    'credit_card', 'handshake', 'account_balance', 'request_quote', 'fitness_center',
-    'commute', 'local_gas_station', 'entertainment', 'redeem', 'savings'
-];
-
+const materialIcons = ['payments', 'restaurant', 'home', 'directions_car', 'shopping_cart', 'medical_services', 'school', 'bolt', 'water_drop', 'wifi', 'credit_card', 'handshake', 'account_balance', 'request_quote', 'fitness_center', 'commute', 'local_gas_station', 'entertainment', 'redeem', 'savings'];
 let selectedIcon = 'payments';
-let searchFilter = '';
-let catFilter = 'todos';
 
-function save() {
-  localStorage.setItem('financas_db_v55', JSON.stringify(db));
-  render();
-}
-
-function formatarMoeda(valor) {
-  return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
-
-function formatarData(dataISO) {
-    if(!dataISO) return "";
-    const [ano, mes, dia] = dataISO.split('-');
-    return `${dia}/${mes}/${ano}`;
-}
+function save() { localStorage.setItem('financas_db_v55', JSON.stringify(db)); render(); }
+function formatarMoeda(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+function formatarData(d) { if(!d) return ""; const [a, m, dia] = d.split('-'); return `${dia}/${m}/${a}`; }
 
 function navegar(tab) {
   currentTab = tab;
-  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-  const idx = {home:0, lancamentos:1, pendencias:2, metas:3, analise:4}[tab];
-  document.querySelectorAll('.nav-item')[idx].classList.add('active');
-  
-  // Controle do botão flutuante
-  const fBtn = document.getElementById('float-btn');
-  if(tab === 'analise') fBtn.style.display = 'none';
-  else fBtn.style.display = 'flex';
-  
+  document.querySelectorAll('.nav-item').forEach((i, idx) => {
+      const tabs = ['home', 'lancamentos', 'pendencias', 'metas', 'analise'];
+      i.classList.toggle('active', tabs[idx] === tab);
+  });
   render();
 }
 
@@ -294,40 +197,31 @@ function abrirModal(id) { document.getElementById(id).style.display = 'flex'; }
 function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
 
 function abrirModalCadastro() {
-  if(currentTab === 'home' || currentTab === 'lancamentos') {
-    document.getElementById('modal-title').innerText = "Novo Lançamento";
-    document.getElementById('edit-id').value = "";
-    document.getElementById('desc').value = "";
-    document.getElementById('valor').value = "";
-    document.getElementById('obs').value = "";
-    document.getElementById('data-lancamento').value = new Date().toISOString().split('T')[0];
-    document.getElementById('btn-excluir').style.display = 'none';
-    carregarCategoriasSelect();
-    abrirModal('modal-lancamento');
-  } else if(currentTab === 'pendencias') {
-    document.getElementById('modal-title').innerText = "Nova Pendência";
-    document.getElementById('tipo-lancamento').value = 'pendencia';
-    document.getElementById('edit-id').value = "";
-    document.getElementById('desc').value = "";
-    document.getElementById('valor').value = "";
-    document.getElementById('obs').value = "";
-    document.getElementById('data-lancamento').value = new Date().toISOString().split('T')[0];
-    document.getElementById('btn-excluir').style.display = 'none';
-    carregarCategoriasSelect();
-    abrirModal('modal-lancamento');
-  } else if(currentTab === 'metas') {
+  if(currentTab === 'analise') return;
+  const isMeta = currentTab === 'metas';
+  if(isMeta) {
     document.getElementById('meta-modal-title').innerText = "Nova Meta";
     document.getElementById('meta-edit-id').value = "";
     document.getElementById('meta-nome').value = "";
     document.getElementById('meta-valor').value = "";
     document.getElementById('edit-meta-fields').style.display = 'none';
     abrirModal('modal-meta');
+  } else {
+    document.getElementById('modal-title').innerText = currentTab === 'pendencias' ? "Nova Pendência" : "Novo Lançamento";
+    document.getElementById('edit-id').value = "";
+    document.getElementById('tipo-lancamento').value = currentTab === 'pendencias' ? 'pendencia' : '';
+    document.getElementById('desc').value = "";
+    document.getElementById('valor').value = "";
+    document.getElementById('obs').value = "";
+    document.getElementById('data-lancamento').value = new Date().toISOString().split('T')[0];
+    document.getElementById('btn-excluir').style.display = 'none';
+    carregarCategoriasSelect();
+    abrirModal('modal-lancamento');
   }
 }
 
 function carregarCategoriasSelect() {
-  const select = document.getElementById('cat-select');
-  select.innerHTML = db.categorias.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+  document.getElementById('cat-select').innerHTML = db.categorias.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
 }
 
 function salvarLancamento() {
@@ -338,10 +232,9 @@ function salvarLancamento() {
   const obs = document.getElementById('obs').value;
   const data = document.getElementById('data-lancamento').value;
   const categoria = db.categorias.find(c => c.id === catId);
-  
-  if(!desc || isNaN(valor)) return alert("Preencha os campos!");
+  if(!desc || isNaN(valor)) return;
 
-  if(currentTab === 'pendencias' || document.getElementById('tipo-lancamento').value === 'pendencia') {
+  if(document.getElementById('tipo-lancamento').value === 'pendencia') {
     if(id) {
       const idx = db.pendencias.findIndex(p => p.id == id);
       db.pendencias[idx] = {...db.pendencias[idx], descricao: desc, valor, categoria, obs, data};
@@ -349,37 +242,29 @@ function salvarLancamento() {
       db.pendencias.push({id: Date.now(), descricao: desc, valor, categoria, obs, data});
     }
   } else {
-    const tipo = categoria.tipo;
     if(id) {
       const idx = db.lancamentos.findIndex(l => l.id == id);
       const antigo = db.lancamentos[idx];
-      // Estorna antigo
-      if(antigo.categoria.tipo === 'receita') db.saldoReal -= antigo.valor;
-      else db.saldoReal += antigo.valor;
-      // Aplica novo
+      db.saldoReal += (antigo.categoria.tipo === 'receita' ? -antigo.valor : antigo.valor);
       db.lancamentos[idx] = {...antigo, descricao: desc, valor, categoria, obs, data};
-      if(tipo === 'receita') db.saldoReal += valor;
-      else db.saldoReal -= valor;
+      db.saldoReal += (categoria.tipo === 'receita' ? valor : -valor);
     } else {
       db.lancamentos.push({id: Date.now(), descricao: desc, valor, categoria, obs, data});
-      if(tipo === 'receita') db.saldoReal += valor;
-      else db.saldoReal -= valor;
+      db.saldoReal += (categoria.tipo === 'receita' ? valor : -valor);
     }
   }
-  
-  fecharModal('modal-lancamento');
-  save();
+  fecharModal('modal-lancamento'); save();
 }
 
 function editarLancamento(id, tipo) {
-  const item = (tipo === 'pendencia') ? db.pendencias.find(p => p.id == id) : db.lancamentos.find(l => l.id == id);
-  document.getElementById('modal-title').innerText = "Editar Lançamento";
+  const item = (tipo === 'pendencia' ? db.pendencias : db.lancamentos).find(x => x.id == id);
+  document.getElementById('modal-title').innerText = "Editar";
   document.getElementById('edit-id').value = item.id;
   document.getElementById('tipo-lancamento').value = tipo;
   document.getElementById('desc').value = item.descricao;
   document.getElementById('valor').value = item.valor;
   document.getElementById('obs').value = item.obs || "";
-  document.getElementById('data-lancamento').value = item.data || new Date().toISOString().split('T')[0];
+  document.getElementById('data-lancamento').value = item.data || "";
   document.getElementById('btn-excluir').style.display = 'block';
   carregarCategoriasSelect();
   document.getElementById('cat-select').value = item.categoria.id;
@@ -388,25 +273,21 @@ function editarLancamento(id, tipo) {
 
 function excluirLancamento() {
   const id = document.getElementById('edit-id').value;
-  const tipo = document.getElementById('tipo-lancamento').value;
-  
-  if(tipo === 'pendencia') {
+  if(document.getElementById('tipo-lancamento').value === 'pendencia') {
     db.pendencias = db.pendencias.filter(p => p.id != id);
   } else {
     const item = db.lancamentos.find(l => l.id == id);
-    if(item.categoria.tipo === 'receita') db.saldoReal -= item.valor;
-    else db.saldoReal += item.valor;
+    db.saldoReal += (item.categoria.tipo === 'receita' ? -item.valor : item.valor);
     db.lancamentos = db.lancamentos.filter(l => l.id != id);
   }
-  fecharModal('modal-lancamento');
-  save();
+  fecharModal('modal-lancamento'); save();
 }
 
 function baixarPendencia(id) {
-  const p = db.pendencias.find(item => item.id == id);
+  const p = db.pendencias.find(x => x.id == id);
   db.saldoReal -= p.valor;
   db.lancamentos.push({...p, id: Date.now()});
-  db.pendencias = db.pendencias.filter(item => item.id != id);
+  db.pendencias = db.pendencias.filter(x => x.id != id);
   save();
 }
 
@@ -414,37 +295,28 @@ function salvarMeta() {
   const id = document.getElementById('meta-edit-id').value;
   const nome = document.getElementById('meta-nome').value;
   const objetivo = parseFloat(document.getElementById('meta-valor').value);
-  
   if(!nome || isNaN(objetivo)) return;
-
   if(id) {
     const idx = db.metas.findIndex(m => m.id == id);
-    const acumulado = parseFloat(document.getElementById('meta-acumulado').value) || 0;
-    db.metas[idx] = {...db.metas[idx], nome, objetivo, acumulado};
+    db.metas[idx] = {...db.metas[idx], nome, objetivo, acumulado: parseFloat(document.getElementById('meta-acumulado').value)||0};
   } else {
     db.metas.push({id: Date.now(), nome, objetivo, acumulado: 0});
   }
-  fecharModal('modal-meta');
-  save();
+  fecharModal('modal-meta'); save();
 }
 
 function editarMeta(id) {
-    const meta = db.metas.find(m => m.id == id);
-    document.getElementById('meta-modal-title').innerText = "Editar Meta";
-    document.getElementById('meta-edit-id').value = meta.id;
-    document.getElementById('meta-nome').value = meta.nome;
-    document.getElementById('meta-valor').value = meta.objetivo;
-    document.getElementById('meta-acumulado').value = meta.acumulado;
-    document.getElementById('edit-meta-fields').style.display = 'block';
-    abrirModal('modal-meta');
+  const m = db.metas.find(x => x.id == id);
+  document.getElementById('meta-modal-title').innerText = "Editar Meta";
+  document.getElementById('meta-edit-id').value = m.id;
+  document.getElementById('meta-nome').value = m.nome;
+  document.getElementById('meta-valor').value = m.objetivo;
+  document.getElementById('meta-acumulado').value = m.acumulado;
+  document.getElementById('edit-meta-fields').style.display = 'block';
+  abrirModal('modal-meta');
 }
 
-function excluirMeta(id) {
-  if(confirm("Excluir esta meta?")) {
-    db.metas = db.metas.filter(m => m.id != id);
-    save();
-  }
-}
+function excluirMeta(id) { if(confirm("Excluir?")) { db.metas = db.metas.filter(m => m.id != id); save(); } }
 
 function aporteMeta(id) {
   document.getElementById('aporte-meta-id').value = id;
@@ -454,275 +326,80 @@ function aporteMeta(id) {
 
 function confirmarAporte() {
   const id = document.getElementById('aporte-meta-id').value;
-  const valor = parseFloat(document.getElementById('aporte-valor').value);
-  if(isNaN(valor) || valor <= 0) return;
-  if(valor > db.saldoReal) return alert("Saldo insuficiente!");
-
-  const meta = db.metas.find(m => m.id == id);
-  meta.acumulado += valor;
-  db.saldoReal -= valor;
-  
-  // Registra como despesa de aporte
-  db.lancamentos.push({
-    id: Date.now(),
-    descricao: `Aporte: ${meta.nome}`,
-    valor: valor,
-    data: new Date().toISOString().split('T')[0],
-    categoria: {id: 99, nome: 'Metas', icone: 'flag', tipo: 'despesa'}
-  });
-
-  fecharModal('modal-aporte');
-  save();
+  const v = parseFloat(document.getElementById('aporte-valor').value);
+  if(isNaN(v) || v > db.saldoReal) return alert("Erro");
+  const m = db.metas.find(x => x.id == id);
+  m.acumulado += v; db.saldoReal -= v;
+  db.lancamentos.push({id: Date.now(), descricao: `Aporte: ${m.nome}`, valor: v, data: new Date().toISOString().split('T')[0], categoria: {id:99, nome:'Metas', icone:'flag', tipo:'despesa'}});
+  fecharModal('modal-aporte'); save();
 }
 
 function initIconPicker() {
-    const picker = document.getElementById('icon-picker');
-    picker.innerHTML = materialIcons.map(icon => `
-        <div class="icon-option ${icon === selectedIcon ? 'selected' : ''}" onclick="selectIcon('${icon}')">
-            <span class="material-icons-round">${icon}</span>
-        </div>
-    `).join('');
+  document.getElementById('icon-picker').innerHTML = materialIcons.map(i => `<div class="icon-option ${i===selectedIcon?'selected':''}" onclick="selectIcon('${i}')"><span class="material-icons-round">${i}</span></div>`).join('');
 }
-
-function selectIcon(icon) {
-    selectedIcon = icon;
-    initIconPicker();
-}
-
+function selectIcon(i) { selectedIcon = i; initIconPicker(); }
 function adicionarCategoria() {
-    const nome = document.getElementById('nova-cat-nome').value;
-    if(!nome) return;
-    db.categorias.push({id: Date.now(), nome, icone: selectedIcon, tipo: 'despesa'});
-    document.getElementById('nova-cat-nome').value = "";
-    save();
-    renderConfigCategorias();
+  const n = document.getElementById('nova-cat-nome').value;
+  if(n) { db.categorias.push({id: Date.now(), nome: n, icone: selectedIcon, tipo: 'despesa'}); save(); renderConfigCategorias(); }
 }
-
-function removerCategoria(id) {
-    db.categorias = db.categorias.filter(c => c.id !== id);
-    save();
-    renderConfigCategorias();
-}
-
+function removerCategoria(id) { db.categorias = db.categorias.filter(c => c.id !== id); save(); renderConfigCategorias(); }
 function renderConfigCategorias() {
-    const lista = document.getElementById('lista-cats-config');
-    lista.innerHTML = db.categorias.map(c => `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:var(--azul-fundo); padding:10px; border-radius:8px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <span class="material-icons-round" style="color:var(--azul-claro)">${c.icone}</span>
-                <span>${c.nome}</span>
-            </div>
-            <span class="material-icons-round" style="color:var(--vermelho); cursor:pointer;" onclick="removerCategoria(${c.id})">delete</span>
-        </div>
-    `).join('');
-}
-
-// Lógica de Filtros
-function updateSearch(val) {
-    searchFilter = val.toLowerCase();
-    render();
-}
-
-function updateCatFilter(val) {
-    catFilter = val;
-    render();
+  document.getElementById('lista-cats-config').innerHTML = db.categorias.map(c => `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><div style="display:flex; gap:10px;"><span class="material-icons-round">${c.icone}</span>${c.nome}</div><span class="material-icons-round" onclick="removerCategoria(${c.id})">delete</span></div>`).join('');
 }
 
 function render() {
   const content = document.getElementById('content');
-  
   if(currentTab === 'home') {
-    const passivos = db.pendencias.reduce((acc, p) => acc + p.valor, 0);
     content.innerHTML = `
-      <div class="card">
-        <div class="card-title">Saldo Real</div>
-        <div class="card-value" style="color:var(--verde)">${formatarMoeda(db.saldoReal)}</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Total Passivos (Pendências)</div>
-        <div class="card-value" style="color:var(--vermelho)">${formatarMoeda(passivos)}</div>
-      </div>
-      <button class="btn btn-outline" onclick="abrirModal('modal-categorias'); renderConfigCategorias(); initIconPicker();">
-        <span class="material-icons-round">category</span> GERENCIAR CATEGORIAS
-      </button>
+      <div class="card"><div class="card-title">Saldo Real</div><div class="card-value" style="color:var(--verde)">${formatarMoeda(db.saldoReal)}</div></div>
+      <div class="card"><div class="card-title">Total Passivos</div><div class="card-value" style="color:var(--vermelho)">${formatarMoeda(db.pendencias.reduce((a,b)=>a+b.valor,0))}</div></div>
+      <button class="btn btn-outline" onclick="abrirModal('modal-categorias'); renderConfigCategorias(); initIconPicker();">CATEGORIAS</button>
     `;
   }
-
   if(currentTab === 'lancamentos') {
-    let list = [...db.lancamentos].sort((a,b) => new Date(b.data) - new Date(a.data));
-    
-    // Aplica filtros
-    if(searchFilter) {
-        list = list.filter(l => l.descricao.toLowerCase().includes(searchFilter));
-    }
-    if(catFilter !== 'todos') {
-        list = list.filter(l => l.categoria.id == catFilter);
-    }
-
-    content.innerHTML = `
-      <div class="search-box">
-        <input type="text" class="input-search" placeholder="Buscar..." oninput="updateSearch(this.value)" value="${searchFilter}">
-        <select class="filter-select" onchange="updateCatFilter(this.value)">
-            <option value="todos">Todas</option>
-            ${db.categorias.map(c => `<option value="${c.id}" ${catFilter == c.id ? 'selected' : ''}>${c.nome}</option>`).join('')}
-        </select>
+    const list = [...db.lancamentos].sort((a,b) => new Date(b.data) - new Date(a.data));
+    content.innerHTML = list.map(l => `
+      <div class="item-lista" onclick="editarLancamento(${l.id}, 'lancamento')">
+        <div class="item-info">
+          <div class="item-icon"><span class="material-icons-round">${l.categoria.icone}</span></div>
+          <div class="item-detalhes"><h4>${l.descricao}</h4><p>${l.categoria.nome} • ${formatarData(l.data)}</p>${l.obs?`<p class="item-obs">${l.obs}</p>`:''}</div>
+        </div>
+        <div class="item-valor" style="color:${l.categoria.tipo==='receita'?'var(--verde)':'var(--texto)'}">${l.categoria.tipo==='receita'?'+':'-'} ${formatarMoeda(l.valor)}</div>
       </div>
-      <div id="lista-lancamentos">
-        ${list.length ? list.map(l => `
-          <div class="item-lista" onclick="editarLancamento(${l.id}, 'lancamento')">
-            <div class="item-info">
-              <div class="item-icon"><span class="material-icons-round">${l.categoria.icone}</span></div>
-              <div class="item-detalhes">
-                <h4>${l.descricao}</h4>
-                <p>${l.categoria.nome} • ${formatarData(l.data)}</p>
-                ${l.obs ? `<p class="item-obs">${l.obs}</p>` : ''}
-              </div>
-            </div>
-            <div class="item-valor" style="color:${l.categoria.tipo === 'receita' ? 'var(--verde)' : 'var(--texto)'}">
-              ${l.categoria.tipo === 'receita' ? '+' : '-'} ${formatarMoeda(l.valor)}
-            </div>
-          </div>
-        `).join('') : '<p style="text-align:center; color:var(--texto-secundario); margin-top:20px;">Nenhum lançamento encontrado.</p>'}
-      </div>
-    `;
+    `).join('') || '<p style="text-align:center; color:var(--texto-secundario)">Vazio</p>';
   }
-
   if(currentTab === 'pendencias') {
-    content.innerHTML = `
-      <div id="lista-pendencias">
-        ${db.pendencias.length ? db.pendencias.map(p => `
-          <div class="item-lista" style="border-left: 4px solid var(--vermelho);">
-            <div class="item-info" onclick="editarLancamento(${p.id}, 'pendencia')">
-              <div class="item-icon"><span class="material-icons-round">${p.categoria.icone}</span></div>
-              <div class="item-detalhes">
-                <h4>${p.descricao}</h4>
-                <p>${formatarData(p.data)}</p>
-                ${p.obs ? `<p class="item-obs">${p.obs}</p>` : ''}
-              </div>
-            </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <div class="item-valor">${formatarMoeda(p.valor)}</div>
-              <button onclick="baixarPendencia(${p.id})" style="background:var(--verde); border:none; border-radius:50%; width:32px; height:32px; color:var(--azul-fundo); display:flex; align-items:center; justify-content:center;">
-                <span class="material-icons-round" style="font-size:20px">check</span>
-              </button>
-            </div>
-          </div>
-        `).join('') : '<p style="text-align:center; color:var(--texto-secundario); margin-top:20px;">Tudo em dia!</p>'}
+    content.innerHTML = db.pendencias.map(p => `
+      <div class="item-lista">
+        <div class="item-info" onclick="editarLancamento(${p.id}, 'pendencia')">
+          <div class="item-icon"><span class="material-icons-round">${p.categoria.icone}</span></div>
+          <div class="item-detalhes"><h4>${p.descricao}</h4><p>${formatarData(p.data)}</p></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;"><div class="item-valor">${formatarMoeda(p.valor)}</div><button onclick="baixarPendencia(${p.id})" style="background:var(--verde); border:none; border-radius:50%; width:32px; height:32px;"><span class="material-icons-round">check</span></button></div>
       </div>
-    `;
+    `).join('') || '<p style="text-align:center; color:var(--texto-secundario)">Tudo em dia!</p>';
   }
-
   if(currentTab === 'metas') {
-    content.innerHTML = `
-      <div id="lista-metas">
-        ${db.metas.length ? db.metas.map(m => {
-          const perc = Math.min((m.acumulado / m.objetivo) * 100, 100);
-          return `
-            <div class="card" style="margin-bottom:15px;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <h4 style="color:var(--azul-claro)">${m.nome}</h4>
-                <div style="display:flex; gap:10px;">
-                   <span class="material-icons-round" style="color:var(--azul-claro); font-size:20px;" onclick="editarMeta(${m.id})">edit</span>
-                   <span class="material-icons-round" style="color:var(--vermelho); font-size:20px;" onclick="excluirMeta(${m.id})">delete</span>
-                </div>
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px;">
-                <span>${formatarMoeda(m.acumulado)}</span>
-                <span style="color:var(--texto-secundario)">objetivo: ${formatarMoeda(m.objetivo)}</span>
-              </div>
-              <div style="width:100%; height:12px; background:var(--borda); border-radius:6px; overflow:hidden; margin-bottom:15px;">
-                <div style="width:${perc}%; height:100%; background:var(--verde);"></div>
-              </div>
-              <button class="btn btn-primary" style="padding:8px; font-size:0.8rem" onclick="aporteMeta(${m.id})">FAZER APORTE</button>
-            </div>
-          `;
-        }).join('') : '<p style="text-align:center; color:var(--texto-secundario); margin-top:20px;">Crie sua primeira meta!</p>'}
-      </div>
-    `;
+    content.innerHTML = db.metas.map(m => {
+      const perc = Math.min((m.acumulado/m.objetivo)*100, 100);
+      return `<div class="card">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><h4>${m.nome}</h4><div style="display:flex; gap:10px;"><span class="material-icons-round" onclick="editarMeta(${m.id})">edit</span><span class="material-icons-round" onclick="excluirMeta(${m.id})">delete</span></div></div>
+        <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:5px;"><span>${formatarMoeda(m.acumulado)}</span><span>${formatarMoeda(m.objetivo)}</span></div>
+        <div style="width:100%; height:10px; background:var(--borda); border-radius:5px; overflow:hidden; margin-bottom:15px;"><div style="width:${perc}%; height:100%; background:var(--verde);"></div></div>
+        <button class="btn btn-primary" style="padding:8px" onclick="aporteMeta(${m.id})">APORTE</button>
+      </div>`;
+    }).join('') || '<p style="text-align:center; color:var(--texto-secundario)">Crie uma meta</p>';
   }
-
   if(currentTab === 'analise') {
-    content.innerHTML = `
-      <div class="tab-buttons">
-        <button id="btn-tab-pizza" class="tab-btn active" onclick="switchAnalise('pizza')">DISTRIBUIÇÃO</button>
-        <button id="btn-tab-ranking" class="tab-btn" onclick="switchAnalise('ranking')">RANKING GASTOS</button>
-      </div>
-      <div id="container-pizza" class="card">
-        <canvas id="chart-despesas"></canvas>
-      </div>
-      <div id="container-ranking" class="card" style="display:none">
-        <div class="card-title">Top 5 Maiores Gastos</div>
-        <div id="ranking-list"></div>
-      </div>
-    `;
+    content.innerHTML = `<div class="card"><canvas id="chart-despesas"></canvas></div>`;
     setTimeout(() => {
-        renderPizza();
-        renderRanking();
+      const ctx = document.getElementById('chart-despesas');
+      const dados = {};
+      db.lancamentos.filter(l => l.categoria.tipo === 'despesa').forEach(l => { dados[l.categoria.nome] = (dados[l.categoria.nome] || 0) + l.valor; });
+      new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(dados), datasets: [{ data: Object.values(dados), backgroundColor: ['#38bdf8', '#22c55e', '#fbbf24', '#ef4444', '#a855f7'], borderWidth: 0 }] }, options: { plugins: { legend: { position: 'bottom', labels: { color: '#f8fafc' } } } } });
     }, 50);
   }
 }
-
-function switchAnalise(tipo) {
-    document.getElementById('container-pizza').style.display = tipo === 'pizza' ? 'block' : 'none';
-    document.getElementById('container-ranking').style.display = tipo === 'ranking' ? 'block' : 'none';
-    document.getElementById('btn-tab-pizza').classList.toggle('active', tipo === 'pizza');
-    document.getElementById('btn-tab-ranking').classList.toggle('active', tipo === 'ranking');
-}
-
-function renderPizza() {
-    const ctx = document.getElementById('chart-despesas');
-    if(!ctx) return;
-    const dados = {};
-    db.lancamentos.filter(l => l.categoria.tipo === 'despesa').forEach(l => {
-      dados[l.categoria.nome] = (dados[l.categoria.nome] || 0) + l.valor;
-    });
-
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: Object.keys(dados),
-        datasets: [{
-          data: Object.values(dados),
-          backgroundColor: ['#38bdf8', '#22c55e', '#fbbf24', '#ef4444', '#a855f7', '#f472b6'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        plugins: { legend: { position: 'bottom', labels: { color: '#f8fafc' } } }
-      }
-    });
-}
-
-function renderRanking() {
-    const listDiv = document.getElementById('ranking-list');
-    if(!listDiv) return;
-
-    const gastos = db.lancamentos
-        .filter(l => l.categoria.tipo === 'despesa')
-        .sort((a,b) => b.valor - a.valor)
-        .slice(0, 5);
-
-    if(!gastos.length) {
-        listDiv.innerHTML = '<p style="text-align:center; color:var(--texto-secundario)">Sem dados suficientes.</p>';
-        return;
-    }
-
-    const maxVal = gastos[0].valor;
-
-    listDiv.innerHTML = gastos.map(g => {
-        const perc = (g.valor / maxVal) * 100;
-        return `
-            <div class="ranking-item">
-                <div class="ranking-label">${g.descricao}</div>
-                <div class="ranking-bar-container">
-                    <div class="ranking-bar" style="width: ${perc}%"></div>
-                </div>
-                <div class="ranking-val">${formatarMoeda(g.valor)}</div>
-            </div>
-        `;
-    }).join('');
-}
-
 navegar('home');
 </script>
 </body>
