@@ -3,95 +3,174 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
-    <title>Zapia Finance v1.0</title>
+    <title>Zapia Finance v2.0 - Sincronizado</title>
     <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/icon?family=Material+Icons+Round' rel='stylesheet'>
     <style>
-        :root { --bg: #f1f5f9; --card: #ffffff; --primary: #2563eb; --text: #1e293b; --muted: #64748b; --up: #10b981; --down: #ef4444; }
+        :root { --bg: #f8fafc; --card: #ffffff; --primary: #6366f1; --text: #1e293b; --muted: #64748b; --up: #10b981; --down: #ef4444; --warn: #f59e0b; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 30px; max-width: 500px; margin: 0 auto; }
-        header { padding: 30px 20px; text-align: center; }
-        header h1 { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
-        .card-main { margin: 0 20px 20px; padding: 25px; background: var(--primary); color: white; border-radius: 24px; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2); }
-        .bal-label { font-size: 0.8rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
-        .bal-val { font-size: 2.2rem; font-weight: 800; margin-top: 5px; }
-        .add-form { margin: 0 20px 25px; padding: 20px; background: white; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .add-form h2 { font-size: 1rem; margin-bottom: 15px; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 1rem; outline: none; }
-        .btn-add { width: 100%; padding: 14px; background: var(--primary); border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 1rem; }
-        .history { padding: 0 20px; }
-        .history h2 { font-size: 1rem; margin-bottom: 15px; color: var(--muted); }
-        .item { padding: 15px; background: white; border-radius: 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 50px; max-width: 500px; margin: 0 auto; }
+        
+        header { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+        .sync-btn { background: #eef2ff; color: var(--primary); border: none; padding: 8px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+
+        .cards-scroll { display: flex; gap: 15px; padding: 0 20px 20px; overflow-x: auto; scrollbar-width: none; }
+        .card { min-width: 200px; padding: 20px; border-radius: 20px; color: white; flex-shrink: 0; }
+        .card-main { background: var(--primary); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2); }
+        .card-warn { background: var(--warn); box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2); }
+        .c-label { font-size: 0.7rem; opacity: 0.8; text-transform: uppercase; }
+        .c-val { font-size: 1.5rem; font-weight: 800; margin-top: 5px; }
+
+        .tabs { display: flex; gap: 10px; padding: 0 20px 15px; }
+        .tab { padding: 8px 16px; background: white; border-radius: 10px; font-size: 0.8rem; font-weight: 600; color: var(--muted); border: 1px solid #e2e8f0; }
+        .tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .form-section { margin: 0 20px 20px; padding: 20px; background: white; border-radius: 20px; border: 1px solid #e2e8f0; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem; outline: none; }
+        .btn-save { width: 100%; padding: 14px; background: var(--primary); border: none; border-radius: 10px; color: white; font-weight: 700; }
+
+        .list-section { padding: 0 20px; }
+        .list-title { font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; }
+        .item { padding: 14px; background: white; border-radius: 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; border: 1px solid #f1f5f9; }
+        .icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
         .item-info { flex: 1; }
-        .item-title { font-size: 0.95rem; font-weight: 600; }
-        .item-val { font-size: 1rem; font-weight: 700; }
-        .up { color: var(--up); }
-        .down { color: var(--down); }
+        .item-title { font-size: 0.9rem; font-weight: 600; }
+        .item-val { font-size: 0.9rem; font-weight: 700; text-align: right; }
+        
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
+        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; }
+        textarea { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; margin: 10px 0; font-family: monospace; font-size: 0.7rem; }
     </style>
 </head>
 <body>
+
 <header>
-    <h1>Zapia Finance</h1>
-    <p style='font-size: 0.8rem; color: var(--muted);'>Sua jornada financeira começa aqui</p>
+    <h1>Zapia<span>.pro</span></h1>
+    <button class='sync-btn' onclick='openSync()'>
+        <span class='material-icons-round' style='font-size:1rem'>sync</span> Sincronizar
+    </button>
 </header>
-<div class='card-main'>
-    <div class='bal-label'>Saldo Atual</div>
-    <div class='bal-val' id='balance'>R$ 0,00</div>
+
+<div class='cards-scroll'>
+    <div class='card card-main'>
+        <div class='c-label'>Saldo em Conta</div>
+        <div class='c-val' id='balance'>R$ 0,00</div>
+    </div>
+    <div class='card card-warn'>
+        <div class='c-label'>Pendências</div>
+        <div class='c-val' id='pending'>R$ 0,00</div>
+    </div>
 </div>
-<div class='add-form'>
-    <h2>Novo Lançamento</h2>
-    <input type='text' id='desc' placeholder='Ex: Aluguel, Salário, Mercado...'>
-    <input type='number' id='val' placeholder='Valor R$ (ex: 50.00)'>
-    <select id='tipo'>
-        <option value='despesa'>Gasto (Saída)</option>
-        <option value='receita'>Ganho (Entrada)</option>
-    </select>
-    <button class='btn-add' onclick='salvar()'>Salvar</button>
+
+<div class='form-section'>
+    <input type='text' id='fDesc' placeholder='O que é? (ex: Aluguel)'>
+    <div style='display:flex; gap:10px'>
+        <input type='number' id='fVal' placeholder='Valor R$'>
+        <select id='fTipo' style='width:120px'>
+            <option value='desp'>Gasto</option>
+            <option value='rec'>Ganho</option>
+            <option value='pend'>Pendência</option>
+        </select>
+    </div>
+    <button class='btn-save' onclick='add()'>Salvar Registro</button>
 </div>
-<div class='history'>
-    <h2>Histórico Recente</h2>
-    <div id='lista'></div>
+
+<div class='list-section'>
+    <div class='list-title'>Atividades Recentes</div>
+    <div id='mainList'></div>
 </div>
+
+<div class='modal' id='syncModal'>
+    <div class='modal-content'>
+        <h3>Sincronizar Dados</h3>
+        <p style='font-size:0.8rem; color:var(--muted); margin: 10px 0;'>Copie o código abaixo para salvar seu backup ou cole um código antigo para restaurar.</p>
+        <textarea id='syncBox' rows='8'></textarea>
+        <div style='display:flex; gap:10px'>
+            <button class='btn-save' onclick='doRestore()' style='background:#10b981'>Restaurar</button>
+            <button class='btn-save' onclick='closeSync()' style='background:#64748b'>Fechar</button>
+        </div>
+    </div>
+</div>
+
 <script>
-    let db = JSON.parse(localStorage.getItem('zapia_fin_v1')) || [];
-    function salvar() {
-        const desc = document.getElementById('desc').value;
-        const val = parseFloat(document.getElementById('val').value);
-        const tipo = document.getElementById('tipo').value;
-        if(!desc || !val) return alert('Preencha os campos!');
-        const registro = { id: Date.now(), desc, val, tipo, data: new Date().toLocaleDateString('pt-BR') };
-        db.unshift(registro);
-        localStorage.setItem('zapia_fin_v1', JSON.stringify(db));
-        document.getElementById('desc').value = '';
-        document.getElementById('val').value = '';
+    let db = JSON.parse(localStorage.getItem('zapia_v2_db')) || { items: [] };
+
+    function persist() { 
+        localStorage.setItem('zapia_v2_db', JSON.stringify(db));
         render();
     }
+
+    function add() {
+        const d = document.getElementById('fDesc').value;
+        const v = parseFloat(document.getElementById('fVal').value);
+        const t = document.getElementById('fTipo').value;
+        if(!d || !v) return;
+
+        db.items.unshift({ id: Date.now(), desc: d, val: v, tipo: t, data: new Date().toLocaleDateString('pt-BR') });
+        document.getElementById('fDesc').value = '';
+        document.getElementById('fVal').value = '';
+        persist();
+    }
+
+    function del(id) {
+        if(!confirm('Excluir este registro?')) return;
+        db.items = db.items.filter(i => i.id !== id);
+        persist();
+    }
+
     function render() {
-        const lista = document.getElementById('lista');
-        lista.innerHTML = '';
-        let total = 0;
-        db.forEach(item => {
-            if(item.tipo === 'receita') total += item.val; else total -= item.val;
-            lista.innerHTML += `
+        const list = document.getElementById('mainList');
+        list.innerHTML = '';
+        let bal = 0, pnd = 0;
+
+        db.items.forEach(i => {
+            if(i.tipo === 'rec') bal += i.val;
+            else if(i.tipo === 'desp') bal -= i.val;
+            else if(i.tipo === 'pend') pnd += i.val;
+
+            const iconBg = i.tipo === 'rec' ? '#dcfce7' : (i.tipo === 'desp' ? '#fee2e2' : '#fef3c7');
+            const iconColor = i.tipo === 'rec' ? 'var(--up)' : (i.tipo === 'desp' ? 'var(--down)' : 'var(--warn)');
+            const iconName = i.tipo === 'rec' ? 'add' : (i.tipo === 'desp' ? 'remove' : 'schedule');
+
+            list.innerHTML += `
                 <div class='item'>
-                    <div class='icon' style='background: ${item.tipo === "receita" ? "#dcfce7" : "#fee2e2"}'>
-                        <span class='material-icons-round ${item.tipo === "receita" ? "up" : "down"}'>
-                            ${item.tipo === "receita" ? "add_circle" : "remove_circle"}
-                        </span>
+                    <div class='icon' style='background:${iconBg}; color:${iconColor}'>
+                        <span class='material-icons-round'>${iconName}</span>
                     </div>
                     <div class='item-info'>
-                        <div class='item-title'>${item.desc}</div>
-                        <div style='font-size: 0.7rem; color: var(--muted)'>${item.data}</div>
+                        <div class='item-title'>${i.desc}</div>
+                        <div style='font-size:0.7rem; color:var(--muted)'>${i.data}</div>
                     </div>
-                    <div class='item-val ${item.tipo === "receita" ? "up" : "down"}'>
-                        ${item.tipo === "receita" ? "+" : "-"} R$ ${item.val.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+                    <div class='item-val' style='color:${i.tipo==='pend' ? 'var(--warn)' : 'var(--text)'}'>
+                        R$ ${i.val.toLocaleString('pt-BR', {minimumFractionDigits:2})}
+                        <div onclick='del(${i.id})' style='font-size:0.6rem; color:var(--muted); font-weight:400'>EXCLUIR</div>
                     </div>
                 </div>
             `;
         });
-        document.getElementById('balance').innerText = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+
+        document.getElementById('balance').innerText = 'R$ ' + bal.toLocaleString('pt-BR', {minimumFractionDigits:2});
+        document.getElementById('pending').innerText = 'R$ ' + pnd.toLocaleString('pt-BR', {minimumFractionDigits:2});
     }
+
+    function openSync() {
+        document.getElementById('syncBox').value = JSON.stringify(db);
+        document.getElementById('syncModal').style.display = 'flex';
+    }
+    function closeSync() { document.getElementById('syncModal').style.display = 'none'; }
+    function doRestore() {
+        try {
+            const data = JSON.parse(document.getElementById('syncBox').value);
+            if(data.items) {
+                db = data;
+                persist();
+                alert('Dados restaurados!');
+                closeSync();
+            }
+        } catch(e) { alert('Código inválido!'); }
+    }
+
     render();
 </script>
 </body>
