@@ -152,6 +152,23 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
   </div>
   <button class="btn-action plus" style="width:100%; margin-bottom:14px;" onclick="openModal('compra')">＋ Item de Compra</button>
   <div class="list" id="listCompras"></div>
+
+  <!-- Calculadora de Peso -->
+  <div class="widget" style="margin-top:20px; border-style:dashed; background:transparent;">
+    <div class="widget-title"><i class="fas fa-weight"></i> Calcular por Peso</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+        <div>
+            <label style="font-size:0.7rem; color:var(--muted)">Peso (kg/un)</label>
+            <input type="number" id="calcPeso" step="0.001" placeholder="0.500" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--text); padding:8px; border-radius:6px;">
+        </div>
+        <div>
+            <label style="font-size:0.7rem; color:var(--muted)">Preço por kg</label>
+            <input type="number" id="calcPrecoKg" step="0.01" placeholder="29.90" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--text); padding:8px; border-radius:6px;">
+        </div>
+    </div>
+    <div id="calcResult" style="margin-top:10px; font-weight:bold; color:var(--azul); text-align:center; font-size:1.1rem;">R$ 0,00</div>
+    <button class="btn-action plus" style="width:100%; margin-top:10px; height:35px; font-size:0.8rem;" onclick="addCalcToCompras()">Adicionar ao Orçamento</button>
+  </div>
 </section>
 
 <section id="sec-pendencias" class="content-section">
@@ -427,6 +444,30 @@ function renderCompras() {
         list.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon" style="background:var(--azul)"><span class="material-icons-round">shopping_basket</span></div><div class="item-text"><b>${item.desc}</b><span>Compra</span></div></div><div class="item-right"><b class="item-val" style="color:var(--azul)">R$ ${item.val.toFixed(2)}</b><button class="btn-del" onclick="deleteItem(${item.id}, 'compra', event)"><i class="fas fa-trash-alt"></i></button></div></div>`;
     });
     document.getElementById('totalComprasValue').innerText = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+    
+    // Adicionar listeners para a calculadora de peso
+    const p = document.getElementById('calcPeso'), pr = document.getElementById('calcPrecoKg');
+    if(p && pr) {
+        [p, pr].forEach(el => el.addEventListener('input', () => {
+            const res = (parseFloat(p.value)||0) * (parseFloat(pr.value)||0);
+            document.getElementById('calcResult').innerText = 'R$ ' + res.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+        }));
+    }
+}
+
+function addCalcToCompras() {
+    const p = parseFloat(document.getElementById('calcPeso').value)||0;
+    const pr = parseFloat(document.getElementById('calcPrecoKg').value)||0;
+    const res = p * pr;
+    if(res > 0) {
+        const desc = prompt("Descrição do item (ex: Carne, Tomate):") || "Item por peso";
+        db.compras.push({ id: Date.now(), desc: `${desc} (${p}kg)`, val: res, sub: 'Compra', data: new Date().toISOString() });
+        save();
+        renderCompras();
+        document.getElementById('calcPeso').value = '';
+        document.getElementById('calcPrecoKg').value = '';
+        document.getElementById('calcResult').innerText = 'R$ 0,00';
+    }
 }
 
 function openModal(mode, id = null) {
