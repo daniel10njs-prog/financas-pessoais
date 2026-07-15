@@ -987,7 +987,7 @@ function renderComp() {
   const groups = {};
   db.items.forEach(i => {
     const d = new Date(i.data);
-    const key = d.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+    const key = d.toLocaleString('pt-BR', { month: 'long', year: 'numeric' }).replace(' de ', ' de ');
     if(!groups[key]) groups[key] = { r: 0, d: 0 };
     if(i.tipo === 'receita') groups[key].r += i.val; else groups[key].d += i.val;
   });
@@ -1027,9 +1027,9 @@ function render() {
   let r=0, d=0, p=0;
   const filterMonth = currentFilterDate.getMonth();
   const filterYear = currentFilterDate.getFullYear();
-  const monthName = currentFilterDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+  const monthName = currentFilterDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' }).replace(' de ', ' de ');
   const display = document.getElementById('currentMonthDisplay');
-  if(display) display.innerText = monthName;
+  if(display) display.innerText = monthName.charAt(0).toUpperCase() + monthName.slice(1);
   const pendCount = db.pendencias.length;
   const badge = document.getElementById('pend-badge');
   const countLabel = document.getElementById('pend-count-label');
