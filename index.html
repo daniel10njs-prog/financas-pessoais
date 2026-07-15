@@ -57,6 +57,22 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 }
 .bottom-nav button.active { color: #fff; }
 .bottom-nav button.active i { color: var(--azul); transform: scale(1.1); }
+
+.nav-badge {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  background: var(--vermelho);
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 10px;
+  min-width: 14px;
+  text-align: center;
+  display: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
 .bottom-nav button.active::after {
   content: '';
   position: absolute;
@@ -254,7 +270,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 
 <section id="sec-pendencias" class="content-section">
   <div class="widget" style="background: rgba(245, 158, 11, 0.05); border-color: var(--amarelo); text-align:center;">
-    <div class="widget-title" style="color: var(--amarelo);">Total Pendente</div>
+    <div class="widget-title" style="color: var(--amarelo); display: flex; justify-content: center; gap: 8px; align-items: center;">Total Pendente <span id="pend-count-label" style="background: var(--amarelo); color: #000; font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; font-weight: 900;">0 ATIVAS</span></div>
     <div id="totalPendValue" style="font-size:1.4rem; font-weight:800; color: var(--amarelo);">R$ 0,00</div>
   </div>
   <button class="btn-action pend" style="width:100%; margin-bottom:14px;" onclick="openModal('pendencia')">＋ Nova Pendência</button>
@@ -316,7 +332,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 
 <nav class="bottom-nav">
   <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><i class="fas fa-wallet"></i>Lançar</button>
-  <button id="nav-pendencias" onclick="setTab('pendencias')"><i class="fas fa-hourglass-half"></i>Pendente</button>
+  <button id="nav-pendencias" onclick="setTab('pendencias')" style="position: relative;"><i class="fas fa-hourglass-half"></i>Pendente<span id="pend-badge" class="nav-badge">0</span></button>
   <button id="nav-comparativo" onclick="setTab('comparativo')"><i class="fas fa-calendar-alt"></i>Mensal</button>
   <button id="nav-simular" onclick="setTab('simular')"><i class="fas fa-chart-line"></i>Simular</button>
   <button id="nav-metas" onclick="setTab('metas')"><i class="fas fa-bullseye"></i>Metas</button>
@@ -811,7 +827,16 @@ function renderComp() {
 }
 
 function render() {
-  let r=0, d=0, p=0; db.items.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val); db.pendencias.forEach(i => p+=i.val);
+  let r=0, d=0, p=0;
+  const pendCount = db.pendencias.length;
+  const badge = document.getElementById('pend-badge');
+  const countLabel = document.getElementById('pend-count-label');
+  if(badge) {
+    badge.innerText = pendCount;
+    badge.style.display = pendCount > 0 ? 'block' : 'none';
+  }
+  if(countLabel) countLabel.innerText = pendCount + (pendCount === 1 ? ' ATIVA' : ' ATIVAS');
+ db.items.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val); db.pendencias.forEach(i => p+=i.val);
   document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); document.getElementById('saldoReal').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
   document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
   const l = document.getElementById('list'); l.innerHTML = '';
