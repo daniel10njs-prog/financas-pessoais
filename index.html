@@ -241,6 +241,13 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .month-selector b { font-size: 0.9rem; text-transform: capitalize; color: var(--azul); }
 .month-btn { background: var(--card2); border: none; color: var(--text); padding: 5px 10px; border-radius: 6px; cursor: pointer; }
 .month-btn:active { transform: scale(0.95); }
+
+/* Força o minúsculo apenas no conectivo, sem mudar a fonte do sistema */
+#currentMonthDisplay span { 
+    text-transform: lowercase !important; 
+    font-family: inherit !important;
+    display: inline-block !important;
+}
 </style>
 </head>
 <body>
