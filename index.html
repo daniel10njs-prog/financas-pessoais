@@ -10,14 +10,24 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
 :root {
-  --verde: #00A36C; --vermelho: #E33E5A; --amarelo: #f59e0b; --azul: #3687E1;
-  --bg: #000000; --card: #0E121E; --card2: #161B2A; --border: #1B2336; --text: #f1f5f9; --muted: #8E98AF;
+  /* Bank Palette: Deep Blacks, Sharp Accents, Silver Overtones */
+  --verde: #10b981; /* Emerald */
+  --vermelho: #f43f5e; /* Rose/Slate Red */
+  --amarelo: #f59e0b;
+  --azul: #0ea5e9; /* Clear Sky */
+  --bg: #000000; 
+  --card: #080808; 
+  --card2: #111111; 
+  --border: #1f1f1f; /* Solid, thinner borders */
+  --text: #ffffff; 
+  --muted: #666666; 
+  --accent: #ffffff;
 }
 body.light-mode {
   --bg: #f8fafc; --card: #ffffff; --card2: #f1f5f9; --border: #e2e8f0; --text: #0f172a; --muted: #64748b;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; letter-spacing: -0.01em; max-width: 480px; margin: 0 auto; padding-bottom: 110px; min-height: 100vh; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, -apple-system, sans-serif; letter-spacing: -0.02em; max-width: 480px; margin: 0 auto; padding-bottom: 120px; min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 header { padding: 18px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 100; }
 header h1 { font-size: 1.1rem; font-weight: 700; }
 
@@ -87,7 +97,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .content-section.active { display: block; }
 
 .cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-.card { background: var(--card); border-radius: 20px; padding: 16px 10px; border: 1px solid var(--border); text-align: center; }
+.card { background: var(--card); border-radius: 8px; padding: 16px 10px; border: 1px solid var(--border); text-align: center; }
 .card .label { font-size: .6rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.5px; }
 .card .value { font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
 .card.rec .value { color: var(--verde); } .card.desp .value { color: var(--vermelho); } .card.saldo .value { color: var(--azul); }
