@@ -520,7 +520,10 @@ function toggleMenu() {
     menu.style.display = 'flex';
   }
 }
-window.onclick = function(e) { if (!e.target.closest('.menu-container')) { document.getElementById('dropdownMenu').style.display = 'none'; } };
+window.onclick = function(e) { 
+  const menu = document.getElementById('dropdownMenu');
+  if (menu && !e.target.closest('.menu-container')) { menu.style.display = 'none'; } 
+};
 
 function toggleTheme() { db.theme = db.theme === 'dark' ? 'light' : 'dark'; applyTheme(); save(); }
 function applyTheme() {
