@@ -824,7 +824,29 @@ function render() {
   const lp = document.getElementById('listPend'); lp.innerHTML = '';
   db.pendencias.forEach(i => { 
     const obsHtml = i.obs ? `<div class="item-obs">${i.obs}</div>` : '';
-    lp.innerHTML += `<div class="item pendencia" style="padding-bottom: 20px;"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span>${obsHtml}</div></div><div class="item-right"><b class="item-val pendencia" style="font-size: 1.1rem;">R$ ${i.val.toFixed(2)}</b><div class="item-actions" style="margin-top: 10px;"><button class="btn-pay-direct" style="width: 100%; min-width: 100px;" onclick="directPay(${i.id}, event)">PAGAR</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
+    lp.innerHTML += `
+<div class="item pendencia" style="flex-direction: column; align-items: stretch; gap: 12px;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+    <div class="item-info">
+      <div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div>
+      <div class="item-text">
+        <b>${i.desc}</b>
+        <span>${i.sub}</span>
+        ${obsHtml}
+      </div>
+    </div>
+    <div class="item-right">
+      <b class="item-val pendencia" style="font-size: 1.1rem;">R$ ${i.val.toFixed(2)}</b>
+    </div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; margin-left: 56px;">
+    <button class="btn-pay-direct" style="flex: 1; max-width: 160px;" onclick="directPay(${i.id}, event)">PAGAR</button>
+    <div class="item-actions" style="margin-left: auto;">
+      <button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button>
+      <button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button>
+    </div>
+  </div>
+</div>`; 
   });
   const ml = document.getElementById('metasList'); ml.innerHTML = '';
   db.metas.forEach(m => {
