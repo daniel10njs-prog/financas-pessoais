@@ -93,8 +93,8 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .card.rec .value { color: var(--verde); } .card.desp .value { color: var(--vermelho); } .card.saldo .value { color: var(--azul); }
 
 .real-card { 
-  background: rgba(54, 131, 225, 0.03);
-  border: 1px solid var(--azul); 
+  background: rgba(255, 255, 255, 0.01);
+  border: 2px solid var(--border); 
   margin-bottom: 24px; 
   padding: 24px 16px; 
   border-radius: 24px; 
@@ -103,8 +103,11 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
   flex-direction: column;
   gap: 8px;
   position: relative;
-  box-shadow: 0 0 20px rgba(54, 131, 225, 0.1);
+  transition: all 0.4s ease;
 }
+.real-card.positive { border-color: var(--verde); box-shadow: 0 0 15px rgba(0, 163, 108, 0.2); }
+.real-card.negative { border-color: var(--vermelho); box-shadow: 0 0 15px rgba(227, 62, 90, 0.2); }
+
 .real-card .label { 
   font-size: .7rem; 
   text-transform: uppercase; 
@@ -252,7 +255,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
     <div class="card desp"><div class="label">Despesas</div><div class="value" id="totalDesp">R$ 0</div></div>
     <div class="card saldo"><div class="label">Saldo</div><div class="value" id="saldo">R$ 0</div></div>
   </div>
-  <div class="real-card">
+  <div class="real-card" id="realCardContainer">
     <div class="label" style="display:flex; align-items:center; justify-content:center; gap:8px;">
       LÍQUIDO REAL 
       <i class="fas fa-eye-slash" style="font-size:0.8rem; cursor:pointer; color:var(--azul);" onclick="toggleBalance()"></i>
@@ -874,7 +877,17 @@ function render() {
   }
   if(countLabel) countLabel.innerText = pendCount + (pendCount === 1 ? ' ATIVA' : ' ATIVAS');
  db.items.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val); db.pendencias.forEach(i => p+=i.val);
-  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); document.getElementById('saldoReal').innerText = balanceHidden ? 'R$ ••••••' : 'R$ '+(r-d).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); const saldoValue = r - d;
+  const realCard = document.getElementById('realCardContainer');
+  if(realCard) {
+    realCard.classList.remove('positive', 'negative');
+    realCard.classList.add(saldoValue >= 0 ? 'positive' : 'negative');
+    const labelIcon = realCard.querySelector('i');
+    if(labelIcon) labelIcon.style.color = saldoValue >= 0 ? 'var(--verde)' : 'var(--vermelho)';
+    const labelText = realCard.querySelector('.label');
+    if(labelText) labelText.style.color = saldoValue >= 0 ? 'var(--verde)' : 'var(--vermelho)';
+  }
+  document.getElementById('saldoReal').innerText = balanceHidden ? 'R$ ••••••' : 'R$ '+saldoValue.toLocaleString('pt-BR', {minimumFractionDigits: 2});
   document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
   const l = document.getElementById('list'); l.innerHTML = '';
   const sortedItems = [...db.items].sort((a,b) => new Date(b.data) - new Date(a.data));
