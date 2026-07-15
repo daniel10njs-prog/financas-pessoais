@@ -10,142 +10,139 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
 :root {
-  --primary: #6366f1; /* Indigo Moderno */
-  --primary-glow: rgba(99, 102, 241, 0.5);
-  --verde: #10b981;
-  --vermelho: #f43f5e;
-  --azul: #3b82f6;
-  --bg: #030712;
-  --card: #111827;
-  --card-border: rgba(255,255,255,0.08);
-  --text: #f9fafb;
-  --muted: #9ca3af;
-  --nav-bg: rgba(17, 24, 39, 0.8);
+  /* Paleta Profissional de Alto Contraste */
+  --primary: #4F46E5;
+  --verde: #059669;
+  --vermelho: #DC2626;
+  --azul: #2563EB;
+  --bg: #0A0F1C;
+  --card: #161D2F;
+  --border: #2D3748; /* Divisória clara e visível no Dark */
+  --text: #F8FAFC;
+  --muted: #94A3B8;
+  --shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
 
 body.light-mode {
-  --bg: #f3f4f6;
-  --card: #ffffff;
-  --card-border: rgba(0,0,0,0.06);
-  --text: #111827;
-  --muted: #6b7280;
-  --nav-bg: rgba(255, 255, 255, 0.8);
+  --bg: #F1F5F9;
+  --card: #FFFFFF;
+  --border: #CBD5E1; /* Divisória clara e visível no Light */
+  --text: #0F172A;
+  --muted: #64748B;
+  --shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', system-ui, sans-serif;
-  transition: all 0.4s ease;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
 }
 
-/* Glassmorphism Cards */
+/* Divisórias Marcadas e Cards Definidos */
 .card, .widget {
   background: var(--card);
-  border: 1px solid var(--card-border) !important;
-  border-radius: 24px !important;
+  border: 1.5px solid var(--border) !important; /* Bordas reforçadas */
+  border-radius: 16px !important;
   padding: 20px;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(8px);
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
 }
 
-/* Luxury Balance Card */
+/* Real Card - Foco Total no Montante */
 .real-card {
-  background: linear-gradient(135deg, var(--card) 0%, var(--bg) 100%);
-  border: 1px solid var(--card-border);
-  border-radius: 32px;
-  padding: 30px 20px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 16px;
   text-align: center;
+  margin-bottom: 24px;
   position: relative;
-  overflow: hidden;
-  margin: 10px 0 20px;
 }
 
-.real-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top right, var(--primary-glow), transparent 70%);
-  opacity: 0.3;
-}
-
-.real-card.positive { border-left: 4px solid var(--verde); }
-.real-card.negative { border-left: 4px solid var(--vermelho); }
+.real-card.positive { border-color: var(--verde) !important; }
+.real-card.negative { border-color: var(--vermelho) !important; }
 
 .real-card .value {
-  font-size: 2.2rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  background: linear-gradient(to bottom, #fff 0%, #aaa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -0.04em;
 }
 
-body.light-mode .real-card .value {
-  background: linear-gradient(to bottom, var(--text) 0%, #555 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Listagem com Separação Visual Clara */
+.item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Floating Bottom Nav */
+.item-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--bg) !important;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+
+/* Navegação Sólida e Intuitiva */
 .bottom-nav {
   position: fixed;
-  bottom: 20px;
-  left: 16px;
-  right: 16px;
-  width: auto;
-  background: var(--nav-bg);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--card-border);
-  border-radius: 24px;
+  bottom: 0; left: 0; right: 0;
+  background: var(--card);
+  border-top: 2px solid var(--border);
   display: flex;
   justify-content: space-around;
-  padding: 10px 5px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
   z-index: 1000;
 }
 
 .bottom-nav button {
-  background: none;
-  border: none;
   color: var(--muted);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.6rem;
-  font-weight: 600;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 700;
+  font-size: 11px;
 }
 
 .bottom-nav button.active {
   color: var(--primary);
-  transform: translateY(-5px);
 }
 
-.bottom-nav button i {
-  font-size: 1.4rem;
-}
-
-/* Action Buttons */
-.btn-action {
-  border-radius: 16px;
-  font-weight: 700;
-  transition: all 0.3s ease;
-  border: none;
-}
-
-.btn-action.plus { background: var(--verde); color: #fff; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3); }
-.btn-action.minus { background: var(--vermelho); color: #fff; box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.3); }
-
-/* Month Selector Navigation */
+/* Month Selector - Estruturado */
 .month-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: var(--card);
-  border-radius: 20px;
-  border: 1px solid var(--card-border);
-  padding: 12px 20px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 16px;
   margin-bottom: 20px;
+}
+
+.month-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+/* Botões de Ação - High Vis */
+.btn-action {
+  height: 50px;
+  border-radius: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  border: 2px solid rgba(0,0,0,0.1);
 }
 </style>
 </head>
