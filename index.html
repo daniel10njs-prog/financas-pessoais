@@ -129,7 +129,8 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .icon-btn { background: none; border: none; cursor: pointer; padding: 4px; font-size: 0.85rem; }
 .icon-btn.edit { color: var(--azul); }
 .icon-btn.delete { color: var(--vermelho); }
-.btn-pay-direct { background: var(--verde); color: white; border: none; border-radius: 6px; padding: 4px 8px; font-size: 0.6rem; font-weight: 800; cursor: pointer; }
+.btn-pay-direct:active { transform: scale(0.95); opacity: 0.9; }
+.btn-pay-direct { background: var(--verde); color: white; border: none; border-radius: 12px; padding: 10px 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 163, 108, 0.3); transition: 0.2s; }
 
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
 .modal-overlay.show { display: flex; }
@@ -823,7 +824,7 @@ function render() {
   const lp = document.getElementById('listPend'); lp.innerHTML = '';
   db.pendencias.forEach(i => { 
     const obsHtml = i.obs ? `<div class="item-obs">${i.obs}</div>` : '';
-    lp.innerHTML += `<div class="item pendencia"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span>${obsHtml}</div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
+    lp.innerHTML += `<div class="item pendencia" style="padding-bottom: 20px;"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span>${obsHtml}</div></div><div class="item-right"><b class="item-val pendencia" style="font-size: 1.1rem;">R$ ${i.val.toFixed(2)}</b><div class="item-actions" style="margin-top: 10px;"><button class="btn-pay-direct" style="width: 100%; min-width: 100px;" onclick="directPay(${i.id}, event)">PAGAR</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
   });
   const ml = document.getElementById('metasList'); ml.innerHTML = '';
   db.metas.forEach(m => {
