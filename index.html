@@ -66,9 +66,37 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .btn-action.pend { background: var(--amarelo); }
 
 .list { display: flex; flex-direction: column; gap: 10px; }
-.item { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.item { 
+  background: var(--card); 
+  border-radius: 20px; 
+  padding: 16px; 
+  border: 1px solid var(--border); 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  position: relative; 
+  overflow: hidden; 
+  margin-bottom: 12px;
+  transition: transform 0.2s;
+}
+.item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+}
+.item.receita::before { background: var(--verde); }
+.item.despesa::before { background: var(--vermelho); }
+.item.pendencia::before { background: var(--amarelo); }
+
+.item.receita { background: linear-gradient(90deg, rgba(0, 163, 108, 0.05) 0%, var(--card) 20%); }
+.item.despesa { background: linear-gradient(90deg, rgba(227, 62, 90, 0.05) 0%, var(--card) 20%); }
+.item.pendencia { background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, var(--card) 20%); }
+
 .item-info { display: flex; align-items: center; gap: 12px; flex: 1; }
-.item-icon { font-size: 1.2rem; background: var(--card2); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; color: var(--azul); }
+.item-icon { font-size: 1.2rem; background: var(--card2); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; color: var(--azul); }
 .item-text b { font-size: .85rem; display: block; }
 .item-text span { font-size: .65rem; color: var(--muted); }
 .item-obs { font-size: 0.65rem; color: var(--azul); font-style: italic; margin-top: 2px; }
@@ -769,12 +797,12 @@ function render() {
   sortedItems.forEach(i => { 
     const dateFormatted = new Date(i.data).toLocaleDateString('pt-BR');
     const obsHtml = i.obs ? `<div class="item-obs">${i.obs}</div>` : '';
-    l.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'inventory_2'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub} • ${dateFormatted}</span>${obsHtml}</div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
+    l.innerHTML += `<div class="item ${i.tipo}"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'inventory_2'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub} • ${dateFormatted}</span>${obsHtml}</div></div><div class="item-right"><b class="item-val ${i.tipo}">${i.tipo==='receita'?'+':'-'} R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="icon-btn edit" onclick="openModal('${i.tipo}', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, '${i.tipo}', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
   });
   const lp = document.getElementById('listPend'); lp.innerHTML = '';
   db.pendencias.forEach(i => { 
     const obsHtml = i.obs ? `<div class="item-obs">${i.obs}</div>` : '';
-    lp.innerHTML += `<div class="item"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span>${obsHtml}</div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
+    lp.innerHTML += `<div class="item pendencia"><div class="item-info"><div class="item-icon"><span class="material-icons-round">${db.icons[i.sub]||'hourglass_empty'}</span></div><div class="item-text"><b>${i.desc}</b><span>${i.sub}</span>${obsHtml}</div></div><div class="item-right"><b class="item-val pendencia">R$ ${i.val.toFixed(2)}</b><div class="item-actions"><button class="btn-pay-direct" onclick="directPay(${i.id}, event)">Pagar</button><button class="icon-btn edit" onclick="openModal('pendencia', ${i.id})"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="deleteItem(${i.id}, 'pendencia', event)"><i class="fas fa-trash-alt"></i></button></div></div></div>`; 
   });
   const ml = document.getElementById('metasList'); ml.innerHTML = '';
   db.metas.forEach(m => {
