@@ -552,7 +552,25 @@ function setCatTab(tab) {
     const list = db.categories[tab] || [];
     list.forEach(catName => {
         content.innerHTML += `<div class="cat-item-row"><div class="cat-item-icon"><span class="material-icons-round">${db.icons[catName] || 'help_outline'}</span></div><div class="cat-item-name">${catName}</div><div class="cat-actions"><button class="icon-btn edit" onclick="editCatForm('${catName}')"><i class="fas fa-pencil-alt"></i></button><button class="icon-btn delete" onclick="removeCategory('${catName}')"><i class="fas fa-trash-alt"></i></button></div></div>`;
-    });
+    
+  Object.entries(categories).sort((a,b) => b[1] - a[1]).forEach(([cat, val]) => {
+    const perc = ((val / totalDesp) * 100).toFixed(1);
+    const budget = budgets[cat] || 0;
+    const budgetInfo = budget > 0 ? `<span style="font-size:0.6rem; color:${val > budget ? 'var(--vermelho)' : 'var(--muted)'};">Teto: R$ ${budget}</span>` : '';
+    const workH = calcWorkHours(val);
+    
+    catList.innerHTML += `
+      <div style="margin-bottom: 12px; cursor:pointer;" onclick="setBudget('${cat}')">
+        <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px;">
+          <span>${cat} ${budgetInfo}</span>
+          <span style="font-weight:700;">R$ ${val.toLocaleString('pt-BR')} (${perc}%)</span>
+        </div>
+        <div style="height:8px; background:var(--card2); border-radius:4px; overflow:hidden; position:relative;">
+          <div style="height:100%; width:${Math.min(perc, 100)}%; background:${budget > 0 && val > budget ? 'var(--vermelho)' : 'var(--azul)'}; transition:0.3s;"></div>
+        </div>
+        <div style="font-size:0.6rem; color:var(--muted); margin-top:4px;">Equivale a ~${workH}h do seu trabalho</div>
+      </div>`;
+  });
 }
 
 function toggleEmojiGrid() {
@@ -878,9 +896,9 @@ function renderCategoryAnalysis() {
     totalDesp += i.val;
   });
   
-  Object.entries(categories).sort((a,b) => b[1] - a[1]).forEach(([cat, val]) => {
+  
     const perc = ((val / totalDesp) * 100).toFixed(1);
-    catList.innerHTML += `
+    
       <div style="margin-bottom: 8px;">
         <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px;">
           <span>${cat}</span>
@@ -892,6 +910,71 @@ function renderCategoryAnalysis() {
       </div>`;
   });
   if(totalDesp === 0) catList.innerHTML = '<div style="color:var(--muted); text-align:center; font-size:0.8rem;">Sem despesas para analisar.</div>';
+}
+
+
+function toggleExtraFields(type) {
+    const extra = document.getElementById('extraFields');
+    const parcelas = document.getElementById('parcelasContainer');
+    if (type === 'despesa') {
+        extra.style.display = 'block';
+        parcelas.style.display = 'block';
+    } else if (type === 'receita') {
+        extra.style.display = 'block';
+        parcelas.style.display = 'none';
+    } else {
+        extra.style.display = 'none';
+    }
+}
+
+// Override openModal to show extra fields
+const originalOpenModal = openModal;
+openModal = function(type, id = null) {
+    originalOpenModal(type, id);
+    if(type === 'lancamento' || type === 'pendencia') {
+        const itemType = document.getElementById('itemTipo') ? document.getElementById('itemTipo').value : 'despesa';
+        toggleExtraFields(itemType);
+        if(id) {
+            const item = db.items.find(x => x.id == id) || db.pendencias.find(x => x.id == id);
+            if(item) {
+                if(document.getElementById('isRecurrent')) document.getElementById('isRecurrent').value = item.recorrente || 'nao';
+                if(document.getElementById('installments')) document.getElementById('installments').value = item.parcelas || 1;
+            }
+        }
+    }
+};
+
+function setBudget(cat) {
+    const current = budgets[cat] || 0;
+    const val = prompt(`Definir teto mensal para ${cat}:`, current);
+    if (val !== null) {
+        budgets[cat] = parseFloat(val);
+        localStorage.setItem('fin_budgets', JSON.stringify(budgets));
+        renderCategoryAnalysis();
+    }
+}
+
+function processInstallments(baseItem) {
+    const n = parseInt(document.getElementById('installments').value) || 1;
+    if (n > 1) {
+        const valIndividual = baseItem.val / n;
+        const baseDate = new Date(baseItem.data);
+        for (let i = 1; i < n; i++) {
+            const nextDate = new Date(baseDate);
+            nextDate.setMonth(baseDate.getMonth() + i);
+            const newItem = {...baseItem, id: Date.now() + i, val: valIndividual, data: nextDate.toISOString().split('T')[0], desc: `${baseItem.desc} (${i+1}/${n})`};
+            db.items.push(newItem);
+        }
+        baseItem.val = valIndividual;
+        baseItem.desc = `${baseItem.desc} (1/${n})`;
+    }
+}
+
+function calcWorkHours(val) {
+    const salary = 5000; // Default or from USER.md logic
+    const hours = 160;
+    const hourVal = salary / hours;
+    return (val / hourVal).toFixed(1);
 }
 
 function renderComp() {
