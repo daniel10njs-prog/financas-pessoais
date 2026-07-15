@@ -398,6 +398,21 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
     <div class="form-group"><label>Valor (R$)</label><input id="val" type="number" step="0.01"></div>
     <div class="form-group"><label>Categoria</label><select id="tipoSub"></select></div>
     <div class="form-group"><label>Observação (Opcional)</label><textarea id="obs" placeholder="Algum detalhe extra?"></textarea></div>
+    <div id="extraFields" style="margin-top:15px; border-top:1px solid var(--border); padding-top:15px; display:none;">
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;">
+                <label style="font-size:0.6rem; color:var(--muted); text-transform:uppercase;">Recorrente?</label>
+                <select id="isRecurrent" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--text); padding:10px; border-radius:8px; font-size:0.9rem;">
+                    <option value="nao">Não</option>
+                    <option value="sim">Mensal</option>
+                </select>
+            </div>
+            <div style="flex:1;" id="parcelasContainer">
+                <label style="font-size:0.6rem; color:var(--muted); text-transform:uppercase;">Parcelas</label>
+                <input type="number" id="installments" value="1" min="1" max="60" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--text); padding:10px; border-radius:8px; font-size:0.9rem;">
+            </div>
+        </div>
+    </div>
     <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-save" onclick="saveEntry()">Salvar</button></div>
   </div>
 </div>
@@ -504,6 +519,27 @@ const materialIcons = [
 ];
 
 let simChecks = {};
+
+let budgets = JSON.parse(localStorage.getItem('fin_budgets') || '{}');
+function setBudget(cat) {
+    const val = prompt(`Definir teto mensal para ${cat}:`, budgets[cat] || 0);
+    if (val !== null) { budgets[cat] = parseFloat(val); localStorage.setItem('fin_budgets', JSON.stringify(budgets)); renderCategoryAnalysis(); }
+}
+function toggleExtraFields(type) {
+    const extra = document.getElementById('extraFields');
+    const parcelas = document.getElementById('parcelasContainer');
+    if(!extra || !parcelas) return;
+    if (type === 'despesa') { extra.style.display = 'block'; parcelas.style.display = 'block'; }
+    else if (type === 'receita') { extra.style.display = 'block'; parcelas.style.display = 'none'; }
+    else { extra.style.display = 'none'; }
+}
+const originalOpenModal = openModal;
+openModal = function(type, id = null) {
+    originalOpenModal(type, id);
+    if(type === 'receita' || type === 'despesa') { toggleExtraFields(type); }
+    else { toggleExtraFields('none'); }
+};
+
 
 let balanceHidden = false;
 function toggleBalance() {
