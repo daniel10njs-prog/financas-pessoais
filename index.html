@@ -92,9 +92,54 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .card .value { font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
 .card.rec .value { color: var(--verde); } .card.desp .value { color: var(--vermelho); } .card.saldo .value { color: var(--azul); }
 
-.real-card { background: var(--card); border: 1px solid var(--azul); margin-bottom: 20px; padding: 24px 12px; border-radius: 30px; text-align: center; }
-.real-card .label { font-size: .7rem; color: var(--azul); font-weight: 700; }
-.real-card .value { font-size: 1.1rem; font-weight: 800; }
+.real-card { 
+  background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%); 
+  border: 1px solid var(--border); 
+  margin-bottom: 24px; 
+  padding: 20px; 
+  border-radius: 24px; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
+}
+.real-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(54, 135, 225, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.real-card-info { display: flex; flex-direction: column; gap: 4px; }
+.real-card .label { 
+  font-size: .65rem; 
+  text-transform: uppercase; 
+  color: var(--muted); 
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+.real-card .value { 
+  font-size: 1.6rem; 
+  font-weight: 700; 
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+.real-card-icon {
+  background: rgba(54, 135, 225, 0.15);
+  color: var(--azul);
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
 
 .action-buttons { display: flex; gap: 12px; margin-bottom: 20px; }
 .btn-action { flex: 1; padding: 14px; border-radius: 20px; border: none; color: #fff; font-size: .9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -228,7 +273,15 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
     <div class="card desp"><div class="label">Despesas</div><div class="value" id="totalDesp">R$ 0</div></div>
     <div class="card saldo"><div class="label">Saldo</div><div class="value" id="saldo">R$ 0</div></div>
   </div>
-  <div class="real-card"><div class="label">Líquido Real</div><div class="value" id="saldoReal">R$ 0,00</div></div>
+  <div class="real-card">
+    <div class="real-card-info">
+      <div class="label" style="display:flex; align-items:center; gap:6px;">Líquido Real <i class="fas fa-eye-slash" style="font-size:0.6rem; cursor:pointer; color:var(--azul);" onclick="toggleBalance()"></i></div>
+      <div class="value" id="saldoReal">R$ 0,00</div>
+    </div>
+    <div class="real-card-icon">
+      <i class="fas fa-shield-alt"></i>
+    </div>
+  </div>
   <div class="action-buttons">
     <button class="btn-action plus" onclick="openModal('receita')">＋ Receita</button>
     <button class="btn-action minus" onclick="openModal('despesa')">－ Despesa</button>
@@ -455,7 +508,14 @@ const materialIcons = [
     'payments','account_balance_wallet','savings','paid','trending_up','restaurant','shopping_cart','local_mall','home','bolt','water_drop','language','directions_car','local_gas_station','directions_bike','flight','celebration','sports_esports','movie','subscriptions','headset','school','edit','medical_services','medication','fitness_center','medical_information','baby_changing_station','toys','checkroom','shopping_bag','face','smartphone','computer','inventory_2','settings','build','cleaning_services','calendar_month','label','help_outline','work','security','pets','local_shipping','handshake','credit_card','account_balance','request_quote','price_check'
 ];
 
-let simChecks = {}; let chartInstance = null; let currentCatTab = 'receita';
+let simChecks = {};
+
+let balanceHidden = false;
+function toggleBalance() {
+  balanceHidden = !balanceHidden;
+  render();
+}
+ let chartInstance = null; let currentCatTab = 'receita';
 
 function save() { localStorage.setItem('zapia_financas_db', JSON.stringify(db)); render(); }
 function toggleMenu() {
@@ -837,7 +897,7 @@ function render() {
   }
   if(countLabel) countLabel.innerText = pendCount + (pendCount === 1 ? ' ATIVA' : ' ATIVAS');
  db.items.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val); db.pendencias.forEach(i => p+=i.val);
-  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); document.getElementById('saldoReal').innerText = 'R$ '+(r-d).toLocaleString('pt-BR');
+  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); document.getElementById('saldoReal').innerText = balanceHidden ? 'R$ ••••••' : 'R$ '+(r-d).toLocaleString('pt-BR', {minimumFractionDigits: 2});
   document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
   const l = document.getElementById('list'); l.innerHTML = '';
   const sortedItems = [...db.items].sort((a,b) => new Date(b.data) - new Date(a.data));
