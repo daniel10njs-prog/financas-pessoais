@@ -6,7 +6,6 @@
 <title>Finanças Pessoais</title>
 <meta name="theme-color" content="#0f172a">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
@@ -296,10 +295,7 @@ header .icon-btn-top:active { transform: scale(0.92); }
   
   <div style="display: flex; gap: 10px; margin-bottom: 14px;">
     <button class="btn-action" style="flex: 1; background: #25d366; color: white; border: none; font-size: 0.8rem; height: 40px; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="sendListWhatsApp()">
-      <i class="fab fa-whatsapp"></i> Enviar Texto
-    </button>
-    <button class="btn-action" style="flex: 1; background: #ef4444; color: white; border: none; font-size: 0.8rem; height: 40px; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="generatePDF()">
-      <i class="fas fa-file-pdf"></i> Gerar PDF
+      <i class="fab fa-whatsapp"></i> Compartilhar no WhatsApp
     </button>
   </div>
 
@@ -965,32 +961,6 @@ function initChart() {
   const totals = {}; db.items.filter(i=>i.tipo==='despesa').forEach(i => totals[i.sub] = (totals[i.sub]||0) + i.val);
   chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(totals), datasets: [{ data: Object.values(totals), backgroundColor: ['#ef4444', '#3b82f6', '#f59e0b', '#22c55e', '#8b5cf6', '#ec4899'] }] }, options: { plugins: { legend: { position: 'bottom', labels: { color: db.theme === 'dark' ? '#f1f5f9' : '#0f172a', font: {size: 10} } } } } });
 }
-function generatePDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const items = db.compras || [];
-  
-  doc.setFontSize(20);
-  doc.text("Lista de Compras", 20, 20);
-  
-  doc.setFontSize(12);
-  let y = 40;
-  let total = 0;
-  
-  items.forEach((item, index) => {
-    if (y > 270) { doc.addPage(); y = 20; }
-    const sub = item.sub ? ` (${item.sub})` : '';
-    doc.text(`${index + 1}. ${item.desc}${sub} - R$ ${item.val.toFixed(2)}`, 20, y);
-    total += item.val;
-    y += 10;
-  });
-  
-  doc.setFontSize(14);
-  doc.text(`Total Orçado: R$ ${total.toFixed(2)}`, 20, y + 10);
-  
-  doc.save("lista_de_compras.pdf");
-}
-
 function sendListWhatsApp() {
   const items = db.compras || [];
   if(items.length === 0) return alert("Sua lista está vazia!");
