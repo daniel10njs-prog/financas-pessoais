@@ -241,13 +241,6 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .month-selector b { font-size: 0.9rem; text-transform: capitalize; color: var(--azul); }
 .month-btn { background: var(--card2); border: none; color: var(--text); padding: 5px 10px; border-radius: 6px; cursor: pointer; }
 .month-btn:active { transform: scale(0.95); }
-
-/* Força o minúsculo apenas no conectivo, sem mudar a fonte do sistema */
-#currentMonthDisplay span { 
-    text-transform: lowercase !important; 
-    font-family: inherit !important;
-    display: inline-block !important;
-}
 </style>
 </head>
 <body>
@@ -1031,22 +1024,22 @@ function renderComp() {
 }
 
 function render() {
-  const r = db.receitas.reduce((a, b) => a + b.val, 0);
-  const d = db.despesas.reduce((a, b) => a + b.val, 0);
-  
-  const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-  const mIdx = currentFilterDate.getMonth();
-  const year = currentFilterDate.getFullYear();
+  let r=0, d=0, p=0;
+  const filterMonth = currentFilterDate.getMonth();
+  const filterYear = currentFilterDate.getFullYear();
+  const monthName = currentFilterDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
   const display = document.getElementById('currentMonthDisplay');
-  if(display) {
-      display.innerText = monthNames[mIdx] + ' ' + year;
+  if(display) display.innerText = monthName;
+  const pendCount = db.pendencias.length;
+  const badge = document.getElementById('pend-badge');
+  const countLabel = document.getElementById('pend-count-label');
+  if(badge) {
+    badge.innerText = pendCount;
+    badge.style.display = pendCount > 0 ? 'block' : 'none';
   }
-
-  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-  document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-  document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-  const saldoValue = r - d;
-
+  if(countLabel) countLabel.innerText = pendCount + (pendCount === 1 ? ' ATIVA' : ' ATIVAS');
+ db.items.filter(i => { const dt = new Date(i.data); return dt.getMonth() === filterMonth && dt.getFullYear() === filterYear; }).forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val); db.pendencias.forEach(i => p+=i.val);
+  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); const saldoValue = r - d;
   const realCard = document.getElementById('realCardContainer');
   if(realCard) {
     realCard.classList.remove('positive', 'negative');
@@ -1144,9 +1137,5 @@ function initChart() {
 }
 window.onload = () => { applyTheme(); render(); };
 </script>
-
-
 </body>
 </html>
-<!-- SVG-DE-FIX-1784154965 -->
-<!-- FORCE-LOWER-V2-1784155053 -->
