@@ -35,11 +35,67 @@ body.light-mode {
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding-bottom: 100px; min-height: 100vh; overflow-x: hidden; transition: 0.3s; }
-header { padding: 22px 16px 14px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; background: var(--bg); }
-header h1 { font-size: 1.5rem; font-weight: 900; letter-spacing: -1px; }
-header .user-info { display: flex; flex-direction: column; }
-header .user-info span { font-size: 0.7rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: -2px; }
-header .user-info b { font-size: 1.1rem; font-weight: 900; color: var(--text); }
+header { 
+  padding: 24px 20px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  position: sticky; 
+  top: 0; 
+  z-index: 100; 
+  background: var(--bg);
+}
+header .user-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+header .avatar {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--azul) 0%, #0ea5e9 100%);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+}
+header .welcome-text {
+  display: flex;
+  flex-direction: column;
+}
+header .welcome-text span {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+header .welcome-text b {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+header .actions {
+  display: flex;
+  gap: 10px;
+}
+header .icon-btn-top {
+  width: 40px;
+  height: 40px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  cursor: pointer;
+  transition: 0.2s;
+}
+header .icon-btn-top:active { transform: scale(0.92); }
 
 .menu-container { position: relative; }
 .dots-btn { background: var(--card2); border: 1px solid var(--border); color: var(--text); width: 42px; height: 42px; border-radius: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
@@ -184,13 +240,22 @@ header .user-info b { font-size: 1.1rem; font-weight: 900; color: var(--text); }
 </head>
 <body>
 <header>
-  <div class="user-info">
-    <span>Bem-vindo</span>
-    <b id="tab-title">Lançamentos</b>
+  <div class="user-profile">
+    <div class="avatar">
+      <i class="fas fa-user"></i>
+    </div>
+    <div class="welcome-text">
+      <span>Olá, Daniel</span>
+      <b id="tab-title">Resumo Geral</b>
+    </div>
   </div>
-  <div class="menu-container" style="z-index: 1001;">
-    <button class="dots-btn" onclick="toggleMenu()" style="background: var(--card2); width: 42px; height: 42px; border-radius: 14px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); color: var(--text); cursor: pointer; transition: 0.2s;"><i class="fas fa-th-large" style="font-size: 1.1rem;"></i></button>
-    <div class="dropdown-menu" id="dropdownMenu" style="position: fixed; top: 70px; right: 20px; width: 220px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 1002;">
+  <div class="actions">
+    <div class="menu-container">
+      <button class="icon-btn-top" onclick="toggleMenu()">
+        <i class="fas fa-grid-2"></i>
+        <i class="fas fa-th-large"></i>
+      </button>
+      <div class="dropdown-menu" id="dropdownMenu" style="position: fixed; top: 80px; right: 20px; width: 220px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 1002;">
       <div style="padding: 12px 16px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--card2);">Ferramentas</div>
       <div class="dropdown-item" onclick="setTab('compras'); toggleMenu()"><i class="fas fa-shopping-cart"></i> Lista de Compras</div>
       <div class="dropdown-item" onclick="toggleTheme(); toggleMenu()"><i class="fas fa-circle-half-stroke"></i> Tema Claro/Escuro</div>
@@ -574,13 +639,13 @@ function setTab(t) {
   document.getElementById('sec-'+t).classList.add('active'); document.getElementById('nav-'+t).classList.add('active');
   
   const titles = {
-    'lancamentos': 'Lançamentos',
-    'compras': 'Compras',
-    'pendencias': 'Pendências',
-    'comparativo': 'Mensal',
-    'simular': 'Simular',
-    'metas': 'Metas',
-    'analise': 'Análise'
+    'lancamentos': 'Resumo Geral',
+    'compras': 'Lista de Compras',
+    'pendencias': 'Suas Pendências',
+    'comparativo': 'Histórico Mensal',
+    'simular': 'Simulador',
+    'metas': 'Minhas Metas',
+    'analise': 'Análise de Gastos'
   };
   document.getElementById('tab-title').innerText = titles[t] || 'Finanças';
 
