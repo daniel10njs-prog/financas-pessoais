@@ -1145,42 +1145,7 @@ function initChart() {
 window.onload = () => { applyTheme(); render(); };
 </script>
 
-<script>
-function forceDateLower() {
-    const display = document.getElementById('monthDisplayFixed');
-    if (display) {
-        const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        // Pega a data global do app (geralmente currentFilterDate no v98)
-        if (typeof currentFilterDate !== 'undefined') {
-            const mIdx = currentFilterDate.getMonth();
-            const year = currentFilterDate.getFullYear();
-            const correctText = months[mIdx] + ' de ' + year;
-            if (display.innerText !== correctText) {
-                display.innerText = correctText;
-            }
-        }
-    }
-}
 
-// Monitora o elemento: se qualquer coisa mudar (incluindo o sistema tentando capitalizar), ele reseta
-const obs = new MutationObserver(() => {
-    const d = document.getElementById('monthDisplayFixed');
-    if (d && d.innerText.includes(' De ')) {
-        d.innerText = d.innerText.replace(' De ', ' de ');
-    }
-});
-
-window.addEventListener('load', () => {
-    const target = document.getElementById('monthDisplayFixed');
-    if (target) {
-        obs.observe(target, { childList: true, characterData: true, subtree: true });
-        // Executa uma vez no início
-        if (target.innerText.includes(' De ')) target.innerText = target.innerText.replace(' De ', ' de ');
-    }
-    // Reforço a cada 1 segundo para garantir
-    setInterval(forceDateLower, 1000);
-});
-</script>
 </body>
 </html>
 <!-- SVG-DE-FIX-1784154965 -->
