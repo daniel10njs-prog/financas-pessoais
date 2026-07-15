@@ -10,14 +10,14 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
 :root {
-  --verde: #22c55e; --vermelho: #ef4444; --amarelo: #f59e0b; --azul: #3b82f6;
-  --bg: #0f172a; --card: #1e293b; --card2: #253047; --border: #334155; --text: #f1f5f9; --muted: #94a3b8;
+  --verde: #00A36C; --vermelho: #E33E5A; --amarelo: #f59e0b; --azul: #3687E1;
+  --bg: #000000; --card: #0E121E; --card2: #161B2A; --border: #1B2336; --text: #f1f5f9; --muted: #8E98AF;
 }
 body.light-mode {
   --bg: #f8fafc; --card: #ffffff; --card2: #f1f5f9; --border: #e2e8f0; --text: #0f172a; --muted: #64748b;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding-bottom: 90px; min-height: 100vh; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; letter-spacing: -0.01em; max-width: 480px; margin: 0 auto; padding-bottom: 90px; min-height: 100vh; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
 header { padding: 18px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 100; }
 header h1 { font-size: 1.1rem; font-weight: 700; }
 
@@ -32,9 +32,10 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .bottom-nav { 
   position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); 
   width: 100%; max-width: 480px; 
-  background: var(--card); border-top: 1px solid var(--border); 
+  background: #0E121E; border-top: 1px solid #1B2336; 
   display: grid; grid-template-columns: repeat(6, 1fr); 
-  z-index: 1000; padding: 12px 4px calc(15px + var(--safe-area-bottom)); 
+  z-index: 1000; padding: 12px 4px calc(15px + var(--safe-area-bottom));
+  border-radius: 24px 24px 0 0; 
 }
 .bottom-nav button { 
   background: none; border: none; color: var(--muted); 
@@ -49,17 +50,17 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .content-section.active { display: block; }
 
 .cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-.card { background: var(--card); border-radius: 12px; padding: 12px 10px; border: 1px solid var(--border); text-align: center; }
-.card .label { font-size: .6rem; text-transform: uppercase; color: var(--muted); }
-.card .value { font-size: .9rem; font-weight: 700; }
+.card { background: var(--card); border-radius: 20px; padding: 16px 10px; border: 1px solid var(--border); text-align: center; }
+.card .label { font-size: .6rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.5px; }
+.card .value { font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
 .card.rec .value { color: var(--verde); } .card.desp .value { color: var(--vermelho); } .card.saldo .value { color: var(--azul); }
 
-.real-card { background: rgba(59, 130, 246, 0.1); border: 1px dashed var(--azul); margin-bottom: 16px; padding: 12px; border-radius: 12px; text-align: center; }
+.real-card { background: var(--card); border: 1px solid var(--azul); margin-bottom: 20px; padding: 24px 12px; border-radius: 30px; text-align: center; }
 .real-card .label { font-size: .7rem; color: var(--azul); font-weight: 700; }
 .real-card .value { font-size: 1.1rem; font-weight: 800; }
 
-.action-buttons { display: flex; gap: 10px; margin-bottom: 16px; }
-.btn-action { flex: 1; padding: 14px; border-radius: 12px; border: none; color: #fff; font-size: .9rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.action-buttons { display: flex; gap: 12px; margin-bottom: 20px; }
+.btn-action { flex: 1; padding: 14px; border-radius: 20px; border: none; color: #fff; font-size: .9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .btn-action.plus { background: var(--verde); }
 .btn-action.minus { background: var(--vermelho); }
 .btn-action.pend { background: var(--amarelo); }
@@ -133,7 +134,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 <body>
 <header style="display: flex; align-items: center; justify-content: space-between; padding: 24px 20px; position: sticky; top: 0; z-index: 100; background: var(--bg);">
   <div class="user-profile" style="display: flex; align-items: center; gap: 14px;">
-    <div class="avatar" style="width: 44px; height: 44px; background: var(--card2); border-radius: 14px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); color: var(--azul); font-size: 1.2rem;">
+    <div class="avatar" style="width: 50px; height: 50px; background: #3687E1; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem; box-shadow: 0 0 15px rgba(54, 135, 225, 0.4);">
       <i class="fas fa-user"></i>
     </div>
     <div class="welcome-text" style="display: flex; flex-direction: column;">
