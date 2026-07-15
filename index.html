@@ -262,7 +262,13 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
     </div>
     <div class="value" id="saldoReal">R$ 0,00</div>
   </div>
-  <div class="action-buttons">
+  
+<div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 10px;">
+  <button onclick="exportData()" style="background:none; border:none; color:var(--muted); font-size:0.7rem; cursor:pointer;"><i class="fas fa-download"></i> BACKUP</button>
+  <button onclick="document.getElementById('importFile').click()" style="background:none; border:none; color:var(--muted); font-size:0.7rem; cursor:pointer;"><i class="fas fa-upload"></i> RESTAURAR</button>
+  <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+</div>
+<div class="action-buttons">
     <button class="btn-action plus" onclick="openModal('receita')">＋ Receita</button>
     <button class="btn-action minus" onclick="openModal('despesa')">－ Despesa</button>
   </div>
@@ -321,6 +327,11 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </section>
 
 <section id="sec-simular" class="content-section">
+  <div class="widget" style="background: rgba(59, 130, 246, 0.05); border-color: var(--azul); margin-bottom: 15px;">
+    <div style="font-size: 0.7rem; color: var(--azul); font-weight: 700; text-transform: uppercase;">Projeção Pós-Pagamentos</div>
+    <div id="projeçãoValue" style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-top: 5px;">R$ 0,00</div>
+    <div style="font-size: 0.6rem; color: var(--muted); margin-top: 4px;">Saldo atual - Pendências selecionadas</div>
+  </div>
   <div class="widget" style="border-color: var(--verde);">
     <div class="widget-title" style="color: var(--verde);">Simulação de Caixa</div>
     <button class="btn-action plus" style="width:100%; margin-bottom:14px; padding:10px; font-size:.8rem;" onclick="openSimRecModal()">＋ Lançar Recebimento Previsto</button>
@@ -343,6 +354,10 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </section>
 
 <section id="sec-analise" class="content-section">
+  <div id="categoryChart" class="widget" style="margin-bottom: 15px;">
+    <div class="widget-title">Gastos por Categoria</div>
+    <div id="catList" style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;"></div>
+  </div>
   <div class="widget" style="text-align:center; margin-bottom: 20px;">
     <canvas id="myChart" style="max-height:280px;"></canvas>
   </div>
@@ -642,6 +657,7 @@ function setTab(t) {
   document.getElementById('tab-title').innerText = titles[t] || 'Finanças';
 
   if(t==='analise') {
+    renderCategoryAnalysis();
     initChart();
     generateAITips();
   }
@@ -821,6 +837,62 @@ function renderSim() {
   });
 }
 function toggleSim(id) { simChecks[id] = simChecks[id] === false ? true : false; renderSim(); }
+
+
+function exportData() {
+  const data = JSON.stringify(db);
+  const blob = new Blob([data], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `financas_backup_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (imported.items && imported.pendencias) {
+        db = imported;
+        save();
+        render();
+        alert('Dados restaurados com sucesso!');
+      }
+    } catch (err) { alert('Erro ao importar arquivo.'); }
+  };
+  reader.readAsText(file);
+}
+
+function renderCategoryAnalysis() {
+  const catList = document.getElementById('catList');
+  if(!catList) return;
+  catList.innerHTML = '';
+  const categories = {};
+  let totalDesp = 0;
+  db.items.filter(i => i.tipo === 'despesa').forEach(i => {
+    categories[i.sub] = (categories[i.sub] || 0) + i.val;
+    totalDesp += i.val;
+  });
+  
+  Object.entries(categories).sort((a,b) => b[1] - a[1]).forEach(([cat, val]) => {
+    const perc = ((val / totalDesp) * 100).toFixed(1);
+    catList.innerHTML += `
+      <div style="margin-bottom: 8px;">
+        <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px;">
+          <span>${cat}</span>
+          <span style="font-weight:700;">R$ ${val.toLocaleString('pt-BR')} (${perc}%)</span>
+        </div>
+        <div style="height:6px; background:var(--card2); border-radius:3px; overflow:hidden;">
+          <div style="height:100%; width:${perc}%; background:var(--azul);"></div>
+        </div>
+      </div>`;
+  });
+  if(totalDesp === 0) catList.innerHTML = '<div style="color:var(--muted); text-align:center; font-size:0.8rem;">Sem despesas para analisar.</div>';
+}
 
 function renderComp() {
   const container = document.getElementById('compList');
