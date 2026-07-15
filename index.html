@@ -816,22 +816,39 @@ function saveEntry() {
   const d = document.getElementById('desc').value, v = parseFloat(document.getElementById('val').value), s = document.getElementById('tipoSub').value, id = document.getElementById('editId').value, type = document.getElementById('editType').value, dt = document.getElementById('entryDate').value, o = document.getElementById('obs').value;
   if(!d || isNaN(v)) return;
   const isoDate = dt ? new Date(dt + 'T12:00:00').toISOString() : new Date().toISOString();
+  
+  const isRec = document.getElementById('isRecurrent') ? document.getElementById('isRecurrent').value : 'nao';
+  const inst = document.getElementById('installments') ? (parseInt(document.getElementById('installments').value) || 1) : 1;
+
+  const baseData = { desc: d, val: v, sub: s, obs: o, recorrente: isRec };
+
   if(type === 'pendencia') {
-    if(id) { const idx = db.pendencias.findIndex(x => x.id == id); if(idx!==-1) db.pendencias[idx] = { ...db.pendencias[idx], desc: d, val: v, sub: s, data: isoDate, obs: o }; }
-    else db.pendencias.push({ id: Date.now(), desc: d, val: v, sub: s, data: isoDate, obs: o });
+    if(id) { const idx = db.pendencias.findIndex(x => x.id == id); if(idx!==-1) db.pendencias[idx] = { ...db.pendencias[idx], ...baseData, data: isoDate }; }
+    else db.pendencias.push({ id: Date.now(), ...baseData, data: isoDate });
   } else if(type === 'compra') {
     if(!db.compras) db.compras = [];
     const q = document.getElementById('modalQty') ? (parseInt(document.getElementById('modalQty').value) || 1) : 1;
     const totalVal = v * q;
-    if(id) { 
-        const idx = db.compras.findIndex(x => x.id == id); 
-        if(idx!==-1) db.compras[idx] = { ...db.compras[idx], desc: d, val: totalVal, val_unit: v, qtd: q, sub: s, data: isoDate, obs: o }; 
-    }
+    if(id) { const idx = db.compras.findIndex(x => x.id == id); if(idx!==-1) db.compras[idx] = { ...db.compras[idx], desc: d, val: totalVal, val_unit: v, qtd: q, sub: s, data: isoDate, obs: o }; }
     else db.compras.push({ id: Date.now(), desc: d, val: totalVal, val_unit: v, qtd: q, sub: s, data: isoDate, obs: o });
     renderCompras();
   } else {
-    if(id) { const idx = db.items.findIndex(x => x.id == id); if(idx!==-1) db.items[idx] = { ...db.items[idx], desc: d, val: v, sub: s, data: isoDate, obs: o }; }
-    else db.items.push({ id: Date.now(), desc: d, val: v, tipo: type, sub: s, data: isoDate, obs: o });
+    if(id) { const idx = db.items.findIndex(x => x.id == id); if(idx!==-1) db.items[idx] = { ...db.items[idx], ...baseData, data: isoDate }; }
+    else {
+      if(inst > 1 && type === 'despesa') {
+        for(let i=0; i<inst; i++) {
+          const newDate = new Date(isoDate); newDate.setMonth(newDate.getMonth() + i);
+          db.items.push({ id: Date.now() + i, ...baseData, val: v/inst, desc: `${d} (${i+1}/${inst})`, tipo: type, data: newDate.toISOString(), parcelas: inst });
+        }
+      } else if(isRec === 'sim') {
+        for(let i=0; i<12; i++) {
+          const newDate = new Date(isoDate); newDate.setMonth(newDate.getMonth() + i);
+          db.items.push({ id: Date.now() + i, ...baseData, tipo: type, data: newDate.toISOString() });
+        }
+      } else {
+        db.items.push({ id: Date.now(), ...baseData, tipo: type, data: isoDate });
+      }
+    }
   }
   save(); closeModal();
 }
