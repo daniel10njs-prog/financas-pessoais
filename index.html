@@ -222,6 +222,15 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .sim-item { background: var(--card); border-radius: 12px; padding: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .sim-btn-del { color: var(--vermelho); background: none; border: none; font-size: 0.8rem; cursor: pointer; margin-left: 10px; }
 .sync-btn { background: none; border: 1px solid var(--verde); color: var(--verde); padding: 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+
+.month-selector {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 10px 15px; margin-bottom: 15px;
+}
+.month-selector b { font-size: 0.9rem; text-transform: capitalize; color: var(--azul); }
+.month-btn { background: var(--card2); border: none; color: var(--text); padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+.month-btn:active { transform: scale(0.95); }
 </style>
 </head>
 <body>
@@ -250,7 +259,13 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </header>
 
 <section id="sec-lancamentos" class="content-section active">
-  <div class="cards">
+  
+<div class="month-selector">
+  <button class="month-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+  <b id="currentMonthDisplay">Julho 2026</b>
+  <button class="month-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+</div>
+<div class="cards">
     <div class="card rec"><div class="label">Receitas</div><div class="value" id="totalRec">R$ 0</div></div>
     <div class="card desp"><div class="label">Despesas</div><div class="value" id="totalDesp">R$ 0</div></div>
     <div class="card saldo"><div class="label">Saldo</div><div class="value" id="saldo">R$ 0</div></div>
@@ -519,6 +534,13 @@ const materialIcons = [
 ];
 
 let simChecks = {};
+
+let currentFilterDate = new Date();
+function changeMonth(offset) {
+    currentFilterDate.setMonth(currentFilterDate.getMonth() + offset);
+    render();
+}
+
 
 let budgets = JSON.parse(localStorage.getItem('fin_budgets') || '{}');
 function setBudget(cat) {
@@ -993,6 +1015,11 @@ function renderComp() {
 
 function render() {
   let r=0, d=0, p=0;
+  const filterMonth = currentFilterDate.getMonth();
+  const filterYear = currentFilterDate.getFullYear();
+  const monthName = currentFilterDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+  const display = document.getElementById('currentMonthDisplay');
+  if(display) display.innerText = monthName;
   const pendCount = db.pendencias.length;
   const badge = document.getElementById('pend-badge');
   const countLabel = document.getElementById('pend-count-label');
@@ -1001,7 +1028,7 @@ function render() {
     badge.style.display = pendCount > 0 ? 'block' : 'none';
   }
   if(countLabel) countLabel.innerText = pendCount + (pendCount === 1 ? ' ATIVA' : ' ATIVAS');
- db.items.forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val); db.pendencias.forEach(i => p+=i.val);
+ db.items.filter(i => { const dt = new Date(i.data); return dt.getMonth() === filterMonth && dt.getFullYear() === filterYear; }).forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val); db.pendencias.forEach(i => p+=i.val);
   document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); const saldoValue = r - d;
   const realCard = document.getElementById('realCardContainer');
   if(realCard) {
@@ -1015,7 +1042,8 @@ function render() {
   document.getElementById('saldoReal').innerText = balanceHidden ? 'R$ ••••••' : 'R$ '+saldoValue.toLocaleString('pt-BR', {minimumFractionDigits: 2});
   document.getElementById('totalPendValue').innerText = 'R$ '+p.toLocaleString('pt-BR');
   const l = document.getElementById('list'); l.innerHTML = '';
-  const sortedItems = [...db.items].sort((a,b) => new Date(b.data) - new Date(a.data));
+  const filteredItems = db.items.filter(i => { const dt = new Date(i.data); return dt.getMonth() === filterMonth && dt.getFullYear() === filterYear; });
+  const sortedItems = [...filteredItems].sort((a,b) => new Date(b.data) - new Date(a.data));
   sortedItems.forEach(i => { 
     const dateFormatted = new Date(i.data).toLocaleDateString('pt-BR');
     const obsHtml = i.obs ? `<div class="item-obs">${i.obs}</div>` : '';
