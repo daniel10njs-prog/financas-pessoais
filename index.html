@@ -987,9 +987,10 @@ function renderComp() {
   const groups = {};
   db.items.forEach(i => {
     const d = new Date(i.data);
-    const key = d.toLocaleString('pt-BR', { month: 'long', year: 'numeric' }).replace(' de ', ' de ');
-    if(!groups[key]) groups[key] = { r: 0, d: 0 };
-    if(i.tipo === 'receita') groups[key].r += i.val; else groups[key].d += i.val;
+    const key = d.toLocaleString('pt-BR', { month: 'long', year: 'numeric' }).replace(/ de /g, ' de ');
+    let formattedKey = key.charAt(0).toUpperCase() + key.slice(1);
+    if(!groups[formattedKey]) groups[formattedKey] = { r: 0, d: 0 };
+    if(i.tipo === 'receita') groups[formattedKey].r += i.val; else groups[formattedKey].d += i.val;
   });
 
   const sortedKeys = Object.keys(groups).sort((a, b) => {
@@ -1027,9 +1028,12 @@ function render() {
   let r=0, d=0, p=0;
   const filterMonth = currentFilterDate.getMonth();
   const filterYear = currentFilterDate.getFullYear();
-  const monthName = currentFilterDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' }).replace(' de ', ' de ');
+  const monthName = currentFilterDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' }).replace(/ de /g, ' de ');
   const display = document.getElementById('currentMonthDisplay');
-  if(display) display.innerText = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+  if(display) {
+      let finalName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+      display.innerText = finalName;
+  }
   const pendCount = db.pendencias.length;
   const badge = document.getElementById('pend-badge');
   const countLabel = document.getElementById('pend-count-label');
