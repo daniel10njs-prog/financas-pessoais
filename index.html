@@ -1039,7 +1039,7 @@ function render() {
   }
   if(countLabel) countLabel.innerText = pendCount + (pendCount === 1 ? ' ATIVA' : ' ATIVAS');
  db.items.filter(i => { const dt = new Date(i.data); return dt.getMonth() === filterMonth && dt.getFullYear() === filterYear; }).forEach(i => i.tipo==='receita'? r+=i.val : d+=i.val); db.pendencias.forEach(i => p+=i.val);
-  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR'); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR'); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR'); const saldoValue = r - d;
+  document.getElementById('totalRec').innerText = 'R$ '+r.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); document.getElementById('totalDesp').innerText = 'R$ '+d.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); document.getElementById('saldo').innerText = 'R$ '+(r-d).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); const saldoValue = r - d;
   const realCard = document.getElementById('realCardContainer');
   if(realCard) {
     realCard.classList.remove('positive', 'negative');
