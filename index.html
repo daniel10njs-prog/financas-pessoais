@@ -5,21 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Finanças Pessoais</title>
 <meta name="theme-color" content="#0f172a">
-<script src="https://cdn.jsdelivr.net/npm/chart.js">
-function toggleOptionsMenu(event) {
-    event.stopPropagation();
-    const content = document.getElementById('optionsContent');
-    if(content) content.classList.toggle('show');
-}
-window.onclick = function(event) {
-    if (!event.target.matches('.fa-ellipsis-v') && !event.target.matches('.options-btn')) {
-        const dropdowns = document.getElementsByClassName('options-content');
-        for (let i = 0; i < dropdowns.length; i++) {
-            if (dropdowns[i].classList.contains('show')) dropdowns[i].classList.remove('show');
-        }
-    }
-}
-</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
@@ -255,43 +241,32 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 .month-selector b { font-size: 0.9rem; text-transform: capitalize; color: var(--azul); }
 .month-btn { background: var(--card2); border: none; color: var(--text); padding: 5px 10px; border-radius: 6px; cursor: pointer; }
 .month-btn:active { transform: scale(0.95); }
-
-.options-menu { position: relative; display: inline-block; }
-.options-content { 
-    display: none; position: absolute; right: 0; background-color: var(--card2); 
-    min-width: 120px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5); z-index: 1001; 
-    border-radius: 8px; border: 1px solid var(--border);
-}
-.options-content a { color: var(--text); padding: 12px 16px; text-decoration: none; display: block; font-size: 14px; }
-.show { display: block; }
-
 </style>
 </head>
 <body>
-<header style="padding: 25px 20px; display: flex; align-items: center; justify-content: space-between; background: var(--card); border-bottom: 1px solid var(--border);">
-    <div style="display: flex; flex-direction: column;">
-        <span style="font-size: 0.8rem; color: var(--muted); font-family: inherit;">Bem-vindo,</span>
-        <h1 style="font-size: 1.3rem; font-weight: 700; margin: 0; color: var(--text); font-family: inherit;">Daniel Santos</h1>
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 24px 20px; position: sticky; top: 0; z-index: 100; background: var(--bg);">
+  <div class="user-profile" style="display: flex; align-items: center; gap: 14px;">
+    <div class="avatar" style="width: 50px; height: 50px; background: #3687E1; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem; box-shadow: 0 0 15px rgba(54, 135, 225, 0.4);">
+      <i class="fas fa-user"></i>
     </div>
-    <div style="width: 42px; height: 42px; background: var(--card2); border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;">
-        <div onclick="toggleOptionsMenu(event)" style="cursor:pointer"><i class="fas fa-wallet" style="color: var(--azul); font-size: 1.1rem;"></div></i>
+    <div class="welcome-text" style="display: flex; flex-direction: column;">
+      <span style="font-size: 0.75rem; color: var(--muted); font-weight: 500;">Olá, Daniel</span>
+      <b id="tab-title" style="font-size: 1rem; color: var(--text); font-weight: 700;">Resumo Geral</b>
     </div>
+  </div>
+  <div class="menu-container" style="position: relative;">
+    <button class="dots-btn" onclick="toggleMenu()" style="background: none; border: none; color: var(--muted); cursor: pointer; position: relative; z-index: 1003; font-size: 1.4rem; padding: 4px;"><i class="fas fa-bars-staggered"></i></button>
+    <div class="dropdown-menu" id="dropdownMenu" style="position: fixed; top: 70px; right: 20px; width: 220px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 1002;">
+      <div style="padding: 12px 16px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--card2);">Ferramentas</div>
+      <div class="dropdown-item" onclick="setTab('compras'); toggleMenu()"><i class="fas fa-shopping-cart"></i> Lista de Compras</div>
+      <div class="dropdown-item" onclick="toggleTheme(); toggleMenu()"><i class="fas fa-circle-half-stroke"></i> Tema Claro/Escuro</div>
+      <div style="padding: 12px 16px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--card2); border-top: 1px solid var(--border);">Dados</div>
+      <div class="dropdown-item" onclick="exportBackup(); toggleMenu()"><i class="fas fa-file-export"></i> Exportar JSON</div>
+      <div class="dropdown-item" onclick="importBackup(); toggleMenu()"><i class="fas fa-file-import"></i> Restaurar Backup</div>
+      <div class="dropdown-item" onclick="openIconManager(); toggleMenu()"><i class="fas fa-tags"></i> Categorias</div>
+    </div>
+  </div>
 </header>
-    <div id="optionsDropdown" class="options-menu" style="position: absolute; right: 20px; top: 70px; z-index: 1001;">
-        
-        <div id="optionsContent" class="options-content">
-            <a href="#" onclick="abrirGerenciadorCategorias()"><i class="fas fa-tags"></i> Gerenciar Categorias</a>
-            <a href="#" onclick="toggleTheme()"><i class="fas fa-adjust"></i> Mudar Tema</a>
-            <a href="#" onclick="abrirListaCompras()"><i class="fas fa-shopping-cart"></i> Lista de Compras</a>
-            <hr style="border: 0; border-top: 1px solid var(--border); margin: 5px 0;">
-            <a href="#" onclick="exportarDados()"><i class="fas fa-download"></i> Exportar Backup</a>
-            <a href="#" onclick="document.getElementById('importInput').click()"><i class="fas fa-upload"></i> Importar Backup</a>
-            <a href="#" onclick="limparDados()" style="color: var(--vermelho);"><i class="fas fa-trash"></i> Limpar Tudo</a>
-        </div>
-
-    </div>
-    <input type="file" id="importInput" style="display:none" onchange="importarDados(event)">
-    
 
 <section id="sec-lancamentos" class="content-section active">
   
@@ -429,7 +404,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </section>
 
 <nav class="bottom-nav">
-  <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><div onclick="toggleOptionsMenu(event)" style="cursor:pointer"><i class="fas fa-wallet"></div></i>Lançar</button>
+  <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><i class="fas fa-wallet"></i>Lançar</button>
   <button id="nav-pendencias" onclick="setTab('pendencias')" style="position: relative;"><i class="fas fa-hourglass-half"></i>Pendente<span id="pend-badge" class="nav-badge">0</span></button>
   <button id="nav-comparativo" onclick="setTab('comparativo')"><i class="fas fa-calendar-alt"></i>Mensal</button>
   <button id="nav-simular" onclick="setTab('simular')"><i class="fas fa-chart-line"></i>Simular</button>
@@ -1161,20 +1136,6 @@ function initChart() {
   chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(totals), datasets: [{ data: Object.values(totals), backgroundColor: ['#ef4444', '#3b82f6', '#f59e0b', '#22c55e', '#8b5cf6', '#ec4899'] }] }, options: { plugins: { legend: { position: 'bottom', labels: { color: db.theme === 'dark' ? '#f1f5f9' : '#0f172a', font: {size: 10} } } } } });
 }
 window.onload = () => { applyTheme(); render(); };
-
-function toggleOptionsMenu(event) {
-    event.stopPropagation();
-    const content = document.getElementById('optionsContent');
-    if(content) content.classList.toggle('show');
-}
-window.onclick = function(event) {
-    if (!event.target.matches('.fa-ellipsis-v') && !event.target.matches('.options-btn')) {
-        const dropdowns = document.getElementsByClassName('options-content');
-        for (let i = 0; i < dropdowns.length; i++) {
-            if (dropdowns[i].classList.contains('show')) dropdowns[i].classList.remove('show');
-        }
-    }
-}
 </script>
 </body>
 </html>
