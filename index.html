@@ -278,11 +278,17 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
     </div>
 </header>
     <div id="optionsDropdown" class="options-menu" style="position: absolute; right: 20px; top: 70px; z-index: 1001;">
+        
         <div id="optionsContent" class="options-content">
+            <a href="#" onclick="abrirGerenciadorCategorias()"><i class="fas fa-tags"></i> Gerenciar Categorias</a>
+            <a href="#" onclick="toggleTheme()"><i class="fas fa-adjust"></i> Mudar Tema</a>
+            <a href="#" onclick="abrirListaCompras()"><i class="fas fa-shopping-cart"></i> Lista de Compras</a>
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 5px 0;">
             <a href="#" onclick="exportarDados()"><i class="fas fa-download"></i> Exportar Backup</a>
             <a href="#" onclick="document.getElementById('importInput').click()"><i class="fas fa-upload"></i> Importar Backup</a>
             <a href="#" onclick="limparDados()" style="color: var(--vermelho);"><i class="fas fa-trash"></i> Limpar Tudo</a>
         </div>
+
     </div>
     <input type="file" id="importInput" style="display:none" onchange="importarDados(event)">
     
