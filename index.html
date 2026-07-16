@@ -274,9 +274,18 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
         <h1 style="font-size: 1.3rem; font-weight: 700; margin: 0; color: var(--text); font-family: inherit;">Daniel Santos</h1>
     </div>
     <div style="width: 42px; height: 42px; background: var(--card2); border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;">
-        <i class="fas fa-wallet" style="color: var(--azul); font-size: 1.1rem;"></i>
+        <div onclick="toggleOptionsMenu(event)" style="cursor:pointer"><i class="fas fa-wallet" style="color: var(--azul); font-size: 1.1rem;"></div></i>
     </div>
 </header>
+    <div id="optionsDropdown" class="options-menu" style="position: absolute; right: 20px; top: 70px; z-index: 1001;">
+        <div id="optionsContent" class="options-content">
+            <a href="#" onclick="exportarDados()"><i class="fas fa-download"></i> Exportar Backup</a>
+            <a href="#" onclick="document.getElementById('importInput').click()"><i class="fas fa-upload"></i> Importar Backup</a>
+            <a href="#" onclick="limparDados()" style="color: var(--vermelho);"><i class="fas fa-trash"></i> Limpar Tudo</a>
+        </div>
+    </div>
+    <input type="file" id="importInput" style="display:none" onchange="importarDados(event)">
+    
 
 <section id="sec-lancamentos" class="content-section active">
   
@@ -414,7 +423,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </section>
 
 <nav class="bottom-nav">
-  <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><i class="fas fa-wallet"></i>Lançar</button>
+  <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><div onclick="toggleOptionsMenu(event)" style="cursor:pointer"><i class="fas fa-wallet"></div></i>Lançar</button>
   <button id="nav-pendencias" onclick="setTab('pendencias')" style="position: relative;"><i class="fas fa-hourglass-half"></i>Pendente<span id="pend-badge" class="nav-badge">0</span></button>
   <button id="nav-comparativo" onclick="setTab('comparativo')"><i class="fas fa-calendar-alt"></i>Mensal</button>
   <button id="nav-simular" onclick="setTab('simular')"><i class="fas fa-chart-line"></i>Simular</button>
