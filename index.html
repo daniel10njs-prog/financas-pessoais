@@ -9,73 +9,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
-
 :root {
-  --bg: #000000;
-  --card: #121212;
-  --card2: #1c1c1c;
-  --azul: #2d8cf0;
-  --verde: #19be6b;
-  --vermelho: #ed4014;
-  --text: #f8f8f9;
-  --muted: #808695;
-  --border: #262626;
+  /* Bank Palette: Deep Blacks, Sharp Accents, Silver Overtones */
+  --verde: #10b981; /* Emerald */
+  --vermelho: #f43f5e; /* Rose/Slate Red */
+  --amarelo: #f59e0b;
+  --azul: #0ea5e9; /* Clear Sky */
+  --bg: #000000; 
+  --card: #080808; 
+  --card2: #111111; 
+  --border: #1f1f1f; /* Solid, thinner borders */
+  --text: #ffffff; 
+  --muted: #666666; 
+  --accent: #ffffff;
 }
-
-body {
-  background-color: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', system-ui, sans-serif !important;
-}
-
-.card, .summary-card {
-  background: var(--card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 12px !important;
-  padding: 20px !important;
-  margin-bottom: 15px !important;
-}
-
-#saldo {
-  font-size: 2rem !important;
-  font-weight: 700;
-  color: #fff;
-}
-
-.month-selector {
-  background: var(--card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 10px !important;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 15px !important;
-  margin-bottom: 20px !important;
-}
-
-.month-selector b {
-    font-size: 1rem !important;
-    font-weight: 700;
-    text-transform: uppercase !important;
-    color: var(--text) !important;
-}
-
-.month-btn {
-    background: var(--card2) !important;
-    border: none !important;
-    color: var(--azul) !important;
-    font-size: 1.2rem;
-    padding: 5px 12px;
-    border-radius: 6px;
-}
-
-button#addBtn {
-    background: var(--azul) !important;
-    color: #fff !important;
-    font-weight: 700 !important;
-    border-radius: 8px !important;
-    height: 50px;
-    font-size: 1rem;
-}
-
 body.light-mode {
   --bg: #f8fafc; --card: #ffffff; --card2: #f1f5f9; --border: #e2e8f0; --text: #0f172a; --muted: #64748b;
 }
@@ -297,14 +244,28 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </style>
 </head>
 <body>
-<header style="padding: 25px 20px; display: flex; align-items: center; justify-content: space-between; background: var(--bg); border-bottom: 1px solid var(--border);">
-    <div style="display: flex; flex-direction: column;">
-        <span style="font-size: 0.8rem; color: var(--muted);">Bem-vindo,</span>
-        <h1 style="font-size: 1.2rem; font-weight: 700; margin: 0;">Daniel Santos</h1>
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 24px 20px; position: sticky; top: 0; z-index: 100; background: var(--bg);">
+  <div class="user-profile" style="display: flex; align-items: center; gap: 14px;">
+    <div class="avatar" style="width: 50px; height: 50px; background: #3687E1; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem; box-shadow: 0 0 15px rgba(54, 135, 225, 0.4);">
+      <i class="fas fa-user"></i>
     </div>
-    <div style="width: 40px; height: 40px; background: var(--card); border-radius: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;">
-        <i class="fas fa-wallet" style="color: var(--azul);"></i>
+    <div class="welcome-text" style="display: flex; flex-direction: column;">
+      <span style="font-size: 0.75rem; color: var(--muted); font-weight: 500;">Olá, Daniel</span>
+      <b id="tab-title" style="font-size: 1rem; color: var(--text); font-weight: 700;">Resumo Geral</b>
     </div>
+  </div>
+  <div class="menu-container" style="position: relative;">
+    <button class="dots-btn" onclick="toggleMenu()" style="background: none; border: none; color: var(--muted); cursor: pointer; position: relative; z-index: 1003; font-size: 1.4rem; padding: 4px;"><i class="fas fa-bars-staggered"></i></button>
+    <div class="dropdown-menu" id="dropdownMenu" style="position: fixed; top: 70px; right: 20px; width: 220px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 1002;">
+      <div style="padding: 12px 16px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--card2);">Ferramentas</div>
+      <div class="dropdown-item" onclick="setTab('compras'); toggleMenu()"><i class="fas fa-shopping-cart"></i> Lista de Compras</div>
+      <div class="dropdown-item" onclick="toggleTheme(); toggleMenu()"><i class="fas fa-circle-half-stroke"></i> Tema Claro/Escuro</div>
+      <div style="padding: 12px 16px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--card2); border-top: 1px solid var(--border);">Dados</div>
+      <div class="dropdown-item" onclick="exportBackup(); toggleMenu()"><i class="fas fa-file-export"></i> Exportar JSON</div>
+      <div class="dropdown-item" onclick="importBackup(); toggleMenu()"><i class="fas fa-file-import"></i> Restaurar Backup</div>
+      <div class="dropdown-item" onclick="openIconManager(); toggleMenu()"><i class="fas fa-tags"></i> Categorias</div>
+    </div>
+  </div>
 </header>
 
 <section id="sec-lancamentos" class="content-section active">
