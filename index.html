@@ -10,17 +10,57 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
 
+
 :root {
   --bg: #000000;
-  --card: #121212;
-  --card2: #1a1a1a;
-  --azul: #0078FF;
-  --azul-glow: rgba(0, 120, 255, 0.5);
-  --text: #ffffff;
-  --muted: #888888;
-  --border: #333333;
-  --accent: #0056b3;
+  --card: #0A0A0A;
+  --card2: #121212;
+  --azul: #FFFFFF;
+  --text: #FFFFFF;
+  --muted: #666666;
+  --border: #1A1A1A;
+  --accent: #3687E1;
 }
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+.card, .month-selector, .summary-card {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+}
+
+/* Forçar MAIÚSCULO no seletor de mês e tirar o 'de' se necessário */
+.month-selector b {
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em;
+    font-size: 1.1rem;
+    color: var(--text) !important;
+}
+
+.month-btn {
+    background: var(--card2) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 50% !important;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+}
+
+button#addBtn {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
 
 body {
   background-color: var(--bg);
@@ -279,19 +319,16 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </style>
 </head>
 <body>
-<header style="display: flex; align-items: center; justify-content: space-between; padding: 30px 20px; background: transparent;">
-  <div style="display: flex; align-items: center; gap: 15px;">
-    <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #0078FF, #00c6ff); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px var(--azul-glow);">
-       <i class="fas fa-play" style="color: white; font-size: 1.2rem; transform: rotate(0deg);"></i>
+<header style="padding: 40px 20px 20px; display: flex; flex-direction: column; gap: 4px; background: var(--bg);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700;">Daniel Santos</span>
+            <h1 style="font-size: 1.6rem; font-weight: 800; margin: 0; color: #fff; letter-spacing: -0.02em;">Finanças</h1>
+        </div>
+        <div style="width: 40px; height: 40px; border-radius: 12px; background: #111; border: 1px solid #222; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-fingerprint" style="color: #333; font-size: 1.2rem;"></i>
+        </div>
     </div>
-    <div style="display: flex; flex-direction: column;">
-      <span style="font-size: 0.65rem; color: var(--azul); text-transform: uppercase; letter-spacing: 0.2em; font-weight: 900;">Daniel Santos</span>
-      <b style="font-size: 1.3rem; color: #fff; font-weight: 800; letter-spacing: -0.03em;">FINANCE</b>
-    </div>
-  </div>
-  <div style="width: 40px; height: 40px; border-radius: 50%; background: #1a1a1a; border: 1px solid #333; display: flex; align-items: center; justify-content: center;">
-     <i class="fas fa-user" style="color: #666; font-size: 1rem;"></i>
-  </div>
 </header>
 
 <section id="sec-lancamentos" class="content-section active">
