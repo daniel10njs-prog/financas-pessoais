@@ -11,16 +11,76 @@
 <style>
 
 
+
 :root {
   --bg: #000000;
-  --card: #0A0A0A;
-  --card2: #121212;
-  --azul: #FFFFFF;
+  --card: #000000;
+  --card2: #080808;
+  --azul: #3687E1;
   --text: #FFFFFF;
-  --muted: #666666;
-  --border: #1A1A1A;
-  --accent: #3687E1;
+  --muted: #555555;
+  --border: #151515;
 }
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  padding-bottom: 80px;
+}
+
+/* Removendo bordas de caixas para um look fluido */
+.card, .summary-card {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  padding: 25px 5px !important;
+  margin-bottom: 0 !important;
+}
+
+.month-selector {
+  background: #080808 !important;
+  border: 1px solid #111 !important;
+  border-radius: 30px !important;
+  padding: 8px 15px !important;
+  margin: 10px 20px 20px !important;
+}
+
+.month-selector b {
+    font-size: 0.9rem !important;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.month-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #444 !important;
+}
+
+#saldo-card {
+    text-align: center;
+    border-bottom: 2px solid #111 !important;
+}
+
+#saldo {
+    font-size: 2.8rem !important;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    margin-top: 10px;
+}
+
+.item-list {
+    padding: 0 20px;
+}
+
+.item {
+    background: transparent !important;
+    border-bottom: 1px solid #111 !important;
+    border-radius: 0 !important;
+    padding: 15px 0 !important;
+}
+
 
 body {
   background-color: var(--bg);
@@ -319,15 +379,13 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </style>
 </head>
 <body>
-<header style="padding: 40px 20px 20px; display: flex; flex-direction: column; gap: 4px; background: var(--bg);">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-        <div style="display: flex; flex-direction: column;">
-            <span style="font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700;">Daniel Santos</span>
-            <h1 style="font-size: 1.6rem; font-weight: 800; margin: 0; color: #fff; letter-spacing: -0.02em;">Finanças</h1>
-        </div>
-        <div style="width: 40px; height: 40px; border-radius: 12px; background: #111; border: 1px solid #222; display: flex; align-items: center; justify-content: center;">
-            <i class="fas fa-fingerprint" style="color: #333; font-size: 1.2rem;"></i>
-        </div>
+<header style="padding: 50px 25px 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; flex-direction: column;">
+        <span style="font-size: 1.8rem; font-weight: 800; color: #fff; letter-spacing: -0.04em;">Olá, Daniel</span>
+        <span style="font-size: 0.85rem; color: #555; font-weight: 500;">Sua saúde financeira hoje</span>
+    </div>
+    <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #222, #000); border: 1px solid #333; display: flex; align-items: center; justify-content: center;">
+        <i class="fas fa-shield-alt" style="color: #222; font-size: 1.1rem;"></i>
     </div>
 </header>
 
