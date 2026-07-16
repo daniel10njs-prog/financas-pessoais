@@ -9,49 +9,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
-
 :root {
-  --bg: #F8F9FA;
-  --card: #FFFFFF;
-  --card2: #F1F3F5;
-  --azul: #2D8CF0;
-  --text: #000000;
-  --muted: #666666;
-  --border: #E9ECEF;
+  /* Bank Palette: Deep Blacks, Sharp Accents, Silver Overtones */
+  --verde: #10b981; /* Emerald */
+  --vermelho: #f43f5e; /* Rose/Slate Red */
+  --amarelo: #f59e0b;
+  --azul: #0ea5e9; /* Clear Sky */
+  --bg: #000000; 
+  --card: #080808; 
+  --card2: #111111; 
+  --border: #1f1f1f; /* Solid, thinner borders */
+  --text: #ffffff; 
+  --muted: #666666; 
+  --accent: #ffffff;
 }
-
-body {
-  background-color: var(--bg);
-  color: var(--text);
-}
-
-.app-header {
-    background: #FFFFFF;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #E9ECEF;
-}
-
-.month-selector {
-    background: #FFFFFF !important;
-    border: 1px solid #E9ECEF !important;
-    border-radius: 8px !important;
-    margin: 15px !important;
-    padding: 10px 15px !important;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.month-selector b {
-    font-size: 0.9rem !important;
-    font-weight: 600;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em;
-}
-
 body.light-mode {
   --bg: #f8fafc; --card: #ffffff; --card2: #f1f5f9; --border: #e2e8f0; --text: #0f172a; --muted: #64748b;
 }
@@ -273,13 +244,13 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </style>
 </head>
 <body>
-<header class="app-header">
+<header style="padding: 25px 20px; display: flex; align-items: center; justify-content: space-between; background: var(--card); border-bottom: 1px solid var(--border);">
     <div style="display: flex; flex-direction: column;">
-        <span style="font-size: 0.8rem; color: #888;">Bem-vindo,</span>
-        <h1 style="font-size: 1.3rem; font-weight: 700; margin: 0;">Daniel Santos</h1>
+        <span style="font-size: 0.8rem; color: var(--muted); font-family: inherit;">Bem-vindo,</span>
+        <h1 style="font-size: 1.3rem; font-weight: 700; margin: 0; color: var(--text); font-family: inherit;">Daniel Santos</h1>
     </div>
-    <div style="width: 42px; height: 42px; background: #F8F9FA; border-radius: 10px; border: 1px solid #E9ECEF; display: flex; align-items: center; justify-content: center;">
-        <i class="fas fa-wallet" style="color: #2D8CF0; font-size: 1.1rem;"></i>
+    <div style="width: 42px; height: 42px; background: var(--card2); border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;">
+        <i class="fas fa-wallet" style="color: var(--azul); font-size: 1.1rem;"></i>
     </div>
 </header>
 
