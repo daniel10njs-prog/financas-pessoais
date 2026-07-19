@@ -5,7 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Finanças Pessoais</title>
 <meta name="theme-color" content="#0f172a">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+async function sincronizarComNuvem() {
+    alert('Iniciando sistema de nuvem com segurança...');
+    const key = prompt('Crie uma chave para este celular (ex: daniel2026):');
+    if(!key) return;
+    
+    document.getElementById('syncBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+    
+    // Por enquanto, apenas confirmamos o recebimento da chave para testar o clique
+    setTimeout(() => {
+        alert('Chave "' + key + '" registrada. Na próxima atualização, liberarei o envio de dados linha por linha.');
+        document.getElementById('syncBtn').innerHTML = '<i class="fas fa-cloud"></i> Nuvem: ' + key;
+    }, 1500);
+}
+
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
