@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sincronizador Daniel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; text-align: center; padding: 40px 20px; }
+        .card { background: #111; border: 1px solid #333; padding: 30px; border-radius: 24px; max-width: 400px; margin: 0 auto; }
+        h1 { font-size: 1.5rem; margin-bottom: 10px; color: #3687E1; }
+        p { color: #888; font-size: 0.9rem; margin-bottom: 30px; }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 20px; text-align: center; font-size: 1.1rem; }
+        button { width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; margin-bottom: 10px; font-size: 1rem; }
+        .btn-send { background: #3687E1; color: white; }
+        .btn-receive { background: #10b981; color: white; }
+        .status { margin-top: 20px; font-size: 0.8rem; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <i class="fas fa-cloud-arrow-up" style="font-size: 3rem; color: #3687E1; margin-bottom: 20px;"></i>
+        <h1>Sincronizador</h1>
+        <p>Use este app apenas para transferir os dados entre seus celulares.</p>
+        
+        <input type="text" id="chave" placeholder="Sua Chave (ex: daniel2026)">
+        
+        <button class="btn-send" onclick="enviarDados()">1. ENVIAR DADOS (Celular 1)</button>
+        <button class="btn-receive" onclick="receberDados()">2. BAIXAR DADOS (Celular 2)</button>
+        
+        <div class="status" id="status">Pronto para sincronizar</div>
+    </div>
+
+    <script>
+        const API_URL = 'https://api.npoint.io/46e507f35476d05f3214';
+
+        async function enviarDados() {
+            const key = document.getElementById('chave').value;
+            if(!key) return alert('Digite a chave!');
+            
+            const dados = localStorage.getItem('zapia_financas_db');
+            if(!dados) return alert('Nenhum dado encontrado neste celular!');
+
+            document.getElementById('status').innerText = 'Enviando...';
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({chave: key, dados: dados, data: new Date().toLocaleString()})
+                });
+                if(res.ok) alert('✅ SUCESSO! Dados enviados.
+Agora vá no outro celular.');
+                else alert('Erro ao enviar.');
+            } catch(e) { alert('Erro de conexão.'); }
+            document.getElementById('status').innerText = 'Pronto';
+        }
+
+        async function receberDados() {
+            const key = document.getElementById('chave').value;
+            if(!key) return alert('Digite a chave!');
+            
+            document.getElementById('status').innerText = 'Baixando...';
+            try {
+                const res = await fetch(API_URL);
+                const cloud = await res.json();
+                
+                if(cloud.chave === key) {
+                    localStorage.setItem('zapia_financas_db', cloud.dados);
+                    alert('✅ SUCESSO! Dados baixados.
+Abra o seu aplicativo principal para ver.');
+                } else {
+                    alert('Chave incorreta ou dados não encontrados.');
+                }
+            } catch(e) { alert('Erro ao baixar.'); }
+            document.getElementById('status').innerText = 'Pronto';
+        }
+    </script>
+</body>
+</html>
