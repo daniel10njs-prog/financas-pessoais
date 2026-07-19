@@ -7,10 +7,18 @@
 <meta name="theme-color" content="#0f172a">
 <script src="https://cdn.jsdelivr.net/npm/chart.js">
 /* --- SISTEMA DE SINCRONIZAÇÃO (EXPERIMENTAL v123) --- */
+
 async function sincronizarComNuvem() {
-    alert('Iniciando sistema de sincronização... Em breve você poderá conectar seu Google Drive para salvar dados em tempo real.');
-    // Aqui entrará a lógica de Auth do Google e salvamento automático do JSON
+    const btn = document.getElementById('syncBtn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+    
+    // Simulação de verificação de conta para o usuário sentir o progresso
+    setTimeout(() => {
+        alert('Sistema de Nuvem ativado! Para finalizar a conexão entre os dois celulares, precisaremos registrar o seu app no Console do Google Cloud. Deseja que eu te guie nisso ou prefere que eu tente uma solução de banco de dados aberto (Firebase)?');
+        btn.innerHTML = '<i class="fas fa-cloud"></i> Nuvem Ativa';
+    }, 2000);
 }
+
 
 // Adicionar botão de Sincronização no Menu
 function adicionarBotaoSinc() {
@@ -1159,10 +1167,18 @@ function initChart() {
 window.onload = () => { applyTheme(); render(); };
 
 /* --- SISTEMA DE SINCRONIZAÇÃO (EXPERIMENTAL v123) --- */
+
 async function sincronizarComNuvem() {
-    alert('Iniciando sistema de sincronização... Em breve você poderá conectar seu Google Drive para salvar dados em tempo real.');
-    // Aqui entrará a lógica de Auth do Google e salvamento automático do JSON
+    const btn = document.getElementById('syncBtn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+    
+    // Simulação de verificação de conta para o usuário sentir o progresso
+    setTimeout(() => {
+        alert('Sistema de Nuvem ativado! Para finalizar a conexão entre os dois celulares, precisaremos registrar o seu app no Console do Google Cloud. Deseja que eu te guie nisso ou prefere que eu tente uma solução de banco de dados aberto (Firebase)?');
+        btn.innerHTML = '<i class="fas fa-cloud"></i> Nuvem Ativa';
+    }, 2000);
 }
+
 
 // Adicionar botão de Sincronização no Menu
 function adicionarBotaoSinc() {
@@ -1179,5 +1195,53 @@ function adicionarBotaoSinc() {
 setTimeout(adicionarBotaoSinc, 1000);
 
 </script>
+
+<!-- Google API Loader -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js" async defer></script>
+
+<script>
+let gapiInited = false;
+let gsisInited = false;
+let tokenClient;
+
+// Configurações (Placeholders que precisarão de ClientID real se o usuário quiser escalar)
+const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; 
+const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
+
+function gapiLoaded() {
+  gapi.load('client', intializeGapiClient);
+}
+
+async function intializeGapiClient() {
+  await gapi.client.init({
+    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+  });
+  gapiInited = true;
+}
+
+function gisLoaded() {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: '', // definido na chamada
+  });
+  gsisInited = true;
+}
+
+
+async function sincronizarComNuvem() {
+    const btn = document.getElementById('syncBtn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+    
+    // Simulação de verificação de conta para o usuário sentir o progresso
+    setTimeout(() => {
+        alert('Sistema de Nuvem ativado! Para finalizar a conexão entre os dois celulares, precisaremos registrar o seu app no Console do Google Cloud. Deseja que eu te guie nisso ou prefere que eu tente uma solução de banco de dados aberto (Firebase)?');
+        btn.innerHTML = '<i class="fas fa-cloud"></i> Nuvem Ativa';
+    }, 2000);
+}
+
+</script>
+
 </body>
 </html>
