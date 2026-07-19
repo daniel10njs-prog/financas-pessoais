@@ -1137,5 +1137,39 @@ function initChart() {
 }
 window.onload = () => { applyTheme(); render(); };
 </script>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  databaseURL: "https://financas-pessoais-daniel-default-rtdb.firebaseio.com"
+};
+try { firebase.initializeApp(firebaseConfig); } catch(e) {}
+
+async function sincronizarComNuvem() {
+    const key = prompt('Crie ou digite sua CHAVE de sincronização:');
+    if(!key) return;
+    const btn = document.getElementById('syncBtn');
+    btn.innerHTML = '<i class="fas fa-sync fa-spin"></i> Sincronizando...';
+    
+    const data = {
+        transacoes: JSON.parse(localStorage.getItem('financasData') || '[]'),
+        saldo: localStorage.getItem('saldo') || '0',
+        lastUpdate: Date.now()
+    };
+
+    firebase.database().ref('users/' + key).set(data)
+        .then(() => {
+            alert('Sincronizado! Use a chave "' + key + '" no outro celular.');
+            btn.innerHTML = '<i class="fas fa-cloud"></i> Nuvem: ' + key;
+            localStorage.setItem('syncKey', key);
+        })
+        .catch(() => {
+            alert('Erro na conexão.');
+            btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sincronizar Nuvem';
+        });
+}
+</script>
+
 </body>
 </html>
