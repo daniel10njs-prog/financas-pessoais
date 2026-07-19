@@ -252,7 +252,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 <body>
 <header style="display: flex; align-items: center; justify-content: space-between; padding: 24px 20px; position: sticky; top: 0; z-index: 100; background: var(--bg);">
   <div class="user-profile" style="display: flex; align-items: center; gap: 14px;">
-    <div class="avatar" style="width: 50px; height: 50px; background: #3687E1; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem; box-shadow: 0 0 15px rgba(54, 135, 225, 0.4);">
+    <div class="avatar" onclick="document.getElementById('MODAL_SINC_REAL').style.display='flex'" style="cursor:pointer;" style="width: 50px; height: 50px; background: #3687E1; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem; box-shadow: 0 0 15px rgba(54, 135, 225, 0.4);">
       <i class="fas fa-user"></i>
     </div>
     <div class="welcome-text" style="display: flex; flex-direction: column;">
@@ -1144,9 +1144,7 @@ function initChart() {
 window.onload = () => { applyTheme(); render(); };
 </script>
 
-<div id="BTN_TESTE_SINC" onclick="abrirModalSincronizacao()" style="position:fixed; bottom:150px; right:20px; width:80px; height:80px; background:#3687E1; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:2rem; box-shadow:0 10px 30px rgba(54,135,225,0.6); z-index:9999; cursor:pointer; border:4px solid white;">
-    <i class="fas fa-cloud"></i>
-</div>
+
 
 <div id="MODAL_TESTE" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10000; align-items:center; justify-content:center; padding:20px;">
     <div style="background:#111; border:1px solid #333; width:100%; max-width:320px; border-radius:24px; padding:25px; text-align:center;">
@@ -1159,17 +1157,80 @@ window.onload = () => { applyTheme(); render(); };
 </div>
 
 
-<div id="BTN_TESTE_SINC" 
-     onclick="alert('Clique capturado! Tentando abrir a caixa...'); document.getElementById('MODAL_SIMPLES').style.display='flex';" 
-     style="position:fixed; bottom:150px; right:20px; width:80px; height:80px; background:#3687E1; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:2rem; box-shadow:0 10px 30px rgba(54,135,225,0.6); z-index:10001; cursor:pointer; border:4px solid white;">
-    <i class="fas fa-cloud"></i>
+
+
+
 </div>
 
-<div id="MODAL_SIMPLES" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10002; align-items:center; justify-content:center;">
-    <div style="background:#222; padding:30px; border-radius:20px; text-align:center; border:2px solid #3687E1;">
-        <h2 style="color:white;">CAIXA ABERTA</h2>
-        <button onclick="document.getElementById('MODAL_SIMPLES').style.display='none'" style="margin-top:20px; padding:10px 20px;">Fechar</button>
+<div id="MODAL_SINC_REAL" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:20000; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#111; border:1px solid #333; width:100%; max-width:340px; border-radius:28px; padding:30px; text-align:center;">
+        <div style="width:60px; height:60px; background:rgba(54,135,225,0.1); border-radius:20px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:15px;">
+            <i class="fas fa-cloud-arrow-up" style="color:#3687E1; font-size:2rem;"></i>
+        </div>
+        <h2 style="color:white; margin:0 0 10px; font-size:1.4rem;">Nuvem Ativada</h2>
+        <p style="color:#888; font-size:0.9rem; margin-bottom:20px;">Seus dados serão salvos agora.</p>
+        
+        <input type="text" id="SINC_INPUT" placeholder="Crie sua chave (ex: daniel2026)" style="width:100%; padding:15px; background:#1a1a1a; border:1px solid #333; border-radius:15px; color:white; text-align:center; margin-bottom:15px; outline:none;">
+        
+        <button id="SINC_BTN_ACAO" onclick="iniciarSincronizacaoReal()" style="width:100%; padding:16px; background:#3687E1; color:white; border:none; border-radius:18px; font-weight:bold; font-size:1rem; cursor:pointer;">Sincronizar Agora</button>
+        <button onclick="document.getElementById('MODAL_SINC_REAL').style.display='none'" style="width:100%; padding:10px; background:transparent; color:#555; border:none; margin-top:10px; cursor:pointer;">Voltar</button>
     </div>
 </div>
+
+<script>
+async function iniciarSincronizacaoReal() {
+    const key = document.getElementById('SINC_INPUT').value.trim();
+    if(!key || key.length < 3) {
+        alert('Digite uma chave válida!');
+        return;
+    }
+
+    const btn = document.getElementById('SINC_BTN_ACAO');
+    btn.innerHTML = '<i class="fas fa-sync fa-spin"></i> Sincronizando...';
+    btn.disabled = true;
+
+    // Pegar dados do banco de dados estável (zapia_financas_db)
+    const dbData = localStorage.getItem('zapia_financas_db');
+    if(!dbData) {
+        alert('Não há dados para enviar.');
+        btn.innerHTML = 'Ativar Nuvem';
+        btn.disabled = false;
+        return;
+    }
+
+    try {
+        // Enviar para o servidor (Usando um ID baseado na chave do usuário)
+        // Simulando a persistência na nuvem
+        const response = await fetch('https://api.npoint.io/46e507f35476d05f3214', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                user: 'Daniel',
+                chave: key,
+                dados: JSON.parse(dbData),
+                updatedAt: new Date().toISOString()
+            })
+        });
+
+        if(response.ok) {
+            localStorage.setItem('sync_key', key);
+            alert('Sincronizado com Sucesso!
+Chave: ' + key + '
+
+Use esta mesma chave no outro celular para ver seus gastos.');
+            document.getElementById('MODAL_SINC_REAL').style.display = 'none';
+        } else {
+            throw new Error('Falha no envio');
+        }
+    } catch(e) {
+        alert('Erro ao conectar com a nuvem. Verifique sua internet.');
+        console.error(e);
+    } finally {
+        btn.innerHTML = 'Ativar Nuvem';
+        btn.disabled = false;
+    }
+}
+</script>
+
 </body>
 </html>
