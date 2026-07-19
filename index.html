@@ -5,67 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Finanças Pessoais</title>
 <meta name="theme-color" content="#0f172a">
-<script src="https://cdn.jsdelivr.net/npm/chart.js">
-async function sincronizarComNuvem() {
-    alert('Iniciando sistema de nuvem com segurança...');
-    const key = prompt('Crie uma chave para este celular (ex: daniel2026):');
-    if(!key) return;
-    
-    document.getElementById('syncBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
-    
-    // Por enquanto, apenas confirmamos o recebimento da chave para testar o clique
-    setTimeout(() => {
-        alert('Chave "' + key + '" registrada. Na próxima atualização, liberarei o envio de dados linha por linha.');
-        document.getElementById('syncBtn').innerHTML = '<i class="fas fa-cloud"></i> Nuvem: ' + key;
-    }, 1500);
-}
-
-
-
-    
-    const btn = document.getElementById('btnSincAcao');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
-    btn.disabled = true;
-
-    // Simulação de sucesso (Passo a Passo)
-    setTimeout(() => {
-        alert('Chave "' + key + '" conectada com sucesso!
-Seus dados agora serão salvos na nuvem.');
-        fecharModalSinc();
-        btn.innerHTML = 'Conectar';
-        btn.disabled = false;
-        // Marcar visualmente que está logado no ícone futuramente
-    }, 2000);
-}
-
-
-function abrirModalSincronizacao() {
-    console.log('Abrindo modal...');
-    const modal = document.getElementById('modalSincronizacao');
-    if(modal) modal.style.display = 'flex';
-    else alert('Erro: Modal não encontrado');
-}
-function fecharModalSinc() {
-    document.getElementById('modalSincronizacao').style.display = 'none';
-}
-async function executarSincronizacao() {
-    const key = document.getElementById('chaveSinc').value;
-    if(!key || key.length < 4) {
-        alert('Crie uma chave com pelo menos 4 caracteres.');
-        return;
-    }
-    const btn = document.getElementById('btnSincAcao');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Conectando...';
-    
-    setTimeout(() => {
-        alert('Sucesso! O celular agora está vinculado à chave: ' + key);
-        fecharModalSinc();
-        btn.innerHTML = originalText;
-    }, 1500);
-}
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
@@ -306,7 +246,7 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 <body>
 <header style="display: flex; align-items: center; justify-content: space-between; padding: 24px 20px; position: sticky; top: 0; z-index: 100; background: var(--bg);">
   <div class="user-profile" style="display: flex; align-items: center; gap: 14px;">
-    <div class="avatar"  class="avatar" id="btnPerfilSinc" style="cursor:pointer; width: 50px; height: 50px; background: #3687E1; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem; box-shadow: 0 0 15px rgba(54, 135, 225, 0.4);">
+    <div class="avatar" style="width: 50px; height: 50px; background: #3687E1; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem; box-shadow: 0 0 15px rgba(54, 135, 225, 0.4);">
       <i class="fas fa-user"></i>
     </div>
     <div class="welcome-text" style="display: flex; flex-direction: column;">
@@ -1196,67 +1136,6 @@ function initChart() {
   chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(totals), datasets: [{ data: Object.values(totals), backgroundColor: ['#ef4444', '#3b82f6', '#f59e0b', '#22c55e', '#8b5cf6', '#ec4899'] }] }, options: { plugins: { legend: { position: 'bottom', labels: { color: db.theme === 'dark' ? '#f1f5f9' : '#0f172a', font: {size: 10} } } } } });
 }
 window.onload = () => { applyTheme(); render(); };
-
-window.abrirModalSincronizacao = function() {
-    console.log('Tentando abrir modal SINC');
-    const modal = document.getElementById('SINC_MODAL');
-    if(modal) {
-        modal.style.display = 'flex';
-    } else {
-        alert('Erro crítico: Modal de sincronização não encontrado no HTML.');
-    }
-};
-
-window.SINC_START = function() {
-    const key = document.getElementById('SINC_KEY_INPUT').value;
-    if(!key || key.length < 3) return alert('Chave muito curta!');
-    
-    const btn = document.getElementById('SINC_ACTION_BTN');
-    btn.innerHTML = '<i class="fas fa-sync fa-spin"></i> Conectando...';
-    
-    setTimeout(() => {
-        alert('Pronto! Chave registrada: ' + key + '
-O celular está pronto para a nuvem.');
-        document.getElementById('SINC_MODAL').style.display = 'none';
-        btn.innerHTML = 'Ativar Nuvem';
-    }, 1500);
-};
-
-// Vincular o clique de forma garantida
-document.addEventListener('DOMContentLoaded', function() {
-    const avatar = document.querySelector('.avatar') || document.getElementById('btnPerfilSinc');
-    if(avatar) {
-        avatar.onclick = window.abrirModalSincronizacao;
-        avatar.style.cursor = 'pointer';
-    }
-});
-
 </script>
-
-
-</div>
-
-
-
-</div>
-
-
-<div id="SINC_MODAL" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10000; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:#111; border:1px solid #333; width:100%; max-width:350px; border-radius:28px; padding:30px; position:relative; box-shadow:0 25px 50px rgba(0,0,0,1);">
-        <div style="text-align:center;">
-            <div style="width:64px; height:64px; background:rgba(54,135,225,0.2); border-radius:20px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:15px;">
-                <i class="fas fa-cloud-upload-alt" style="color:#3687E1; font-size:2rem;"></i>
-            </div>
-            <h2 style="color:white; margin:0 0 10px; font-size:1.4rem;">Sincronização</h2>
-            <p style="color:#888; font-size:0.9rem; line-height:1.4; margin-bottom:25px;">Conecte outro celular usando uma chave única para ver seus dados.</p>
-        </div>
-        
-        <input type="text" id="SINC_KEY_INPUT" placeholder="Sua chave (ex: daniel123)" style="width:100%; padding:15px; background:#1a1a1a; border:1px solid #333; border-radius:16px; color:white; font-size:1rem; margin-bottom:20px; outline:none; text-align:center;">
-        
-        <button onclick="window.SINC_START()" id="SINC_ACTION_BTN" style="width:100%; padding:16px; background:#3687E1; color:white; border:none; border-radius:18px; font-weight:bold; font-size:1rem; cursor:pointer;">Ativar Nuvem</button>
-        <button onclick="document.getElementById('SINC_MODAL').style.display='none'" style="width:100%; padding:15px; background:transparent; color:#555; border:none; margin-top:10px; cursor:pointer;">Agora não</button>
-    </div>
-</div>
-
 </body>
 </html>
