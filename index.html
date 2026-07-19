@@ -5,7 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Finanças Pessoais</title>
 <meta name="theme-color" content="#0f172a">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+/* --- SISTEMA DE SINCRONIZAÇÃO (EXPERIMENTAL v123) --- */
+async function sincronizarComNuvem() {
+    alert('Iniciando sistema de sincronização... Em breve você poderá conectar seu Google Drive para salvar dados em tempo real.');
+    // Aqui entrará a lógica de Auth do Google e salvamento automático do JSON
+}
+
+// Adicionar botão de Sincronização no Menu
+function adicionarBotaoSinc() {
+    const menu = document.getElementById('optionsContent');
+    if(menu && !document.getElementById('syncBtn')) {
+        const btn = document.createElement('a');
+        btn.id = 'syncBtn';
+        btn.href = '#';
+        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sincronizar Nuvem';
+        btn.onclick = sincronizarComNuvem;
+        menu.insertBefore(btn, menu.firstChild);
+    }
+}
+setTimeout(adicionarBotaoSinc, 1000);
+
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
@@ -1136,6 +1157,27 @@ function initChart() {
   chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(totals), datasets: [{ data: Object.values(totals), backgroundColor: ['#ef4444', '#3b82f6', '#f59e0b', '#22c55e', '#8b5cf6', '#ec4899'] }] }, options: { plugins: { legend: { position: 'bottom', labels: { color: db.theme === 'dark' ? '#f1f5f9' : '#0f172a', font: {size: 10} } } } } });
 }
 window.onload = () => { applyTheme(); render(); };
+
+/* --- SISTEMA DE SINCRONIZAÇÃO (EXPERIMENTAL v123) --- */
+async function sincronizarComNuvem() {
+    alert('Iniciando sistema de sincronização... Em breve você poderá conectar seu Google Drive para salvar dados em tempo real.');
+    // Aqui entrará a lógica de Auth do Google e salvamento automático do JSON
+}
+
+// Adicionar botão de Sincronização no Menu
+function adicionarBotaoSinc() {
+    const menu = document.getElementById('optionsContent');
+    if(menu && !document.getElementById('syncBtn')) {
+        const btn = document.createElement('a');
+        btn.id = 'syncBtn';
+        btn.href = '#';
+        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sincronizar Nuvem';
+        btn.onclick = sincronizarComNuvem;
+        menu.insertBefore(btn, menu.firstChild);
+    }
+}
+setTimeout(adicionarBotaoSinc, 1000);
+
 </script>
 </body>
 </html>
