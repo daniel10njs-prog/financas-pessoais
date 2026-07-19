@@ -5,197 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Finanças Pessoais</title>
 <meta name="theme-color" content="#0f172a">
-<script src="https://cdn.jsdelivr.net/npm/chart.js">
-/* --- SISTEMA DE SINCRONIZAÇÃO (EXPERIMENTAL v123) --- */
-
-async function sincronizarComNuvem() {
-    const btn = document.getElementById('syncBtn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
-    
-    // Simulação de verificação de conta para o usuário sentir o progresso
-    setTimeout(() => {
-        alert('Sistema de Nuvem ativado! Para finalizar a conexão entre os dois celulares, precisaremos registrar o seu app no Console do Google Cloud. Deseja que eu te guie nisso ou prefere que eu tente uma solução de banco de dados aberto (Firebase)?');
-        btn.innerHTML = '<i class="fas fa-cloud"></i> Nuvem Ativa';
-    }, 2000);
-}
-
-
-// Adicionar botão de Sincronização no Menu
-function adicionarBotaoSinc() {
-    const menu = document.getElementById('optionsContent');
-    if(menu && !document.getElementById('syncBtn')) {
-        const btn = document.createElement('a');
-        btn.id = 'syncBtn';
-        btn.href = '#';
-        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sincronizar Nuvem';
-        btn.onclick = sincronizarComNuvem;
-        menu.insertBefore(btn, menu.firstChild);
-    }
-}
-setTimeout(adicionarBotaoSinc, 1000);
-
-
-function toggleMenu() {
-    const pop = document.getElementById('mainPopover');
-    pop.style.display = pop.style.display === 'block' ? 'none' : 'block';
-}
-window.onclick = function(event) {
-    if (!event.target.closest('.app-header') && !event.target.closest('.popover-menu')) {
-        document.getElementById('mainPopover').style.display = 'none';
-    }
-}
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
-
 :root {
-  --bg: #F0F4F8;
-  --card: #FFFFFF;
-  --text: #2D3436;
-  --muted: #636E72;
-  --azul: #4183F1;
-  --verde: #10AC84;
-  --vermelho: #EE5253;
-  --border: #E1E8EF;
-  --nav-bg: #2D3436;
+  /* Bank Palette: Deep Blacks, Sharp Accents, Silver Overtones */
+  --verde: #10b981; /* Emerald */
+  --vermelho: #f43f5e; /* Rose/Slate Red */
+  --amarelo: #f59e0b;
+  --azul: #0ea5e9; /* Clear Sky */
+  --bg: #000000; 
+  --card: #080808; 
+  --card2: #111111; 
+  --border: #1f1f1f; /* Solid, thinner borders */
+  --text: #ffffff; 
+  --muted: #666666; 
+  --accent: #ffffff;
 }
-
-body {
-  background-color: var(--bg);
-  color: var(--text);
-  font-family: inherit;
-  margin: 0; padding: 0;
-  padding-bottom: 100px;
-}
-
-.app-header {
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.user-icon {
-  width: 50px; height: 50px;
-  background: var(--azul);
-  border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  color: white; font-size: 1.5rem;
-}
-
-.summary-container {
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.mini-card {
-  background: var(--card);
-  border-radius: 15px;
-  padding: 12px 20px;
-  border: 1px solid var(--border);
-  width: fit-content;
-}
-
-.main-balance-card {
-  background: var(--card);
-  border: 3px solid var(--verde);
-  border-radius: 25px;
-  padding: 20px;
-  text-align: center;
-  position: relative;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  padding: 20px;
-}
-
-.btn-action {
-  flex: 1;
-  padding: 15px;
-  border-radius: 15px;
-  border: none;
-  color: white;
-  font-weight: 700;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-
-.btn-receita { background-color: var(--verde); }
-.btn-despesa { background-color: var(--vermelho); }
-
-.transaction-list {
-  padding: 0 20px;
-  display: flex; flex-direction: column; gap: 12px;
-}
-
-.transaction-item {
-  background: var(--card);
-  border-radius: 20px;
-  padding: 15px;
-  display: flex; align-items: center; gap: 15px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-.category-icon {
-  width: 45px; height: 45px;
-  border-radius: 12px;
-  background: #F0F4F8;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--azul); font-size: 1.2rem;
-}
-
-.bottom-nav {
-  position: fixed;
-  bottom: 20px; left: 20px; right: 20px;
-  background: var(--nav-bg);
-  border-radius: 30px;
-  padding: 12px 10px;
-  display: flex; justify-content: space-around;
-  align-items: center;
-  z-index: 1000;
-}
-
-.nav-item {
-  color: #B2BEC3;
-  display: flex; flex-direction: column; align-items: center;
-  font-size: 0.65rem; gap: 4px;
-}
-
-.nav-item.active { color: white; }
-
-/* Menu Popover */
-.popover-menu {
-  display: none;
-  position: absolute;
-  top: 70px; right: 20px;
-  background: white;
-  width: 200px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  z-index: 2000;
-  overflow: hidden;
-}
-
-.popover-header {
-  padding: 10px 15px;
-  background: #F8F9FA;
-  font-size: 0.7rem;
-  color: #B2BEC3;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-
 body.light-mode {
   --bg: #f8fafc; --card: #ffffff; --card2: #f1f5f9; --border: #e2e8f0; --text: #0f172a; --muted: #64748b;
 }
@@ -417,56 +244,248 @@ header h1 { font-size: 1.1rem; font-weight: 700; }
 </style>
 </head>
 <body>
-<header class="app-header">
-    <div class="user-profile">
-        <div class="user-icon"><i class="fas fa-user"></i></div>
-        <div style="display:flex; flex-direction:column;">
-            <span style="font-size: 0.8rem; color: var(--muted);">Olá, Daniel</span>
-            <b style="font-size: 1.2rem;">Resumo Geral</b>
-        </div>
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 24px 20px; position: sticky; top: 0; z-index: 100; background: var(--bg);">
+  <div class="user-profile" style="display: flex; align-items: center; gap: 14px;">
+    <div class="avatar" style="width: 50px; height: 50px; background: #3687E1; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem; box-shadow: 0 0 15px rgba(54, 135, 225, 0.4);">
+      <i class="fas fa-user"></i>
     </div>
-    <div onclick="toggleMenu()" style="font-size: 1.5rem; cursor:pointer;"><i class="fas fa-bars"></i></div>
+    <div class="welcome-text" style="display: flex; flex-direction: column;">
+      <span style="font-size: 0.75rem; color: var(--muted); font-weight: 500;">Olá, Daniel</span>
+      <b id="tab-title" style="font-size: 1rem; color: var(--text); font-weight: 700;">Resumo Geral</b>
+    </div>
+  </div>
+  <div class="menu-container" style="position: relative;">
+    <button class="dots-btn" onclick="toggleMenu()" style="background: none; border: none; color: var(--muted); cursor: pointer; position: relative; z-index: 1003; font-size: 1.4rem; padding: 4px;"><i class="fas fa-bars-staggered"></i></button>
+    <div class="dropdown-menu" id="dropdownMenu" style="position: fixed; top: 70px; right: 20px; width: 220px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 1002;">
+      <div style="padding: 12px 16px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--card2);">Ferramentas</div>
+      <div class="dropdown-item" onclick="setTab('compras'); toggleMenu()"><i class="fas fa-shopping-cart"></i> Lista de Compras</div>
+      <div class="dropdown-item" onclick="toggleTheme(); toggleMenu()"><i class="fas fa-circle-half-stroke"></i> Tema Claro/Escuro</div>
+      <div style="padding: 12px 16px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--card2); border-top: 1px solid var(--border);">Dados</div>
+      <div class="dropdown-item" onclick="exportBackup(); toggleMenu()"><i class="fas fa-file-export"></i> Exportar JSON</div>
+      <div class="dropdown-item" onclick="importBackup(); toggleMenu()"><i class="fas fa-file-import"></i> Restaurar Backup</div>
+      <div class="dropdown-item" onclick="openIconManager(); toggleMenu()"><i class="fas fa-tags"></i> Categorias</div>
+    </div>
+  </div>
 </header>
 
-<div class="popover-menu" id="mainPopover">
-    <div class="popover-header">Ferramentas</div>
-    <a href="#" onclick="abrirListaCompras()" style="display:flex; align-items:center; gap:10px; padding: 12px 15px; text-decoration:none; color:inherit;"><i class="fas fa-shopping-cart"></i> Lista de Compras</a>
-    <a href="#" onclick="toggleTheme()" style="display:flex; align-items:center; gap:10px; padding: 12px 15px; text-decoration:none; color:inherit;"><i class="fas fa-adjust"></i> Tema Claro/Escuro</a>
-    <div class="popover-header">Dados</div>
-    <a href="#" onclick="exportarDados()" style="display:flex; align-items:center; gap:10px; padding: 12px 15px; text-decoration:none; color:inherit;"><i class="fas fa-file-export"></i> Exportar JSON</a>
-    <a href="#" onclick="document.getElementById('importInput').click()" style="display:flex; align-items:center; gap:10px; padding: 12px 15px; text-decoration:none; color:inherit;"><i class="fas fa-file-import"></i> Restaurar Backup</a>
-    <a href="#" onclick="abrirGerenciadorCategorias()" style="display:flex; align-items:center; gap:10px; padding: 12px 15px; text-decoration:none; color:inherit;"><i class="fas fa-tags"></i> Categorias</a>
+<section id="sec-lancamentos" class="content-section active">
+  
+<div class="month-selector">
+  <button class="month-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+  <b id="currentMonthDisplay">Julho 2026</b>
+  <button class="month-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
 </div>
-
-<main class="summary-container">
-    <div class="mini-card">
-        <span style="font-size: 0.7rem; color: var(--muted); text-transform: uppercase;">Receitas</span><br>
-        <b style="color: var(--verde); font-size: 1.1rem;" id="total-receitas">R$ 0,00</b>
+<div class="cards">
+    <div class="card rec"><div class="label">Receitas</div><div class="value" id="totalRec">R$ 0</div></div>
+    <div class="card desp"><div class="label">Despesas</div><div class="value" id="totalDesp">R$ 0</div></div>
+    <div class="card saldo"><div class="label">Saldo</div><div class="value" id="saldo">R$ 0</div></div>
+  </div>
+  <div class="real-card" id="realCardContainer">
+    <div class="label" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+      LÍQUIDO REAL 
+      <i class="fas fa-eye-slash" style="font-size:0.8rem; cursor:pointer; color:var(--azul);" onclick="toggleBalance()"></i>
     </div>
-    
-    <div class="main-balance-card">
-        <span style="font-size: 0.8rem; color: var(--muted);">LÍQUIDO</span><br>
-        <b style="font-size: 2.2rem;" id="saldo">R$ 0,00</b>
-    </div>
-</main>
-
+    <div class="value" id="saldoReal">R$ 0,00</div>
+  </div>
+  
+<div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 10px;">
+  <button onclick="exportData()" style="background:none; border:none; color:var(--muted); font-size:0.7rem; cursor:pointer;"><i class="fas fa-download"></i> BACKUP</button>
+  <button onclick="document.getElementById('importFile').click()" style="background:none; border:none; color:var(--muted); font-size:0.7rem; cursor:pointer;"><i class="fas fa-upload"></i> RESTAURAR</button>
+  <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+</div>
 <div class="action-buttons">
-    <button class="btn-action btn-receita" onclick="openModal('receita')">+ Receita</button>
-    <button class="btn-action btn-despesa" onclick="openModal('despesa')">- Despesa</button>
-</div>
+    <button class="btn-action plus" onclick="openModal('receita')">＋ Receita</button>
+    <button class="btn-action minus" onclick="openModal('despesa')">－ Despesa</button>
+  </div>
+  <div class="list" id="list"></div>
+</section>
 
-<div class="transaction-list" id="lista-transacoes">
-    <!-- Transações aqui -->
-</div>
+<section id="sec-compras" class="content-section">
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+      <div class="widget" style="background: rgba(59, 130, 246, 0.05); border-color: var(--azul); text-align:center; margin-bottom:0;">
+        <div class="widget-title" style="color: var(--azul);">Itens</div>
+        <div id="totalItensCount" style="font-size:1.4rem; font-weight:800; color: var(--azul);">0</div>
+      </div>
+      <div class="widget" style="background: rgba(59, 130, 246, 0.05); border-color: var(--azul); text-align:center; margin-bottom:0;">
+        <div class="widget-title" style="color: var(--azul);">Total Orçado</div>
+        <div id="totalComprasValue" style="font-size:1.4rem; font-weight:800; color: var(--azul);">R$ 0,00</div>
+      </div>
+  </div>
+  <button class="btn-action plus" style="width:100%; margin-bottom:14px;" onclick="openModal('compra')">＋ Item de Compra</button>
+  <div class="list" id="listCompras"></div>
+
+  <!-- Calculadora de Peso -->
+  <div class="widget" style="margin-top:20px; border-style:dashed; background:transparent;">
+    <div class="widget-title"><i class="fas fa-weight"></i> Calcular por Peso</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+        <div>
+            <label style="font-size:0.7rem; color:var(--muted)">Peso (kg/un)</label>
+            <input type="number" id="calcPeso" step="0.001" placeholder="0.500" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--text); padding:8px; border-radius:6px;">
+        </div>
+        <div>
+            <label style="font-size:0.7rem; color:var(--muted)">Preço por kg</label>
+            <input type="number" id="calcPrecoKg" step="0.01" placeholder="29.90" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--text); padding:8px; border-radius:6px;">
+        </div>
+    </div>
+    <div id="calcResult" style="margin-top:10px; font-weight:bold; color:var(--azul); text-align:center; font-size:1.1rem;">R$ 0,00</div>
+    <button class="btn-action plus" style="width:100%; margin-top:10px; height:35px; font-size:0.8rem;" onclick="addCalcToCompras()">Adicionar ao Orçamento</button>
+  </div>
+</section>
+
+<section id="sec-pendencias" class="content-section">
+  <div class="widget" style="background: rgba(245, 158, 11, 0.05); border-color: var(--amarelo); text-align:center;">
+    <div class="widget-title" style="color: var(--amarelo); display: flex; justify-content: center; gap: 8px; align-items: center;">Total Pendente <span id="pend-count-label" style="background: var(--amarelo); color: #000; font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; font-weight: 900;">0 ATIVAS</span></div>
+    <div id="totalPendValue" style="font-size:1.4rem; font-weight:800; color: var(--amarelo);">R$ 0,00</div>
+  </div>
+  <button class="btn-action pend" style="width:100%; margin-bottom:14px;" onclick="openModal('pendencia')">＋ Nova Pendência</button>
+  <div class="list" id="listPend"></div>
+</section>
+
+<section id="sec-comparativo" class="content-section">
+  <div class="widget">
+    <div class="widget-title">Histórico Mensal</div>
+    <div class="comp-row comp-header">
+      <div>Mês</div><div>Rec</div><div>Desp</div><div>Real</div>
+    </div>
+    <div id="compList"></div>
+  </div>
+</section>
+
+<section id="sec-simular" class="content-section">
+  <div class="widget" style="background: rgba(59, 130, 246, 0.05); border-color: var(--azul); margin-bottom: 15px;">
+    <div style="font-size: 0.7rem; color: var(--azul); font-weight: 700; text-transform: uppercase;">Projeção Pós-Pagamentos</div>
+    <div id="projeçãoValue" style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-top: 5px;">R$ 0,00</div>
+    <div style="font-size: 0.6rem; color: var(--muted); margin-top: 4px;">Saldo atual - Pendências selecionadas</div>
+  </div>
+  <div class="widget" style="border-color: var(--verde);">
+    <div class="widget-title" style="color: var(--verde);">Simulação de Caixa</div>
+    <button class="btn-action plus" style="width:100%; margin-bottom:14px; padding:10px; font-size:.8rem;" onclick="openSimRecModal()">＋ Lançar Recebimento Previsto</button>
+    <div style="background: var(--card2); padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+        <div style="font-size: .6rem; color: var(--muted); text-transform: uppercase;">Total Previsto</div>
+        <div id="simTotalRec" style="font-size: 1.2rem; font-weight: 800; color: var(--verde);">R$ 0,00</div>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg); padding:10px; border-radius:10px; border: 1px solid var(--border);">
+      <span style="font-size:.75rem; font-weight:700;">SALDO RESTANTE:</span>
+      <b id="simRestante" style="font-size:1.3rem; color:var(--verde);">R$ 0,00</b>
+    </div>
+  </div>
+  <div id="simRecList" style="margin-bottom: 20px;"></div>
+  <div id="simList" class="list"></div>
+</section>
+
+<section id="sec-metas" class="content-section">
+  <button class="btn-action plus" style="width:100%; margin-bottom:14px;" onclick="openMetaModal()">＋ Criar Meta</button>
+  <div id="metasList" class="list"></div>
+</section>
+
+<section id="sec-analise" class="content-section">
+  <div id="categoryChart" class="widget" style="margin-bottom: 15px;">
+    <div class="widget-title">Gastos por Categoria</div>
+    <div id="catList" style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;"></div>
+  </div>
+  <div class="widget" style="text-align:center; margin-bottom: 20px;">
+    <canvas id="myChart" style="max-height:280px;"></canvas>
+  </div>
+  
+  <div class="widget" style="background: rgba(59, 130, 246, 0.05); border: 1px solid var(--azul); border-radius: 16px; padding: 15px;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+      <div style="background: var(--azul); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+        <i class="fas fa-robot"></i>
+      </div>
+      <b style="color: var(--azul); font-size: 0.9rem;">Zapia Insights</b>
+    </div>
+    <div id="ai-tips" style="font-size: 0.85rem; line-height: 1.4; color: var(--text); opacity: 0.9;">
+      Analisando seus dados para gerar dicas personalizadas...
+    </div>
+    <button onclick="generateAITips()" style="margin-top: 12px; background: none; border: 1px solid var(--azul); color: var(--azul); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+      <i class="fas fa-sync-alt"></i> Atualizar Dicas
+    </button>
+  </div>
+</section>
 
 <nav class="bottom-nav">
-    <div class="nav-item active"><i class="fas fa-wallet" style="font-size: 1.2rem;"></i><span>Lançar</span></div>
-    <div class="nav-item"><i class="fas fa-hourglass-half" style="font-size: 1.2rem;"></i><span>Pendente</span></div>
-    <div class="nav-item"><i class="fas fa-calendar-alt" style="font-size: 1.2rem;"></i><span>Mensal</span></div>
-    <div class="nav-item"><i class="fas fa-chart-line" style="font-size: 1.2rem;"></i><span>Simular</span></div>
-    <div class="nav-item"><i class="fas fa-bullseye" style="font-size: 1.2rem;"></i><span>Metas</span></div>
-    <div class="nav-item" onclick="showTab('analise')"><i class="fas fa-chart-pie" style="font-size: 1.2rem;"></i><span>Análise</span></div>
+  <button id="nav-lancamentos" class="active" onclick="setTab('lancamentos')"><i class="fas fa-wallet"></i>Lançar</button>
+  <button id="nav-pendencias" onclick="setTab('pendencias')" style="position: relative;"><i class="fas fa-hourglass-half"></i>Pendente<span id="pend-badge" class="nav-badge">0</span></button>
+  <button id="nav-comparativo" onclick="setTab('comparativo')"><i class="fas fa-calendar-alt"></i>Mensal</button>
+  <button id="nav-simular" onclick="setTab('simular')"><i class="fas fa-chart-line"></i>Simular</button>
+  <button id="nav-metas" onclick="setTab('metas')"><i class="fas fa-bullseye"></i>Metas</button>
+  <button id="nav-analise" onclick="setTab('analise')"><i class="fas fa-chart-pie"></i>Análise</button>
 </nav>
+
+<!-- MODAIS -->
+<div class="modal-overlay" id="modalEntry">
+  <div class="modal">
+    <h2 id="modalTitle">Lançamento</h2>
+    <input type="hidden" id="editId">
+    <input type="hidden" id="editType">
+    <div class="form-group"><label>Data do Lançamento</label><input id="entryDate" type="date"></div>
+    <div class="form-group"><label>Descrição</label><input id="desc" type="text"></div>
+    <div class="form-group"><label>Valor (R$)</label><input id="val" type="number" step="0.01"></div>
+    <div class="form-group"><label>Categoria</label><select id="tipoSub"></select></div>
+    <div class="form-group"><label>Observação (Opcional)</label><textarea id="obs" placeholder="Algum detalhe extra?"></textarea></div>
+    <div id="extraFields" style="margin-top:15px; border-top:1px solid var(--border); padding-top:15px; display:none;">
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;">
+                <label style="font-size:0.6rem; color:var(--muted); text-transform:uppercase;">Recorrente?</label>
+                <select id="isRecurrent" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--text); padding:10px; border-radius:8px; font-size:0.9rem;">
+                    <option value="nao">Não</option>
+                    <option value="sim">Mensal</option>
+                </select>
+            </div>
+            <div style="flex:1;" id="parcelasContainer">
+                <label style="font-size:0.6rem; color:var(--muted); text-transform:uppercase;">Parcelas</label>
+                <input type="number" id="installments" value="1" min="1" max="60" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--text); padding:10px; border-radius:8px; font-size:0.9rem;">
+            </div>
+        </div>
+    </div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-save" onclick="saveEntry()">Salvar</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalIcon">
+  <div class="modal cat-manager-modal">
+    <div class="cat-header"><h2>Gerenciar Categorias</h2></div>
+    <div class="cat-tabs">
+        <div class="cat-tab active" id="tab-cat-receita" onclick="setCatTab('receita')">Receitas</div>
+        <div class="cat-tab" id="tab-cat-despesa" onclick="setCatTab('despesa')">Despesas</div>
+        <div class="cat-tab" id="tab-cat-pendencia" onclick="setCatTab('pendencia')">Pendências</div>
+    </div>
+    <div class="cat-list-container" id="catListContent"></div>
+    <button class="cat-btn-add" onclick="openAddCatForm()"><i class="fas fa-plus-circle"></i> ADICIONAR CATEGORIA</button>
+    <div class="modal-actions" style="padding:0 15px 15px;"><button class="btn-cancel" style="width:100%" onclick="closeIconManager()">Fechar</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalAddEditCat">
+    <div class="modal">
+        <h2 id="catModalTitle">Categoria</h2>
+        <input type="hidden" id="catOldName">
+        <div class="form-group"><label>Ícone Selecionado</label>
+            <div id="selectedIconDisplay" class="icon-selector-btn" onclick="toggleEmojiGrid()"><span class="material-icons-round">help_outline</span></div>
+            <input type="hidden" id="catInputIcon" value="help_outline">
+            <div id="emojiGrid" class="emoji-grid" style="display:none;"></div>
+        </div>
+        <div class="form-group"><label>Nome da Categoria</label><input type="text" id="catInputName" placeholder="Ex: Internet"></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeAddEditCat()">Cancelar</button>
+            <button class="btn-save" onclick="saveCategory()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalMeta">
+    <div class="modal">
+        <h2 id="metaTitleHeader">Nova Meta</h2>
+        <input type="hidden" id="editMetaId">
+        <div class="form-group"><label>Nome</label><input id="metaNome" type="text"></div>
+        <div class="form-group"><label>Valor Pretendido (R$)</label><input id="metaPretendido" type="number" step="0.01"></div>
+        <div class="form-group" id="metaAcumuladoGroup" style="display:none;"><label>Valor Já Acumulado (R$)</label><input id="metaAcumulado" type="number" step="0.01"></div>
+        <div class="modal-actions"><button class="btn-cancel" onclick="closeMetaModal()">Cancelar</button><button class="btn-save" onclick="saveMeta()">Salvar</button></div>
+    </div>
+</div>
+<div class="modal-overlay" id="modalAddMeta"><div class="modal"><h2>Adicionar à Meta</h2><input type="hidden" id="addMetaId"><div class="form-group"><label>Valor (R$)</label><input id="valAddMeta" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeAddMetaModal()">Cancelar</button><button class="btn-save" onclick="confirmAddMeta()">Adicionar</button></div></div></div>
+<div class="modal-overlay" id="modalSimRec"><div class="modal"><h2>Recebimento Previsto</h2><div class="form-group"><label>Descrição</label><input id="simRecDesc" type="text"></div><div class="form-group"><label>Valor (R$)</label><input id="simRecVal" type="number" step="0.01"></div><div class="modal-actions"><button class="btn-cancel" onclick="closeSimRecModal()">Cancelar</button><button class="btn-save" onclick="saveSimRec()">Adicionar</button></div></div></div>
+
 <script>
 // Inicialização Robusta do Banco de Dados
 let db;
@@ -1117,225 +1136,6 @@ function initChart() {
   chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(totals), datasets: [{ data: Object.values(totals), backgroundColor: ['#ef4444', '#3b82f6', '#f59e0b', '#22c55e', '#8b5cf6', '#ec4899'] }] }, options: { plugins: { legend: { position: 'bottom', labels: { color: db.theme === 'dark' ? '#f1f5f9' : '#0f172a', font: {size: 10} } } } } });
 }
 window.onload = () => { applyTheme(); render(); };
-
-/* --- SISTEMA DE SINCRONIZAÇÃO (EXPERIMENTAL v123) --- */
-
-async function sincronizarComNuvem() {
-    const btn = document.getElementById('syncBtn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
-    
-    // Simulação de verificação de conta para o usuário sentir o progresso
-    setTimeout(() => {
-        alert('Sistema de Nuvem ativado! Para finalizar a conexão entre os dois celulares, precisaremos registrar o seu app no Console do Google Cloud. Deseja que eu te guie nisso ou prefere que eu tente uma solução de banco de dados aberto (Firebase)?');
-        btn.innerHTML = '<i class="fas fa-cloud"></i> Nuvem Ativa';
-    }, 2000);
-}
-
-
-// Adicionar botão de Sincronização no Menu
-function adicionarBotaoSinc() {
-    const menu = document.getElementById('optionsContent');
-    if(menu && !document.getElementById('syncBtn')) {
-        const btn = document.createElement('a');
-        btn.id = 'syncBtn';
-        btn.href = '#';
-        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sincronizar Nuvem';
-        btn.onclick = sincronizarComNuvem;
-        menu.insertBefore(btn, menu.firstChild);
-    }
-}
-setTimeout(adicionarBotaoSinc, 1000);
-
-
-function toggleMenu() {
-    const pop = document.getElementById('mainPopover');
-    pop.style.display = pop.style.display === 'block' ? 'none' : 'block';
-}
-window.onclick = function(event) {
-    if (!event.target.closest('.app-header') && !event.target.closest('.popover-menu')) {
-        document.getElementById('mainPopover').style.display = 'none';
-    }
-}
-
 </script>
-
-<!-- Google API Loader -->
-<script src="https://accounts.google.com/gsi/client" async defer>
-function toggleMenu() {
-    const pop = document.getElementById('mainPopover');
-    pop.style.display = pop.style.display === 'block' ? 'none' : 'block';
-}
-window.onclick = function(event) {
-    if (!event.target.closest('.app-header') && !event.target.closest('.popover-menu')) {
-        document.getElementById('mainPopover').style.display = 'none';
-    }
-}
-
-</script>
-<script src="https://apis.google.com/js/api.js" async defer>
-function toggleMenu() {
-    const pop = document.getElementById('mainPopover');
-    pop.style.display = pop.style.display === 'block' ? 'none' : 'block';
-}
-window.onclick = function(event) {
-    if (!event.target.closest('.app-header') && !event.target.closest('.popover-menu')) {
-        document.getElementById('mainPopover').style.display = 'none';
-    }
-}
-
-</script>
-
-<script>
-let gapiInited = false;
-let gsisInited = false;
-let tokenClient;
-
-// Configurações (Placeholders que precisarão de ClientID real se o usuário quiser escalar)
-const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; 
-const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
-
-function gapiLoaded() {
-  gapi.load('client', intializeGapiClient);
-}
-
-async function intializeGapiClient() {
-  await gapi.client.init({
-    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-  });
-  gapiInited = true;
-}
-
-function gisLoaded() {
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: SCOPES,
-    callback: '', // definido na chamada
-  });
-  gsisInited = true;
-}
-
-
-async function sincronizarComNuvem() {
-    const btn = document.getElementById('syncBtn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
-    
-    // Simulação de verificação de conta para o usuário sentir o progresso
-    setTimeout(() => {
-        alert('Sistema de Nuvem ativado! Para finalizar a conexão entre os dois celulares, precisaremos registrar o seu app no Console do Google Cloud. Deseja que eu te guie nisso ou prefere que eu tente uma solução de banco de dados aberto (Firebase)?');
-        btn.innerHTML = '<i class="fas fa-cloud"></i> Nuvem Ativa';
-    }, 2000);
-}
-
-
-function toggleMenu() {
-    const pop = document.getElementById('mainPopover');
-    pop.style.display = pop.style.display === 'block' ? 'none' : 'block';
-}
-window.onclick = function(event) {
-    if (!event.target.closest('.app-header') && !event.target.closest('.popover-menu')) {
-        document.getElementById('mainPopover').style.display = 'none';
-    }
-}
-
-</script>
-
-
-<!-- Firebase App (the core Firebase SDK) -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js">
-function toggleMenu() {
-    const pop = document.getElementById('mainPopover');
-    pop.style.display = pop.style.display === 'block' ? 'none' : 'block';
-}
-window.onclick = function(event) {
-    if (!event.target.closest('.app-header') && !event.target.closest('.popover-menu')) {
-        document.getElementById('mainPopover').style.display = 'none';
-    }
-}
-
-</script>
-<!-- Firebase Realtime Database -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js">
-function toggleMenu() {
-    const pop = document.getElementById('mainPopover');
-    pop.style.display = pop.style.display === 'block' ? 'none' : 'block';
-}
-window.onclick = function(event) {
-    if (!event.target.closest('.app-header') && !event.target.closest('.popover-menu')) {
-        document.getElementById('mainPopover').style.display = 'none';
-    }
-}
-
-</script>
-
-<script>
-// A estrutura de configuração será preenchida assim que o banco for provisionado
-const firebaseConfig = {
-  apiKey: "AIzaSy...", // Placeholder
-  authDomain: "financas-pessoais-daniel.firebaseapp.com",
-  databaseURL: "https://financas-pessoais-daniel-default-rtdb.firebaseio.com",
-  projectId: "financas-pessoais-daniel",
-  storageBucket: "financas-pessoais-daniel.appspot.com",
-  messagingSenderId: "...",
-  appId: "..."
-};
-
-// Initialize Firebase
-let db;
-try {
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.database();
-} catch(e) { console.log('Firebase Init Pending'); }
-
-async function sincronizarComNuvem() {
-    const userId = prompt('Digite uma CHAVE DE ACESSO única para conectar seus aparelhos (ex: daniel123):');
-    if(!userId) return;
-    
-    const btn = document.getElementById('syncBtn');
-    btn.innerHTML = '<i class="fas fa-sync fa-spin"></i> Sincronizando...';
-    
-    // Salvar dados locais no Firebase
-    const localData = JSON.parse(localStorage.getItem('financasData') || '[]');
-    const saldoData = localStorage.getItem('saldo') || '0';
-    
-    firebase.database().ref('users/' + userId).set({
-        transacoes: localData,
-        saldo: saldoData,
-        lastUpdate: new Date().getTime()
-    }).then(() => {
-        alert('Sincronizado com sucesso! No outro celular, use a MESMA CHAVE para baixar os dados.');
-        btn.innerHTML = '<i class="fas fa-cloud"></i> Conectado: ' + userId;
-        localStorage.setItem('syncKey', userId);
-    }).catch(err => {
-        alert('Erro ao sincronizar. Verifique a internet.');
-        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Tentar Novamente';
-    });
-}
-
-// Função para checar atualizações em tempo real
-function monitorarMudanças() {
-    const key = localStorage.getItem('syncKey');
-    if(key && db) {
-        db.ref('users/' + key).on('value', (snapshot) => {
-            const data = snapshot.val();
-            if(data) {
-                // Lógica de merge ou atualização silenciosa
-                console.log('Dados atualizados via Nuvem');
-            }
-        });
-    }
-}
-
-function toggleMenu() {
-    const pop = document.getElementById('mainPopover');
-    pop.style.display = pop.style.display === 'block' ? 'none' : 'block';
-}
-window.onclick = function(event) {
-    if (!event.target.closest('.app-header') && !event.target.closest('.popover-menu')) {
-        document.getElementById('mainPopover').style.display = 'none';
-    }
-}
-
-</script>
-
 </body>
 </html>
