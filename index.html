@@ -1243,5 +1243,70 @@ async function sincronizarComNuvem() {
 
 </script>
 
+
+<!-- Firebase App (the core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<!-- Firebase Realtime Database -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+// A estrutura de configuração será preenchida assim que o banco for provisionado
+const firebaseConfig = {
+  apiKey: "AIzaSy...", // Placeholder
+  authDomain: "financas-pessoais-daniel.firebaseapp.com",
+  databaseURL: "https://financas-pessoais-daniel-default-rtdb.firebaseio.com",
+  projectId: "financas-pessoais-daniel",
+  storageBucket: "financas-pessoais-daniel.appspot.com",
+  messagingSenderId: "...",
+  appId: "..."
+};
+
+// Initialize Firebase
+let db;
+try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+} catch(e) { console.log('Firebase Init Pending'); }
+
+async function sincronizarComNuvem() {
+    const userId = prompt('Digite uma CHAVE DE ACESSO única para conectar seus aparelhos (ex: daniel123):');
+    if(!userId) return;
+    
+    const btn = document.getElementById('syncBtn');
+    btn.innerHTML = '<i class="fas fa-sync fa-spin"></i> Sincronizando...';
+    
+    // Salvar dados locais no Firebase
+    const localData = JSON.parse(localStorage.getItem('financasData') || '[]');
+    const saldoData = localStorage.getItem('saldo') || '0';
+    
+    firebase.database().ref('users/' + userId).set({
+        transacoes: localData,
+        saldo: saldoData,
+        lastUpdate: new Date().getTime()
+    }).then(() => {
+        alert('Sincronizado com sucesso! No outro celular, use a MESMA CHAVE para baixar os dados.');
+        btn.innerHTML = '<i class="fas fa-cloud"></i> Conectado: ' + userId;
+        localStorage.setItem('syncKey', userId);
+    }).catch(err => {
+        alert('Erro ao sincronizar. Verifique a internet.');
+        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Tentar Novamente';
+    });
+}
+
+// Função para checar atualizações em tempo real
+function monitorarMudanças() {
+    const key = localStorage.getItem('syncKey');
+    if(key && db) {
+        db.ref('users/' + key).on('value', (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                // Lógica de merge ou atualização silenciosa
+                console.log('Dados atualizados via Nuvem');
+            }
+        });
+    }
+}
+</script>
+
 </body>
 </html>
